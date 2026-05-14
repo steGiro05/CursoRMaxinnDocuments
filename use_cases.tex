@@ -620,7 +620,7 @@ The system shall provide a dashboard for doctors to view a record of their own e
     
     \item \textbf{Key Management:} The system shall ensure secure management of cryptographic keys, including protection, storage and periodic renewal, to prevent unauthorized access to sensitive data.
 
-    \item \textbf{Data Minimization \& Access Control:} In compliance with GDPR principles, the system shall enforce strict role-based access. Medical records shall only be displayed to a doctor if strictly necessary, such as during an active scheduled appointment or immediately after the physical scanning of the patient's ``Tessera Sanitaria''.
+    \item \textbf{Data Minimization \& Access Control:} In compliance with GDPR principles, the system shall enforce strict role-based access. Medical records shall only be displayed to a doctor if strictly necessary, such as during an active scheduled appointment or immediately after the physical scanning of the patient's ``Sanitary Card''.
 
     \item \textbf{Audit Logging:} The system shall log all access and modification operations on medical records, including timestamp, user identity and reason for access.
 
@@ -911,8 +911,8 @@ network.} % 3: Goal
 \end{ucrequirements}
 \begin{ucflow}
     1 & The Doctor asks the System to upload an examination to the Patient clinical record. \\ \hline
-    2 & The Doctor fills in the required fields, including the selection of the Patient to whom the Prescription / Exemption applies. \\ \hline
-    3 & The Doctor appends as much attachments as wanted \\ \hline
+    2 & The Doctor fills in the required fields, including the selection of the Patient to whom the Examination applies. \\ \hline
+    3 & The Doctor appends as many attachments as desired \\ \hline
     4 & The Doctor saves. \\ \hline
     5 & The System perform field validations. \\ \hline    
     6 & The System saves the examination record in the Patient clinical record. \\ \hline
@@ -1015,7 +1015,7 @@ network.} % 3: Goal
 \usecaseheader
   {UC7}  % 1: ID
   {Update User Profile} % 2: Titolo
-  {To provide a Registered user with to modify their account information.} % 3: Goal
+  {To provide a Registered user with the ability to modify their account information.} % 3: Goal
   {Scope: users account management. Level: Primary.} % 4: Scope
   {The user is logged in.} % 5: Preconditions
   {The account information is successfully updated in the system.} % 6: Success
@@ -1142,7 +1142,7 @@ network.} % 3: Goal
          4. Use case ends. \\ \hline
     6a & \textbf{Appointment not paid:}\newline 
          1. The System checks if the appointment was paid ahead.\newline 
-         2. If not go to main flow step 7 without refund.\\ \hline
+         2. If not, proceed to step 7 (refund is skipped).\\ \hline
 \end{ucextensions}
 
 \phantomsection
@@ -1176,14 +1176,9 @@ network.} % 3: Goal
     3a & \textbf{The Doctor / Head of Department cancels:}\newline 
          1. The System aborts the editing process.\newline 
          2. Use case ends. \\ \hline
-    4a & \textbf{Late canceling:}\newline 
-         1. The System identifies that the appointment is in less than 48 hours.\newline 
-         2. Cancellation is aborted.\newline 
-         3. The System returns an error.\newline 
-         4. Use case ends. \\ \hline
     7a & \textbf{Appointment not paid:}\newline 
          1. The System checks if the appointment was paid ahead.\newline 
-         2. If not go to main flow step 8 without refund.\\ \hline
+         2. If not, proceed to step 7 (refund is skipped).\\ \hline
 \end{ucextensions}
 
 \phantomsection
@@ -1290,7 +1285,7 @@ Secondary: Database.} % 8: Actors
 \begin{ucextensions}
     2a & \textbf{Already existing Head of Hospital:}\newline 
          1. The System prompts that there is another Head of Hospital for that structure. \newline 
-         2. The System ask if the admin wants to change the Head of Hospital. \newline 
+         2. The System asks if the admin wants to change the Head of Hospital. \newline 
          3. Admin confirms. \newline 
          4. Resume at Main Flow Step 6. \\ \hline
     5a & \textbf{Operation canceled:}\newline 
@@ -1822,7 +1817,7 @@ Secondary: Database, Mail Service.} % 8: Actors
     1 & The Patient selects the desired examination and, optionally, a preferred hospital and a target future date. \\ \hline
     2 & The Patient submits the search request. \\ \hline
     3 & The System selects all periods in which at least one correct examination room is available. \\ \hline
-    4 & \textbf{Include: \hyperlink{FR12}{FR12 Automated Doctor assignment.}} The System retrieves a suitable Doctor, and date and time of the appointment. \\ \hline
+    4 & \textbf{Include: \hyperlink{FR12}{FR12 Automated Doctor assignment.}} The System retrieves a suitable Doctor and date and time of the appointment. \\ \hline
     5 & The System presents the proposed appointment details (date, time, hospital, department, and Doctor) to the Patient. \\ \hline
     6 & The Patient confirms. \\ \hline
     7 & The System saves the appointment in the Database. \\ \hline

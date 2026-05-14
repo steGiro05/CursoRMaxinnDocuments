@@ -91,13 +91,14 @@ This document provides a detailed description of every class in the HealthMaxxin
 
 \par\medskip\hrule\medskip
 
-\section*{1. HealthMaxxinSystem}\label{sec:1-healthmaxxinsystem}
+\section{Classes Description}
+\subsection{HealthMaxxinSystem}\label{sec:1-healthmaxxinsystem}
 
-\subsection*{Description}
+\textbf{Description}
 
 The central singleton class representing the entire HealthMaxxing platform. It acts as the top-level container and entry point for the system, tying together the major subsystems: the hospital network, the user base, the treatment catalog, and insurance policies. Its existence ensures that all components operate within a single, coherent system context.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -111,7 +112,7 @@ The central singleton class representing the entire HealthMaxxing platform. It a
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Manages (1-to-1) one \code{Hospital} network entry point
@@ -121,13 +122,13 @@ The central singleton class representing the entire HealthMaxxing platform. It a
 
 \par\medskip\hrule\medskip
 
-\section*{2. User}\label{sec:2-user}
+\subsection{User}\label{sec:2-user}
 
-\subsection*{Description}
+\textbf{Description}
 
 The base class for all human actors who interact with the HealthMaxxing platform (excluding \code{SystemAdmin}, which is a separate administrative entity). It encapsulates the shared identity and authentication data common to all user roles, patients, doctors, department heads, and hospital heads. Every user has a unique account, can authenticate, and can manage their own profile. The \code{fiscalCode} attribute plays an important role in the Italian healthcare context, serving as a universal patient identifier.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -147,7 +148,7 @@ The base class for all human actors who interact with the HealthMaxxing platform
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -165,7 +166,7 @@ The base class for all human actors who interact with the HealthMaxxing platform
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Superclass of \code{Patient}, \code{Doctor}, \code{HeadOfDepartment}, and \code{HeadOfHospital}
@@ -177,13 +178,13 @@ The base class for all human actors who interact with the HealthMaxxing platform
 
 \par\medskip\hrule\medskip
 
-\section*{3. Patient}\label{sec:3-patient}
+\subsection{Patient}\label{sec:3-patient}
 
-\subsection*{Description}
+\textbf{Description}
 
 A specialization of \code{User} representing individuals who seek and receive medical care within the system. Patients are the primary consumers of healthcare services: they book appointments for treatments, manage their insurance coverage, and accumulate a health history made up of prescriptions, examinations, and exemptions. The \code{fiscalCode} inherited from \code{User} is especially important for patients, as it is the key used by doctors to access their medical records.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -199,7 +200,7 @@ A specialization of \code{User} representing individuals who seek and receive me
 
 \emph{(Inherits all attributes from \code{User})}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -215,7 +216,7 @@ A specialization of \code{User} representing individuals who seek and receive me
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Is the "Booked By" party for \code{Appointment} (1 patient to 0..N appointments)
@@ -227,13 +228,13 @@ A specialization of \code{User} representing individuals who seek and receive me
 
 \par\medskip\hrule\medskip
 
-\section*{4. Doctor}\label{sec:4-doctor}
+\subsection{Doctor}\label{sec:4-doctor}
 
-\subsection*{Description}
+\textbf{Description}
 
 A specialization of \code{User} representing licensed medical professionals registered in the system. Doctors are the primary healthcare providers: they conduct appointments, issue prescriptions and exemptions, upload examination results, and access patient records. They are assigned to one or more departments and operate according to scheduled shifts. Doctors form the basis for the more privileged \code{HeadOfDepartment} and \code{HeadOfHospital} roles.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -248,7 +249,7 @@ A specialization of \code{User} representing licensed medical professionals regi
 
 \emph{(Inherits all attributes from \code{User})}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -267,7 +268,7 @@ A specialization of \code{User} representing licensed medical professionals regi
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Works at a \code{Department} (0..1 department at a time)
@@ -280,13 +281,13 @@ A specialization of \code{User} representing licensed medical professionals regi
 
 \par\medskip\hrule\medskip
 
-\section*{5. HeadOfDepartment}\label{sec:5-headofdepartment}
+\subsection{HeadOfDepartment}\label{sec:5-headofdepartment}
 
-\subsection*{Description}
+\textbf{Description}
 
 A specialization of \code{Doctor} with additional administrative authority scoped to a single department. The Head of Department oversees the operational management of their unit: they configure capacity, define treatment offerings, manage doctor assignments, and maintain shift patterns. They also have visibility into all appointments occurring within their department and can intervene by cancelling them when necessary.
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -306,7 +307,7 @@ A specialization of \code{Doctor} with additional administrative authority scope
 
 \emph{(Inherits all attributes and methods from \code{Doctor} and \code{User})}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Manages exactly one \code{Department} (1-to-1)
@@ -315,13 +316,13 @@ A specialization of \code{Doctor} with additional administrative authority scope
 
 \par\medskip\hrule\medskip
 
-\section*{6. HeadOfHospital}\label{sec:6-headofhospital}
+\subsection{HeadOfHospital}\label{sec:6-headofhospital}
 
-\subsection*{Description}
+\textbf{Description}
 
 A specialization of \code{Doctor} with the highest level of administrative authority within a specific hospital. The Head of Hospital oversees the appointment and allocation of staff at the departmental and hospital-wide level. They are also the key actor in financial management, having visibility into insurance-related debts and the ability to settle outstanding balances with insurance companies.
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -339,7 +340,7 @@ A specialization of \code{Doctor} with the highest level of administrative autho
 
 \emph{(Inherits all attributes and methods from \code{Doctor} and \code{User})}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Manages exactly one \code{Hospital} (1-to-1)
@@ -348,13 +349,13 @@ A specialization of \code{Doctor} with the highest level of administrative autho
 
 \par\medskip\hrule\medskip
 
-\section*{7. SystemAdmin}\label{sec:7-systemadmin}
+\subsection{SystemAdmin}\label{sec:7-systemadmin}
 
-\subsection*{Description}
+\textbf{Description}
 
 A privileged, platform-level administrator who sits outside the \code{User} hierarchy. The System Admin is responsible for the configuration and lifecycle management of the entire platform infrastructure: creating and closing hospitals and departments, registering doctors, and managing insurance policies and treatments globally. This role is typically held by platform operators rather than healthcare professionals and has no patient-facing responsibilities. It has its own separate authentication mechanism.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -369,7 +370,7 @@ A privileged, platform-level administrator who sits outside the \code{User} hier
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -399,7 +400,7 @@ A privileged, platform-level administrator who sits outside the \code{User} hier
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Operates at the \code{HealthMaxxinSystem} level (1-to-1)
@@ -408,13 +409,13 @@ A privileged, platform-level administrator who sits outside the \code{User} hier
 
 \par\medskip\hrule\medskip
 
-\section*{8. Hospital}\label{sec:8-hospital}
+\subsection{Hospital}\label{sec:8-hospital}
 
-\subsection*{Description}
+\textbf{Description}
 
 Represents a physical hospital facility registered within the platform. A hospital is the top-level organizational unit in the care delivery hierarchy, containing multiple departments and employing doctors. Its status lifecycle (active/closed) is managed by the \code{SystemAdmin}. Each hospital is headed by a \code{HeadOfHospital} and can accumulate insurance-related debt tracked via \code{OutstandingDebt}.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -431,7 +432,7 @@ Represents a physical hospital facility registered within the platform. A hospit
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -444,7 +445,7 @@ Represents a physical hospital facility registered within the platform. A hospit
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Contains 1..N \code{Department} entities
@@ -455,13 +456,13 @@ Represents a physical hospital facility registered within the platform. A hospit
 
 \par\medskip\hrule\medskip
 
-\section*{9. Department}\label{sec:9-department}
+\subsection{Department}\label{sec:9-department}
 
-\subsection*{Description}
+\textbf{Description}
 
 Represents a specialized medical unit within a hospital (e.g., Cardiology, Oncology, Radiology). A department defines what treatments it offers, how many patients it can handle (capacity), and which doctors are working within it. Its operational state is managed through status flags, and it can be closed when no longer active. Departments are the direct context in which appointments and clinical activities take place.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -478,7 +479,7 @@ Represents a specialized medical unit within a hospital (e.g., Cardiology, Oncol
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -491,7 +492,7 @@ Represents a specialized medical unit within a hospital (e.g., Cardiology, Oncol
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Belongs to exactly one \code{Hospital}
@@ -503,13 +504,13 @@ Represents a specialized medical unit within a hospital (e.g., Cardiology, Oncol
 
 \par\medskip\hrule\medskip
 
-\section*{10. Shift}\label{sec:10-shift}
+\subsection{Shift}\label{sec:10-shift}
 
-\subsection*{Description}
+\textbf{Description}
 
 Defines a recurring working time block for a specific doctor. A shift is characterized by a day of the week and a time window, and is valid within a defined date range. This allows the system to model part-time schedules, rotations, and temporary duty assignments. The validity check ensures the system only considers shifts that fall within their active period when computing doctor availability for appointment booking.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -527,7 +528,7 @@ Defines a recurring working time block for a specific doctor. A shift is charact
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -540,7 +541,7 @@ Defines a recurring working time block for a specific doctor. A shift is charact
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Schedules 0..N \code{Doctor} working patterns (each doctor has 0..N shifts)
@@ -549,13 +550,13 @@ Defines a recurring working time block for a specific doctor. A shift is charact
 
 \par\medskip\hrule\medskip
 
-\section*{11. Calendar}\label{sec:11-calendar}
+\subsection{Calendar}\label{sec:11-calendar}
 
-\subsection*{Description}
+\textbf{Description}
 
 A personal scheduling container owned by each \code{User}. It aggregates all appointments associated with that user and provides a secure export mechanism for integration with external calendar applications (e.g., Google Calendar, iCal). The export is token-protected and time-limited to prevent unauthorized access.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -570,7 +571,7 @@ A personal scheduling container owned by each \code{User}. It aggregates all app
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -584,7 +585,7 @@ A personal scheduling container owned by each \code{User}. It aggregates all app
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Owned by exactly one \code{User} (1-to-1)
@@ -593,13 +594,13 @@ A personal scheduling container owned by each \code{User}. It aggregates all app
 
 \par\medskip\hrule\medskip
 
-\section*{12. TemporaryPassword}\label{sec:12-temporarypassword}
+\subsection{TemporaryPassword}\label{sec:12-temporarypassword}
 
-\subsection*{Description}
+\textbf{Description}
 
 A short-lived credential object generated during the password reset flow or when a new doctor account is created by the \code{SystemAdmin}. It ensures that users can gain initial or recovery access to the system without exposing their permanent password. The system enforces expiry to minimize the security window of exposure.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -614,7 +615,7 @@ A short-lived credential object generated during the password reset flow or when
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -627,7 +628,7 @@ A short-lived credential object generated during the password reset flow or when
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Belongs to zero or one \code{User} (a user either has an active temporary password or does not)
@@ -635,13 +636,13 @@ A short-lived credential object generated during the password reset flow or when
 
 \par\medskip\hrule\medskip
 
-\section*{13. Appointment}\label{sec:13-appointment}
+\subsection{Appointment}\label{sec:13-appointment}
 
-\subsection*{Description}
+\textbf{Description}
 
 The central transactional object of the system, representing a scheduled encounter between a patient and a doctor for a specific treatment in a department. An appointment has a well-defined lifecycle (e.g., PENDING, CONFIRMED, CANCELLED, COMPLETED) and can be created, rescheduled, or cancelled by various actors. Cancellation always requires a reason for audit purposes. Each appointment is associated with a \code{Payment}.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -659,7 +660,7 @@ The central transactional object of the system, representing a scheduled encount
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -674,7 +675,7 @@ The central transactional object of the system, representing a scheduled encount
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Booked by exactly one \code{Patient}
@@ -687,13 +688,13 @@ The central transactional object of the system, representing a scheduled encount
 
 \par\medskip\hrule\medskip
 
-\section*{14. Payment}\label{sec:14-payment}
+\subsection{Payment}\label{sec:14-payment}
 
-\subsection*{Description}
+\textbf{Description}
 
 Records the financial transaction associated with a single appointment. The payment model supports a layered discount structure: a base price is defined by the treatment, which can be reduced by applicable exemptions and/or insurance coverage, yielding a final amount. The class supports multiple payment methods and tracks transaction status (e.g., PENDING, COMPLETED, REFUNDED). Refunds are handled for appointments that are cancelled after payment.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -714,7 +715,7 @@ Records the financial transaction associated with a single appointment. The paym
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -730,7 +731,7 @@ Records the financial transaction associated with a single appointment. The paym
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Associated with one \code{Appointment} (via "Paid via")
@@ -740,13 +741,13 @@ Records the financial transaction associated with a single appointment. The paym
 
 \par\medskip\hrule\medskip
 
-\section*{15. Treatment}\label{sec:15-treatment}
+\subsection{Treatment}\label{sec:15-treatment}
 
-\subsection*{Description}
+\textbf{Description}
 
 Represents a specific medical procedure or service that can be offered by departments and booked by patients as appointments. Each treatment has a defined base price, a required room type, and the type of medical professional needed to perform it. Treatments can be deactivated to remove them from availability without deleting their historical records, preserving audit integrity.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -765,7 +766,7 @@ Represents a specific medical procedure or service that can be offered by depart
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -779,7 +780,7 @@ Represents a specific medical procedure or service that can be offered by depart
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Catalogued in one \code{TreatmentCatalog} (via "Catalogs")
@@ -790,13 +791,13 @@ Represents a specific medical procedure or service that can be offered by depart
 
 \par\medskip\hrule\medskip
 
-\section*{16. TreatmentCatalog}\label{sec:16-treatmentcatalog}
+\subsection{TreatmentCatalog}\label{sec:16-treatmentcatalog}
 
-\subsection*{Description}
+\textbf{Description}
 
 A registry that aggregates all treatments defined in the system. The catalog serves as the authoritative source of available medical services, providing methods to query active treatments and manage their lifecycle. It acts as an intermediary between the \code{SystemAdmin} (who manages the global treatment list) and the departments that offer subsets of those treatments.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -809,7 +810,7 @@ A registry that aggregates all treatments defined in the system. The catalog ser
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -824,7 +825,7 @@ A registry that aggregates all treatments defined in the system. The catalog ser
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Catalogs 1..N \code{Treatment} entries
@@ -833,13 +834,13 @@ A registry that aggregates all treatments defined in the system. The catalog ser
 
 \par\medskip\hrule\medskip
 
-\section*{17. Prescription}\label{sec:17-prescription}
+\subsection{Prescription}\label{sec:17-prescription}
 
-\subsection*{Description}
+\textbf{Description}
 
 A formal medical document issued by a doctor to a patient, authorizing the patient to receive a specific treatment or medication. Prescriptions have a validity window and a fulfillment flag, enabling the system to track whether they have been acted upon. Expired or already-fulfilled prescriptions are distinguishable, preventing misuse.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -856,7 +857,7 @@ A formal medical document issued by a doctor to a patient, authorizing the patie
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -870,7 +871,7 @@ A formal medical document issued by a doctor to a patient, authorizing the patie
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Issued to exactly one \code{Patient}
@@ -881,13 +882,13 @@ A formal medical document issued by a doctor to a patient, authorizing the patie
 
 \par\medskip\hrule\medskip
 
-\section*{18. Exemption}\label{sec:18-exemption}
+\subsection{Exemption}\label{sec:18-exemption}
 
-\subsection*{Description}
+\textbf{Description}
 
 Represents a discount entitlement granted to a patient, typically based on medical, social, or economic criteria (as is common in the Italian National Health Service). An exemption reduces the cost of applicable treatments by a defined percentage and is valid for a specific time period. Exemptions are treatment-specific, meaning they only apply to a designated set of treatments rather than all services.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -905,7 +906,7 @@ Represents a discount entitlement granted to a patient, typically based on medic
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -919,7 +920,7 @@ Represents a discount entitlement granted to a patient, typically based on medic
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Belongs to exactly one \code{Patient}
@@ -931,13 +932,13 @@ Represents a discount entitlement granted to a patient, typically based on medic
 
 \par\medskip\hrule\medskip
 
-\section*{19. InsurancePolicy}\label{sec:19-insurancepolicy}
+\subsection{InsurancePolicy}\label{sec:19-insurancepolicy}
 
-\subsection*{Description}
+\textbf{Description}
 
 Represents a health insurance product offered by an external insurance company, registered in the system by the \code{SystemAdmin}. A policy defines the coverage conditions and the discount percentage it provides on treatments. Policies can be linked to individual patients via \code{InsurancePolicyRecord} entries, allowing the system to automatically apply insurance discounts during payment. Policies can be deactivated to prevent new linkages while preserving historical records.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -956,7 +957,7 @@ Represents a health insurance product offered by an external insurance company, 
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -970,7 +971,7 @@ Represents a health insurance product offered by an external insurance company, 
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Records 1..N \code{InsurancePolicyRecord} entries (one per patient linked)
@@ -981,13 +982,13 @@ Represents a health insurance product offered by an external insurance company, 
 
 \par\medskip\hrule\medskip
 
-\section*{20. InsurancePolicyRecord}\label{sec:20-insurancepolicyrecord}
+\subsection{InsurancePolicyRecord}\label{sec:20-insurancepolicyrecord}
 
-\subsection*{Description}
+\textbf{Description}
 
 A join entity that captures the specific instance of an insurance policy being linked to a patient. It records when the policy was registered, whether it has been consumed (used for a payment), and the total financial amount it covered. This provides a granular audit trail of insurance usage per patient and per policy.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -1004,7 +1005,7 @@ A join entity that captures the specific instance of an insurance policy being l
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Records the use of exactly one \code{InsurancePolicy}
@@ -1014,13 +1015,13 @@ A join entity that captures the specific instance of an insurance policy being l
 
 \par\medskip\hrule\medskip
 
-\section*{21. OutstandingDebt}\label{sec:21-outstandingdebt}
+\subsection{OutstandingDebt}\label{sec:21-outstandingdebt}
 
-\subsection*{Description}
+\textbf{Description}
 
 Tracks the running financial debt that an insurance company owes to the hospital system as a result of insurance discounts applied to patient payments. As insurance covers portions of appointment costs, a debt accumulates against the insurance company. The Head of Hospital monitors this balance and can record settlements. A full history of insurance policy records is accessible for reconciliation purposes.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -1036,7 +1037,7 @@ Tracks the running financial debt that an insurance company owes to the hospital
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -1050,7 +1051,7 @@ Tracks the running financial debt that an insurance company owes to the hospital
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Owed to one \code{Hospital} (via the insurance company's obligations)
@@ -1061,13 +1062,13 @@ Tracks the running financial debt that an insurance company owes to the hospital
 
 \par\medskip\hrule\medskip
 
-\section*{22. AiAssistant}\label{sec:22-aiassistant}
+\subsection{AiAssistant}\label{sec:22-aiassistant}
 
-\subsection*{Description}
+\textbf{Description}
 
 An AI-powered conversational assistant embedded within the platform, associated with each user's session. It provides contextual support by processing natural language queries from users and suggesting relevant quick actions within the application. The assistant is session-scoped, meaning it has context within a single user interaction. It can help patients understand appointment options, guide doctors through workflows, or assist administrators with system tasks.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -1081,7 +1082,7 @@ An AI-powered conversational assistant embedded within the platform, associated 
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -1095,7 +1096,7 @@ An AI-powered conversational assistant embedded within the platform, associated 
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Assists exactly one \code{User} (1-to-1), scoped per session
@@ -1104,13 +1105,13 @@ An AI-powered conversational assistant embedded within the platform, associated 
 
 \par\medskip\hrule\medskip
 
-\section*{23. MailService}\label{sec:23-mailservice}
+\subsection{MailService}\label{sec:23-mailservice}
 
-\subsection*{Description}
+\textbf{Description}
 
 A service class responsible for all outbound email communications sent by the system to users and doctors. It centralizes notification logic, ensuring that every significant event, account creation, appointment updates, prescriptions, shift changes, and more, triggers a standardized, well-formatted email to the relevant recipient. By encapsulating all mail-sending logic in one class, the system maintains a consistent communication layer decoupled from business logic.
 
-\subsection*{Attributes}
+\textbf{Attributes}
 
 \begin{center}
 \small
@@ -1124,7 +1125,7 @@ A service class responsible for all outbound email communications sent by the sy
 \end{tabularx}
 \end{center}
 
-\subsection*{Methods}
+\textbf{Methods}
 
 \begin{center}
 \small
@@ -1147,7 +1148,7 @@ A service class responsible for all outbound email communications sent by the sy
 \end{tabularx}
 \end{center}
 
-\subsection*{Relationships}
+\textbf{Relationships}
 
 \begin{itemize}
     \item Notifies \code{User} for account lifecycle events (verification, password reset, deletion)

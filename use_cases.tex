@@ -3737,7 +3737,7 @@ Represents a health insurance product offered by an external insurance company, 
 \begin{itemize}
     \item Records 1..N \texttt{InsurancePolicyRecord} entries (one per patient linked)
     \item Owed to an \texttt{OutstandingDebt} tracking the balance owed by the insurance company
-    \item Offers coverage across 0..N \texttt{Treatment}
+    \item Offers coverage across 1..N \texttt{Treatment}
     \item Used by \texttt{Payment} to calculate the \texttt{insuranceDiscount}
 \end{itemize}
 

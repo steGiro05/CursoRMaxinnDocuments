@@ -2942,7 +2942,8 @@ The base class for all human actors who interact with the HealthMaxxing platform
 
 \textbf{Description}
 
-A specialization of \texttt{User} representing individuals who seek and receive medical care within the system. Patients are the primary consumers of healthcare services: they book appointments for treatments, manage their insurance coverage, and accumulate a health history made up of prescriptions, examinations, and exemptions. The \texttt{fiscalCode} inherited from \texttt{User} is especially important for patients, as it is the key used by doctors to access their medical records.
+
+A specialization of \texttt{User} representing individuals who seek and receive medical care within the system. Patients are the primary consumers of healthcare services: they book appointments for treatments, manage their insurance coverage, and accumulate a health history.
 
 \textbf{Attributes}
 
@@ -2983,8 +2984,8 @@ A specialization of \texttt{User} representing individuals who seek and receive 
     \item Is the "Booked By" party for \texttt{Appointment} (1 patient to 0..N appointments)
     \item Receives \texttt{Prescription} records (issued to 0..N)
     \item Holds \texttt{Exemption} records (belongs to 0..N)
+    \item Holds \texttt{Examination} records (issued to 0..N)
     \item Linked to \texttt{InsurancePolicyRecord} entries (0..N)
-    \item Is notified by \texttt{MailService} for appointments, prescriptions, exemptions, and examinations
 \end{itemize}
 
 \par\medskip\hrule\medskip
@@ -3211,7 +3212,6 @@ Represents a physical hospital facility registered within the platform. A hospit
 \begin{itemize}
     \item Contains 1..N \texttt{Department} entities
     \item Managed by exactly one \texttt{HeadOfHospital}
-    \item Appointments are located at a hospital (via the "Located at" association on \texttt{Appointment})
     \item Owes debt tracked by \texttt{OutstandingDebt}
 \end{itemize}
 
@@ -3917,4 +3917,40 @@ A service class responsible for all outbound email communications sent by the sy
     \item Notifies about \texttt{Appointment} events (confirmation, cancellation, rescheduling)
     \item Notifies \texttt{Patient} for clinical events (prescriptions, exemptions, examinations)
 \end{itemize}
+
+\subsection{24. Examination}\label{sec:24-examination}
+
+\textbf{Description}
+
+Represents a medical examination uploaded by a doctor following a patient visit. It stores the clinical findings and any associated file, forming part of the patient's chronological medical record.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\texttt{id} & UUID & Unique identifier for the mail service instance \\ \hline
+\texttt{uploadedAt} & DateTime & The date and time when the examination was uploaded \\ \hline
+\texttt{examinationDate} & Date & The date when the examination was conducted \\ \hline
+\texttt{type} & String & The type of examination performed \\ \hline
+\texttt{result} & String & The outcome or findings of the examination \\ \hline
+\texttt{attachments} & List<File> & A list of files attached to the examination \\ \hline
+\texttt{notes} & String & Additional notes or comments about the examination \\ \hline
+\end{tabularx}
+\end{center}
+
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item It is uploaded by exactly one \texttt{Doctor}
+    \item Is issued to exactly one \texttt{Patient} 
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
 \end{document}

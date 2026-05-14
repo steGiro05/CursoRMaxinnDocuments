@@ -3442,7 +3442,7 @@ The central transactional object of the system, representing a scheduled encount
     \item Booked by exactly one \texttt{Patient}
     \item Assigned to exactly one \texttt{Doctor}
     \item Located at exactly one \texttt{Hospital} (within a \texttt{Department})
-    \item Paid via 0..N \texttt{Payment} records
+    \item Paid via 0..1 \texttt{Payment} records
     \item Displayed in the user's \texttt{Calendar}
     \item Triggers notifications via \texttt{MailService} (confirmation, cancellation, rescheduling)
 \end{itemize}
@@ -3647,7 +3647,7 @@ A formal medical document issued by a doctor to a patient, authorizing the patie
 
 \textbf{Description}
 
-Represents a discount entitlement granted to a patient, typically based on medical, social, or economic criteria (as is common in the Italian National Health Service). An exemption reduces the cost of applicable treatments by a defined percentage and is valid for a specific time period. Exemptions are treatment-specific, meaning they only apply to a designated set of treatments rather than all services.
+Represents a discount entitlement granted to a patient. An exemption reduces the cost of applicable treatments by a defined percentage and is valid for a specific time period.
 
 \textbf{Attributes}
 

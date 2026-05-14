@@ -882,7 +882,7 @@ network.} % 3: Goal
 \end{ucflow}
 
 \begin{ucextensions}
-    3a & \textbf{The System Admin cancels:}\newline 
+    3a & \textbf{The Doctor cancels:}\newline 
          1. The System aborts the creation process.\newline 
          2. Use case ends. \\ \hline
     4a & \textbf{Validity check fails:}\newline 
@@ -921,7 +921,7 @@ network.} % 3: Goal
 \end{ucflow}
 
 \begin{ucextensions}
-    3a & \textbf{The System Admin cancels:}\newline 
+    3a & \textbf{The Doctor cancels:}\newline 
          1. The System aborts the creation process.\newline 
          2. Use case ends. \\ \hline
     5a & \textbf{Validity check fails:}\newline 
@@ -1142,7 +1142,7 @@ network.} % 3: Goal
          4. Use case ends. \\ \hline
     6a & \textbf{Appointment not paid:}\newline 
          1. The System checks if the appointment was paid ahead.\newline 
-         2. If not go to main flow step 7.\\ \hline
+         2. If not go to main flow step 7 without refund.\\ \hline
 \end{ucextensions}
 
 \phantomsection
@@ -1183,7 +1183,7 @@ network.} % 3: Goal
          4. Use case ends. \\ \hline
     7a & \textbf{Appointment not paid:}\newline 
          1. The System checks if the appointment was paid ahead.\newline 
-         2. If not go to main flow step 7.\\ \hline
+         2. If not go to main flow step 8 without refund.\\ \hline
 \end{ucextensions}
 
 \phantomsection
@@ -2419,7 +2419,7 @@ Secondary: Database, Mail Service.} % 8: Actors
 \end{ucrequirements}
 \begin{ucflow}
     1 & The Doctor wants to search for clinical records. \\ \hline
-    2 & The Doctor inputs the Patient's Fiscal Code manually or the manual ID entry. \\ \hline
+    2 & The Doctor inputs the Patient's Fiscal Code manually. \\ \hline
     3 & The System validates the format of the input. \\ \hline
     4 & The System searches the Database for matching Patient records. \\ \hline
     5 & The System retrieves only the clinical information relevant to the booked visit (the Patient's full history is restricted due to privacy concerns). \\ \hline
@@ -2427,34 +2427,34 @@ Secondary: Database, Mail Service.} % 8: Actors
 \end{ucflow}
 
 \begin{ucsubvariations}
-    1a & \textbf{Barcode Scan Input:}\newline 
+    2a & \textbf{Barcode Scan Input:}\newline 
          1. The Doctor scans the barcode from the Patient's Sanitary Card instead of typing manually.\newline 
          2. The System processes and decodes the barcode to extract the Fiscal Code.\newline 
-         3. Resume at Main Flow Step 2. \\ \hline
+         3. Resume at Main Flow Step 3. \\ \hline
 \end{ucsubvariations}
 
 \begin{ucextensions}
-    1a.1 & \textbf{Barcode Not Readable:}\newline 
+    2a.a & \textbf{Barcode Not Readable:}\newline 
          1. During a barcode scan attempt, the System fails to read or decode the barcode.\newline 
-         2. The System displays an error message.\newline 
+         2. The System returns an error message.\newline 
          3. The Doctor is prompted to enter the Patient information manually.\newline 
-         4. Resume at Main Flow Step 1. \\ \hline
+         4. Resume at Main Flow Step 2. \\ \hline
     2a & \textbf{Invalid Input Format:}\newline 
          1. The System detects that the entered or scanned Fiscal Code has an invalid format. \newline 
          2. The System displays an error message. \newline 
-         3. The Doctor corrects the input and submits it again. \newline 
-         4. Resume at Main Flow Step 1. \\ \hline
+         3. The System prompts the Doctor to correct the input. \newline 
+         4. Resume at Main Flow Step 2. \\ \hline
     3a & \textbf{Patient Not Found:}\newline 
          1. The System does not find any matching Patient records. \newline 
-         2. The System displays a message indicating that the Patient is not present in the System. \newline 
+         2. The System returns an error indicating that the Patient is not present in the System. \newline 
          3. Use case ends. \\ \hline
     4a & \textbf{No Relevant Record Found:}\newline 
          1. The System detects that the Patient has no clinical records relevant to the current context or previous visits with the Doctor. \newline 
-         2. The System displays a message indicating that no clinical records are available. \newline 
+         2. The System returns an error indicating that no clinical records are available. \newline 
          3. Use case ends. \\ \hline
     4b & \textbf{Access Restricted Due to Privacy:}\newline 
          1. The System detects that access to the Patient's clinical history is restricted due to privacy settings. \newline 
-         2. The System displays an authorization message indicating that the Doctor cannot access the Patient's clinical information. \newline 
+         2. The System returns an authorization error indicating that the Doctor cannot access the Patient's clinical information. \newline 
          3. Use case ends. \\ \hline
 \end{ucextensions}
 

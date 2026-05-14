@@ -1,0 +1,1160 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- PACKAGES ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\geometry{a4paper, margin=2.5cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,
+    urlcolor=cyan,
+    citecolor=green
+}
+
+\makeatletter
+\newcommand{\code}[1]{%
+    \begingroup
+    \ttfamily
+    \edef\code@text{\detokenize{#1}}%
+    \expandafter\code@break\code@text\@nil
+    \endgroup
+}
+\def\code@break#1{%
+    \ifx#1\@nil
+    \else
+        #1\hspace{0pt}%
+        \expandafter\code@break
+    \fi
+}
+\makeatother
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{M}{>{\raggedright\arraybackslash}p{6.3cm}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{HealthMaxxin}
+\fancyhead[R]{Class Overview}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{15pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\setlist[itemize]{leftmargin=1.5em, itemsep=0.25em, topsep=0.2em}
+\setlist[enumerate]{leftmargin=2em, itemsep=0.25em, topsep=0.2em}
+
+\begin{document}
+
+\section*{HealthMaxxing System - Class Overview}
+
+This document provides a detailed description of every class in the HealthMaxxing domain model, including their responsibilities, attributes, methods, and key relationships.
+
+\par\medskip\hrule\medskip
+
+\section*{Table of Contents}
+
+\begin{enumerate}
+    \item \hyperref[sec:1-healthmaxxinsystem]{HealthMaxxinSystem}
+    \item \hyperref[sec:2-user]{User}
+    \item \hyperref[sec:3-patient]{Patient}
+    \item \hyperref[sec:4-doctor]{Doctor}
+    \item \hyperref[sec:5-headofdepartment]{HeadOfDepartment}
+    \item \hyperref[sec:6-headofhospital]{HeadOfHospital}
+    \item \hyperref[sec:7-systemadmin]{SystemAdmin}
+    \item \hyperref[sec:8-hospital]{Hospital}
+    \item \hyperref[sec:9-department]{Department}
+    \item \hyperref[sec:10-shift]{Shift}
+    \item \hyperref[sec:11-calendar]{Calendar}
+    \item \hyperref[sec:12-temporarypassword]{TemporaryPassword}
+    \item \hyperref[sec:13-appointment]{Appointment}
+    \item \hyperref[sec:14-payment]{Payment}
+    \item \hyperref[sec:15-treatment]{Treatment}
+    \item \hyperref[sec:16-treatmentcatalog]{TreatmentCatalog}
+    \item \hyperref[sec:17-prescription]{Prescription}
+    \item \hyperref[sec:18-exemption]{Exemption}
+    \item \hyperref[sec:19-insurancepolicy]{InsurancePolicy}
+    \item \hyperref[sec:20-insurancepolicyrecord]{InsurancePolicyRecord}
+    \item \hyperref[sec:21-outstandingdebt]{OutstandingDebt}
+    \item \hyperref[sec:22-aiassistant]{AiAssistant}
+    \item \hyperref[sec:23-mailservice]{MailService}
+\end{enumerate}
+
+\par\medskip\hrule\medskip
+
+\section{Classes Description}
+\subsection{HealthMaxxinSystem}\label{sec:1-healthmaxxinsystem}
+
+\textbf{Description}
+
+The central singleton class representing the entire HealthMaxxing platform. It acts as the top-level container and entry point for the system, tying together the major subsystems: the hospital network, the user base, the treatment catalog, and insurance policies. Its existence ensures that all components operate within a single, coherent system context.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{systemName} & String & The display name of the platform \\ \hline
+\code{version} & String & The current running version of the software \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Manages (1-to-1) one \code{Hospital} network entry point
+    \item Is associated with \code{User}, \code{TreatmentCatalog}, and \code{InsurancePolicy} at a system-wide level
+    \item Contains (1-to-1) one \code{SystemAdmin}
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{User}\label{sec:2-user}
+
+\textbf{Description}
+
+The base class for all human actors who interact with the HealthMaxxing platform (excluding \code{SystemAdmin}, which is a separate administrative entity). It encapsulates the shared identity and authentication data common to all user roles, patients, doctors, department heads, and hospital heads. Every user has a unique account, can authenticate, and can manage their own profile. The \code{fiscalCode} attribute plays an important role in the Italian healthcare context, serving as a universal patient identifier.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & String & Unique identifier for the user \\ \hline
+\code{firstName} & String & The user's first name \\ \hline
+\code{lastName} & String & The user's last name \\ \hline
+\code{email} & String & The user's email address, used for login and notifications \\ \hline
+\code{fiscalCode} & String & Italian tax code, used as a universal health identifier \\ \hline
+\code{passwordHash} & String & Hashed version of the user's password \\ \hline
+\code{isVerified} & Boolean & Whether the user's email address has been verified \\ \hline
+\code{createdAt} & DateTime & Timestamp of account creation \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{login()} & Authenticates the user and initiates a session \\ \hline
+\code{logout()} & Terminates the active session \\ \hline
+\code{viewProfile()} & Returns the user's profile information \\ \hline
+\code{updateProfile()} & Allows the user to modify their personal details \\ \hline
+\code{requestPasswordReset()} & Triggers a password reset flow (email with temporary credentials) \\ \hline
+\code{deleteAccount()} & Permanently removes the user account from the system \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Superclass of \code{Patient}, \code{Doctor}, \code{HeadOfDepartment}, and \code{HeadOfHospital}
+    \item Owns exactly one \code{Calendar}
+    \item May have zero or one \code{TemporaryPassword} at any given time
+    \item Is assisted by exactly one \code{AiAssistant}
+    \item Is notified by \code{MailService} for account-related events
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Patient}\label{sec:3-patient}
+
+\textbf{Description}
+
+A specialization of \code{User} representing individuals who seek and receive medical care within the system. Patients are the primary consumers of healthcare services: they book appointments for treatments, manage their insurance coverage, and accumulate a health history made up of prescriptions, examinations, and exemptions. The \code{fiscalCode} inherited from \code{User} is especially important for patients, as it is the key used by doctors to access their medical records.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{address} & String & The patient's residential address \\ \hline
+\code{dateOfBirth} & Date & The patient's date of birth \\ \hline
+\end{tabularx}
+\end{center}
+
+\emph{(Inherits all attributes from \code{User})}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{bookAppointment()} & Creates a new appointment request for a treatment \\ \hline
+\code{cancelAppointment()} & Cancels an existing appointment \\ \hline
+\code{rescheduleAppointment()} & Moves an existing appointment to a new date/time \\ \hline
+\code{registerInsurance(code: String)} & Links an insurance policy to the patient's profile using a unique code \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Is the "Booked By" party for \code{Appointment} (1 patient to 0..N appointments)
+    \item Receives \code{Prescription} records (issued to 0..N)
+    \item Holds \code{Exemption} records (belongs to 0..N)
+    \item Linked to \code{InsurancePolicyRecord} entries (0..N)
+    \item Is notified by \code{MailService} for appointments, prescriptions, exemptions, and examinations
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Doctor}\label{sec:4-doctor}
+
+\textbf{Description}
+
+A specialization of \code{User} representing licensed medical professionals registered in the system. Doctors are the primary healthcare providers: they conduct appointments, issue prescriptions and exemptions, upload examination results, and access patient records. They are assigned to one or more departments and operate according to scheduled shifts. Doctors form the basis for the more privileged \code{HeadOfDepartment} and \code{HeadOfHospital} roles.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{specialty} & String & The medical specialty of the doctor (e.g., Cardiology, Radiology) \\ \hline
+\end{tabularx}
+\end{center}
+
+\emph{(Inherits all attributes from \code{User})}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{viewAppointments()} & Retrieves the list of appointments assigned to this doctor \\ \hline
+\code{cancelAppointment(reason: String)} & Cancels an appointment and records the reason \\ \hline
+\code{createPrescription()} & Issues a new prescription for a patient \\ \hline
+\code{createExemption()} & Issues a new exemption record for a patient \\ \hline
+\code{accessPatientRecord(fiscalCode: String)} & Looks up a patient's full medical history using their fiscal code \\ \hline
+\code{uploadExamination()} & Attaches examination results to a patient's record \\ \hline
+\code{viewChronologicalReport()} & Generates a chronological view of all clinical activities \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Works at a \code{Department} (0..1 department at a time)
+    \item Assigned to \code{Appointment} records (0..N)
+    \item Issues \code{Prescription} records (0..N)
+    \item Creates \code{Exemption} records (0..N)
+    \item Schedules follow a \code{Shift} pattern (0..N)
+    \item Is notified by \code{MailService} for shift changes and credentials
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{HeadOfDepartment}\label{sec:5-headofdepartment}
+
+\textbf{Description}
+
+A specialization of \code{Doctor} with additional administrative authority scoped to a single department. The Head of Department oversees the operational management of their unit: they configure capacity, define treatment offerings, manage doctor assignments, and maintain shift patterns. They also have visibility into all appointments occurring within their department and can intervene by cancelling them when necessary.
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{assignDoctorToDepartment()} & Assigns a doctor to work within this department \\ \hline
+\code{updateDepartmentTreatments()} & Modifies the list of treatments offered by the department \\ \hline
+\code{configureDepartmentCapacity()} & Sets or updates the maximum patient capacity for the department \\ \hline
+\code{setShiftPattern(doctor: Doctor)} & Defines or updates the work shift schedule for a specific doctor \\ \hline
+\code{viewDepartmentAppointments()} & Retrieves all appointments booked within the department \\ \hline
+\code{cancelDepartmentAppointment(reason: String)} & Cancels an appointment at the department level with a stated reason \\ \hline
+\end{tabularx}
+\end{center}
+
+\emph{(Inherits all attributes and methods from \code{Doctor} and \code{User})}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Manages exactly one \code{Department} (1-to-1)
+    \item Manages doctor schedules via \code{Shift} associations
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{HeadOfHospital}\label{sec:6-headofhospital}
+
+\textbf{Description}
+
+A specialization of \code{Doctor} with the highest level of administrative authority within a specific hospital. The Head of Hospital oversees the appointment and allocation of staff at the departmental and hospital-wide level. They are also the key actor in financial management, having visibility into insurance-related debts and the ability to settle outstanding balances with insurance companies.
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{appointHeadOfDepartment(doctor: Doctor, dept: Department)} & Designates a doctor as the Head of a specific department \\ \hline
+\code{allocateDoctors(doctors: List<Doctor>, dept: Department)} & Assigns a group of doctors to a department \\ \hline
+\code{viewInsuranceDebt()} & Displays the outstanding debt owed by insurance companies \\ \hline
+\code{settleInsuranceDebt(company: InsuranceCompany, amount: Decimal)} & Records a partial or full debt settlement with an insurance company \\ \hline
+\end{tabularx}
+\end{center}
+
+\emph{(Inherits all attributes and methods from \code{Doctor} and \code{User})}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Manages exactly one \code{Hospital} (1-to-1)
+    \item Interacts with \code{OutstandingDebt} to monitor and settle insurance balances
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{SystemAdmin}\label{sec:7-systemadmin}
+
+\textbf{Description}
+
+A privileged, platform-level administrator who sits outside the \code{User} hierarchy. The System Admin is responsible for the configuration and lifecycle management of the entire platform infrastructure: creating and closing hospitals and departments, registering doctors, and managing insurance policies and treatments globally. This role is typically held by platform operators rather than healthcare professionals and has no patient-facing responsibilities. It has its own separate authentication mechanism.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier for the admin account \\ \hline
+\code{username} & String & The login username \\ \hline
+\code{passwordHash} & String & Hashed password for admin authentication \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{createHospital()} & Registers a new hospital in the system \\ \hline
+\code{editHospital()} & Updates hospital details \\ \hline
+\code{closeHospital()} & Marks a hospital as closed and inactive \\ \hline
+\code{createDepartment()} & Creates a new department within a hospital \\ \hline
+\code{editDepartment()} & Modifies department attributes \\ \hline
+\code{closeDepartment()} & Deactivates a department \\ \hline
+\code{registerDoctor()} & Adds a new doctor to the platform \\ \hline
+\code{assignDoctorToHospital()} & Associates a doctor with a specific hospital \\ \hline
+\code{appointHeadOfHospital(doctor: Doctor, hospital: Hospital)} & Designates a doctor as the Head of a Hospital \\ \hline
+\code{createInsurancePolicy()} & Adds a new insurance policy to the system \\ \hline
+\code{editInsurancePolicy()} & Updates an existing insurance policy \\ \hline
+\code{deactivateInsurancePolicy()} & Disables an insurance policy \\ \hline
+\code{generateInsuranceCode(policy: InsurancePolicy, patient: Patient)} & Generates a unique insurance code linking a policy to a patient \\ \hline
+\code{createTreatment()} & Adds a new treatment to the global catalog \\ \hline
+\code{editTreatment()} & Modifies an existing treatment \\ \hline
+\code{deactivateTreatment()} & Removes a treatment from active availability \\ \hline
+\code{adminLogin()} & Authenticates the system administrator \\ \hline
+\code{adminLogout()} & Terminates the admin session \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Operates at the \code{HealthMaxxinSystem} level (1-to-1)
+    \item Manages \code{Hospital}, \code{Department}, \code{Doctor}, \code{InsurancePolicy}, and \code{Treatment} lifecycle
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Hospital}\label{sec:8-hospital}
+
+\textbf{Description}
+
+Represents a physical hospital facility registered within the platform. A hospital is the top-level organizational unit in the care delivery hierarchy, containing multiple departments and employing doctors. Its status lifecycle (active/closed) is managed by the \code{SystemAdmin}. Each hospital is headed by a \code{HeadOfHospital} and can accumulate insurance-related debt tracked via \code{OutstandingDebt}.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{name} & String & Official name of the hospital \\ \hline
+\code{address} & String & Physical address of the facility \\ \hline
+\code{status} & HospitalStatus & Current operational status (e.g., ACTIVE, CLOSED) \\ \hline
+\code{createdAt} & DateTime & Timestamp of registration in the system \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{close()} & Transitions the hospital to a closed state \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Contains 1..N \code{Department} entities
+    \item Managed by exactly one \code{HeadOfHospital}
+    \item Appointments are located at a hospital (via the "Located at" association on \code{Appointment})
+    \item Owes debt tracked by \code{OutstandingDebt}
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Department}\label{sec:9-department}
+
+\textbf{Description}
+
+Represents a specialized medical unit within a hospital (e.g., Cardiology, Oncology, Radiology). A department defines what treatments it offers, how many patients it can handle (capacity), and which doctors are working within it. Its operational state is managed through status flags, and it can be closed when no longer active. Departments are the direct context in which appointments and clinical activities take place.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{name} & String & Name of the department (e.g., "Cardiology") \\ \hline
+\code{capacity} & Integer & Maximum number of patients/appointments the department can handle \\ \hline
+\code{status} & DepartmentStatus & Current operational status (e.g., ACTIVE, CLOSED) \\ \hline
+\code{createdAt} & DateTime & Timestamp of creation \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{close()} & Transitions the department to a closed/inactive state \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Belongs to exactly one \code{Hospital}
+    \item Managed by exactly one \code{HeadOfDepartment}
+    \item Offers 0..N \code{Treatment} types
+    \item Houses 0..N \code{Doctor} workers
+    \item Is the site of 0..N \code{Appointment} records
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Shift}\label{sec:10-shift}
+
+\textbf{Description}
+
+Defines a recurring working time block for a specific doctor. A shift is characterized by a day of the week and a time window, and is valid within a defined date range. This allows the system to model part-time schedules, rotations, and temporary duty assignments. The validity check ensures the system only considers shifts that fall within their active period when computing doctor availability for appointment booking.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{startTime} & Time & The time the shift begins \\ \hline
+\code{endTime} & Time & The time the shift ends \\ \hline
+\code{dayOfWeek} & DayOfWeek & The day of the week this shift applies to \\ \hline
+\code{validFrom} & Date & Start date of this shift's validity period \\ \hline
+\code{validUntil} & Date & End date of this shift's validity period \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{isValid()} & Returns true if the current date falls within the validFrom–validUntil range \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Schedules 0..N \code{Doctor} working patterns (each doctor has 0..N shifts)
+    \item Set by \code{HeadOfDepartment} via \code{setShiftPattern()}
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Calendar}\label{sec:11-calendar}
+
+\textbf{Description}
+
+A personal scheduling container owned by each \code{User}. It aggregates all appointments associated with that user and provides a secure export mechanism for integration with external calendar applications (e.g., Google Calendar, iCal). The export is token-protected and time-limited to prevent unauthorized access.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{exportToken} & String & A secure token for external calendar export/sync \\ \hline
+\code{tokenExpiresAt} & DateTime & Expiry timestamp of the export token \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{generateExportToken()} & Creates or refreshes the export token with a new expiry date \\ \hline
+\code{getAppointments()} & Returns the list of all appointments associated with this calendar \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Owned by exactly one \code{User} (1-to-1)
+    \item Displays 0..N \code{Appointment} records
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{TemporaryPassword}\label{sec:12-temporarypassword}
+
+\textbf{Description}
+
+A short-lived credential object generated during the password reset flow or when a new doctor account is created by the \code{SystemAdmin}. It ensures that users can gain initial or recovery access to the system without exposing their permanent password. The system enforces expiry to minimize the security window of exposure.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{value} & String & The plaintext or hashed temporary password value \\ \hline
+\code{createdAt} & DateTime & Timestamp when the temporary password was generated \\ \hline
+\code{expiresAt} & DateTime & Timestamp after which the password is no longer valid \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{isExpired()} & Returns true if the current time has passed \code{expiresAt} \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Belongs to zero or one \code{User} (a user either has an active temporary password or does not)
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Appointment}\label{sec:13-appointment}
+
+\textbf{Description}
+
+The central transactional object of the system, representing a scheduled encounter between a patient and a doctor for a specific treatment in a department. An appointment has a well-defined lifecycle (e.g., PENDING, CONFIRMED, CANCELLED, COMPLETED) and can be created, rescheduled, or cancelled by various actors. Cancellation always requires a reason for audit purposes. Each appointment is associated with a \code{Payment}.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{date} & Date & The scheduled date of the appointment \\ \hline
+\code{time} & Time & The scheduled time of the appointment \\ \hline
+\code{status} & AppointmentStatus & Current status (e.g., PENDING, CONFIRMED, CANCELLED, COMPLETED) \\ \hline
+\code{cancellationReason} & String & The reason provided when the appointment is cancelled \\ \hline
+\code{createdAt} & DateTime & Timestamp of creation \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{create()} & Initializes and persists a new appointment \\ \hline
+\code{reschedule(newDate: Date)} & Moves the appointment to a new date \\ \hline
+\code{cancel(reason: String)} & Cancels the appointment and stores the reason \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Booked by exactly one \code{Patient}
+    \item Assigned to exactly one \code{Doctor}
+    \item Located at exactly one \code{Hospital} (within a \code{Department})
+    \item Paid via 0..N \code{Payment} records
+    \item Displayed in the user's \code{Calendar}
+    \item Triggers notifications via \code{MailService} (confirmation, cancellation, rescheduling)
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Payment}\label{sec:14-payment}
+
+\textbf{Description}
+
+Records the financial transaction associated with a single appointment. The payment model supports a layered discount structure: a base price is defined by the treatment, which can be reduced by applicable exemptions and/or insurance coverage, yielding a final amount. The class supports multiple payment methods and tracks transaction status (e.g., PENDING, COMPLETED, REFUNDED). Refunds are handled for appointments that are cancelled after payment.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{basePrice} & Decimal & The original cost of the treatment before discounts \\ \hline
+\code{exemptionDiscount} & Decimal & Amount deducted due to applied exemptions \\ \hline
+\code{insuranceDiscount} & Decimal & Amount covered by insurance policies \\ \hline
+\code{finalAmount} & Decimal & The net amount charged to the patient \\ \hline
+\code{paymentMethod} & PaymentMethod & The method used (e.g., CREDIT\_CARD, BANK\_TRANSFER) \\ \hline
+\code{paidAt} & DateTime & Timestamp when payment was completed \\ \hline
+\code{status} & PaymentStatus & Current payment state (e.g., PENDING, PAID, REFUNDED) \\ \hline
+\code{transactionId} & String & External transaction reference for reconciliation \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{process()} & Executes the payment transaction \\ \hline
+\code{refund()} & Reverses the payment and issues a refund \\ \hline
+\code{applyExemptions(exemptions: List<Exemption>)} & Calculates and applies exemption discounts to the base price \\ \hline
+\code{applyInsurance(policies: List<InsurancePolicy>)} & Calculates and applies insurance coverage discounts \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Associated with one \code{Appointment} (via "Paid via")
+    \item Uses 0..N \code{Exemption} records for discount calculation
+    \item Uses 0..N \code{InsurancePolicy} records for coverage calculation
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Treatment}\label{sec:15-treatment}
+
+\textbf{Description}
+
+Represents a specific medical procedure or service that can be offered by departments and booked by patients as appointments. Each treatment has a defined base price, a required room type, and the type of medical professional needed to perform it. Treatments can be deactivated to remove them from availability without deleting their historical records, preserving audit integrity.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{name} & String & Name of the treatment (e.g., "ECG", "Blood Test") \\ \hline
+\code{roomType} & String & Type of room required (e.g., "Operating Room", "Consultation Room") \\ \hline
+\code{specializedFigure} & String & The medical role required to perform the treatment \\ \hline
+\code{basePrice} & Decimal & The standard cost of the treatment \\ \hline
+\code{isActive} & Boolean & Whether the treatment is currently available for booking \\ \hline
+\code{deactivatedAt} & DateTime & Timestamp of deactivation, if applicable \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{activate()} & Re-enables a previously deactivated treatment \\ \hline
+\code{deactivate()} & Marks the treatment as inactive and records the deactivation time \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Catalogued in one \code{TreatmentCatalog} (via "Catalogs")
+    \item Offered by 0..N \code{Department} entities
+    \item Referenced by \code{Prescription} (prescribes 0..N treatments)
+    \item Referenced by \code{Exemption} (applicable to specific treatments)
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{TreatmentCatalog}\label{sec:16-treatmentcatalog}
+
+\textbf{Description}
+
+A registry that aggregates all treatments defined in the system. The catalog serves as the authoritative source of available medical services, providing methods to query active treatments and manage their lifecycle. It acts as an intermediary between the \code{SystemAdmin} (who manages the global treatment list) and the departments that offer subsets of those treatments.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{addTreatment()} & Registers a new treatment in the catalog \\ \hline
+\code{getActiveTreatments()} & Returns all treatments where \code{isActive = true} \\ \hline
+\code{deactivateTreatment(treatment: Treatment)} & Deactivates a specific treatment within the catalog \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Catalogs 1..N \code{Treatment} entries
+    \item Associated with the \code{HealthMaxxinSystem} at a global level
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Prescription}\label{sec:17-prescription}
+
+\textbf{Description}
+
+A formal medical document issued by a doctor to a patient, authorizing the patient to receive a specific treatment or medication. Prescriptions have a validity window and a fulfillment flag, enabling the system to track whether they have been acted upon. Expired or already-fulfilled prescriptions are distinguishable, preventing misuse.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{issueDate} & Date & The date the prescription was created \\ \hline
+\code{expirationDate} & Date & The date after which the prescription is no longer valid \\ \hline
+\code{isFulfilled} & Boolean & Whether the prescription has been used/acted upon \\ \hline
+\code{notes} & String & Optional clinical notes from the issuing doctor \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{markFulfilled()} & Sets \code{isFulfilled} to true once the prescription has been used \\ \hline
+\code{isExpired()} & Returns true if the current date is past \code{expirationDate} \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Issued to exactly one \code{Patient}
+    \item Issued by exactly one \code{Doctor}
+    \item Prescribes 1..N \code{Treatment} entries
+    \item Triggers a notification to the patient via \code{MailService}
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{Exemption}\label{sec:18-exemption}
+
+\textbf{Description}
+
+Represents a discount entitlement granted to a patient, typically based on medical, social, or economic criteria (as is common in the Italian National Health Service). An exemption reduces the cost of applicable treatments by a defined percentage and is valid for a specific time period. Exemptions are treatment-specific, meaning they only apply to a designated set of treatments rather than all services.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{discountPercentage} & Decimal & The percentage reduction applied to the base price \\ \hline
+\code{validFrom} & Date & Start date of the exemption's validity \\ \hline
+\code{validUntil} & Date & End date of the exemption's validity \\ \hline
+\code{notes} & String & Clinical or administrative notes about the exemption \\ \hline
+\code{applicableTreatments} & List\textless{}Treatment\textgreater{} & The set of treatments to which this exemption applies \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{isValid()} & Returns true if the current date falls within the validity window \\ \hline
+\code{applyDiscount(basePrice: Decimal)} & Computes and returns the discounted price after applying the exemption percentage \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Belongs to exactly one \code{Patient}
+    \item Created by exactly one \code{Doctor}
+    \item Applicable to 1..N \code{Treatment} types
+    \item Used by \code{Payment} to calculate the \code{exemptionDiscount}
+    \item Triggers a notification to the patient via \code{MailService}
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{InsurancePolicy}\label{sec:19-insurancepolicy}
+
+\textbf{Description}
+
+Represents a health insurance product offered by an external insurance company, registered in the system by the \code{SystemAdmin}. A policy defines the coverage conditions and the discount percentage it provides on treatments. Policies can be linked to individual patients via \code{InsurancePolicyRecord} entries, allowing the system to automatically apply insurance discounts during payment. Policies can be deactivated to prevent new linkages while preserving historical records.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{name} & String & Display name of the insurance product \\ \hline
+\code{uniqueIdentifier} & String & A system-wide unique reference code for the policy \\ \hline
+\code{coverageConditions} & String & Description of the conditions under which coverage applies \\ \hline
+\code{discountPercentage} & Decimal & The percentage of treatment costs covered by this policy \\ \hline
+\code{isActive} & Boolean & Whether the policy is currently available for new enrolments \\ \hline
+\code{companyName} & String & The name of the insurance company offering this policy \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{deactivate()} & Marks the policy as inactive \\ \hline
+\code{generateCode()} & Generates a new unique enrolment code for linking the policy to a patient \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Records 1..N \code{InsurancePolicyRecord} entries (one per patient linked)
+    \item Owed to an \code{OutstandingDebt} tracking the balance owed by the insurance company
+    \item Offers coverage across 0..N \code{Department}-\code{Treatment} combinations
+    \item Used by \code{Payment} to calculate the \code{insuranceDiscount}
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{InsurancePolicyRecord}\label{sec:20-insurancepolicyrecord}
+
+\textbf{Description}
+
+A join entity that captures the specific instance of an insurance policy being linked to a patient. It records when the policy was registered, whether it has been consumed (used for a payment), and the total financial amount it covered. This provides a granular audit trail of insurance usage per patient and per policy.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{uniqueCode} & String & The unique code used by the patient to register this policy \\ \hline
+\code{linkedAt} & DateTime & Timestamp when the patient registered the policy \\ \hline
+\code{consumedAt} & DateTime & Timestamp when the insurance was applied to a payment \\ \hline
+\code{totalAmountCovered} & Decimal & The cumulative monetary amount covered by this policy record \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Records the use of exactly one \code{InsurancePolicy}
+    \item Belongs to one \code{Patient}
+    \item Forms part of the history tracked by \code{OutstandingDebt}
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{OutstandingDebt}\label{sec:21-outstandingdebt}
+
+\textbf{Description}
+
+Tracks the running financial debt that an insurance company owes to the hospital system as a result of insurance discounts applied to patient payments. As insurance covers portions of appointment costs, a debt accumulates against the insurance company. The Head of Hospital monitors this balance and can record settlements. A full history of insurance policy records is accessible for reconciliation purposes.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier \\ \hline
+\code{totalBalance} & Decimal & The current total amount owed by the insurance company \\ \hline
+\code{lastUpdated} & DateTime & Timestamp of the most recent balance update \\ \hline
+\code{companyName} & String & The name of the insurance company that owes the debt \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{settle(amount: Decimal)} & Records a (partial or full) payment from the insurance company, reducing the balance \\ \hline
+\code{getHistory()} & Returns the list of all \code{InsurancePolicyRecord} entries that contributed to this debt \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Owed to one \code{Hospital} (via the insurance company's obligations)
+    \item Has a history of 1..N \code{InsurancePolicyRecord} entries
+    \item Linked to one \code{InsurancePolicy}
+    \item Managed by \code{HeadOfHospital} via \code{viewInsuranceDebt()} and \code{settleInsuranceDebt()}
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{AiAssistant}\label{sec:22-aiassistant}
+
+\textbf{Description}
+
+An AI-powered conversational assistant embedded within the platform, associated with each user's session. It provides contextual support by processing natural language queries from users and suggesting relevant quick actions within the application. The assistant is session-scoped, meaning it has context within a single user interaction. It can help patients understand appointment options, guide doctors through workflows, or assist administrators with system tasks.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier for the assistant instance \\ \hline
+\code{sessionId} & String & Identifier tying the assistant to the current user session \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{processQuery(query: String)} & Accepts a natural language input and returns a contextual response \\ \hline
+\code{suggestActions()} & Returns a list of \code{QuickAction} objects representing recommended next steps for the user \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Assists exactly one \code{User} (1-to-1), scoped per session
+    \item Associated with the \code{HealthMaxxinSystem} at a platform level
+\end{itemize}
+
+\par\medskip\hrule\medskip
+
+\subsection{MailService}\label{sec:23-mailservice}
+
+\textbf{Description}
+
+A service class responsible for all outbound email communications sent by the system to users and doctors. It centralizes notification logic, ensuring that every significant event, account creation, appointment updates, prescriptions, shift changes, and more, triggers a standardized, well-formatted email to the relevant recipient. By encapsulating all mail-sending logic in one class, the system maintains a consistent communication layer decoupled from business logic.
+
+\textbf{Attributes}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{3.3cm}|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Attribute} & \textbf{Type} & \textbf{Description} \\ \hline
+\code{id} & UUID & Unique identifier for the mail service instance \\ \hline
+\code{senderAddress} & String & The "from" email address used for all outgoing messages \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Methods}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|M|Y|}
+\hline
+\rowcolor{gray!20}
+\textbf{Method} & \textbf{Description} \\ \hline
+\code{sendVerificationEmail(user: User)} & Sends an email verification link to a newly registered user \\ \hline
+\code{sendPasswordReset(user: User)} & Sends a password reset link or temporary credentials \\ \hline
+\code{sendCredentials(doctor: Doctor)} & Sends initial login credentials to a newly registered doctor \\ \hline
+\code{sendAppointmentConfirmation(appointment: Appointment)} & Confirms a successfully booked appointment \\ \hline
+\code{sendCancellationNotice(appointment: Appointment)} & Notifies relevant parties of an appointment cancellation \\ \hline
+\code{sendRescheduleNotice(appointment: Appointment)} & Informs the patient and doctor of an appointment rescheduling \\ \hline
+\code{sendPrescriptionNotice(patient: Patient)} & Alerts a patient that a new prescription has been issued to them \\ \hline
+\code{sendExemptionNotice(patient: Patient)} & Alerts a patient that a new exemption has been granted \\ \hline
+\code{sendExaminationNotice(patient: Patient)} & Notifies a patient that new examination results have been uploaded \\ \hline
+\code{sendShiftNotice(doctor: Doctor)} & Informs a doctor of a new or updated shift assignment \\ \hline
+\code{sendAccountDeletionConfirmation(user: User)} & Sends a final confirmation email when a user deletes their account \\ \hline
+\end{tabularx}
+\end{center}
+
+\textbf{Relationships}
+
+\begin{itemize}
+    \item Notifies \code{User} for account lifecycle events (verification, password reset, deletion)
+    \item Notifies \code{Doctor} for credential delivery and shift updates
+    \item Notifies about \code{Appointment} events (confirmation, cancellation, rescheduling)
+    \item Notifies \code{Patient} for clinical events (prescriptions, exemptions, examinations)
+\end{itemize}
+
+\end{document}

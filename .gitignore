@@ -56,4 +56,4 @@ _minted*
 Thumbs.db
 
 # Generated PDFs (opzionale)
-# *.pdf
+*.pdf

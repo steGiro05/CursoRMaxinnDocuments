@@ -1,0 +1,2154 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- PACKETS ---
+\usepackage{graphicx} 
+\usepackage{geometry}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{booktabs}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{fancyhdr}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,     % Enables link coloring
+    linkcolor=black,      % Color for internal links (like \nameref or \ref)
+    filecolor=magenta,   % Color for local file links
+    urlcolor=cyan,       % Color for web links (URLs)
+    citecolor=green      % Color for bibliography citations
+}
+
+% --- SETUP HEADER E FOOTER ---
+% --- DEFINIZIONE VERSIONAMENTO ---
+\newcommand{\docversion}{1.0} % <-- Ho impostato la versione qui a 0.1
+\pagestyle{fancy}
+\fancyhf{} % Clean defaults
+\fancyhead[L]{HealthMaxxin} % Top left
+\fancyhead[R]{Deliverable 2 -- Use Cases Analysis} % Top right
+\fancyfoot[C]{\thepage} % Page numbering
+\renewcommand{\headrulewidth}{0.4pt} % Header line
+\setlength{\headheight}{15pt}
+
+% --- TEMPLATE PER USE CASES ---
+% Comando per la tabella riassuntiva (9 argomenti)
+\newcommand{\usecaseheader}[9]{
+    \vspace{0.5cm}
+    \noindent
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabularx}{\textwidth}{|>{\columncolor{gray!20}\bfseries}p{4.5cm}|X|}
+    \hline
+    \rowcolor{blue!10}
+    \multicolumn{2}{|c|}{\textbf{USE CASE #1: #2}} \\ \hline
+    Goal in Context & #3 \\ \hline
+    Scope \& Level & #4 \\ \hline
+    Preconditions & #5 \\ \hline
+    Success End Condition & #6 \\ \hline
+    Failed End Condition & #7 \\ \hline
+    Primary, Secondary Actors & #8 \\ \hline
+    Trigger & #9 \\ \hline
+    \end{tabularx}
+    \par\vspace{0.2cm}
+}
+
+% Ambiente per la Description (Flusso principale)
+\newenvironment{ucflow}{
+    \noindent\textbf{DESCRIPTION} \par \vspace{0.1cm}
+    \noindent
+    \renewcommand{\arraystretch}{1.3}
+    \tabularx{\textwidth}{|>{\centering\arraybackslash}p{1.2cm}|X|}
+    \hline
+    \rowcolor{gray!30}
+    \textbf{Step} & \textbf{Action} \\ \hline
+}{
+    \endtabularx
+    \par\vspace{0.3cm}
+}
+
+% Ambiente per le Extensions
+\newenvironment{ucextensions}{
+    \noindent\textbf{EXTENSIONS} \par \vspace{0.1cm}
+    \noindent
+    \renewcommand{\arraystretch}{1.3}
+    \tabularx{\textwidth}{|>{\centering\arraybackslash}p{1.2cm}|X|}
+    \hline
+    \rowcolor{gray!30}
+    \textbf{Step} & \textbf{Branching Action} \\ \hline
+}{
+    \endtabularx
+    \par\vspace{0.3cm}
+}
+
+% Ambiente per le Sub-Variations
+\newenvironment{ucsubvariations}{
+    \noindent\textbf{SUB-VARIATIONS} \par \vspace{0.1cm}
+    \noindent
+    \renewcommand{\arraystretch}{1.3}
+    \tabularx{\textwidth}{|>{\centering\arraybackslash}p{1.2cm}|X|}
+    \hline
+    \rowcolor{gray!30}
+    \textbf{Step} & \textbf{Branching Action} \\ \hline
+}{
+    \endtabularx
+    \par\vspace{0.5cm}
+}
+
+% Ambiente per i Functional Requirements (FR) collegati
+\newenvironment{ucrequirements}{
+    \noindent\textbf{RELATED FUNCTIONAL / NON-FUNCTIONAL REQUIREMENTS} \par \vspace{0.1cm}
+    \noindent
+    \renewcommand{\arraystretch}{1.3}
+    \tabularx{\textwidth}{|>{\centering\arraybackslash\bfseries}p{2.5cm}|X|}
+    \hline
+    \rowcolor{gray!30}
+    \textbf{FR ID} & \textbf{Title} \\ \hline
+}{
+    \endtabularx
+    \par\vspace{0.5cm}
+}
+
+\setcounter{secnumdepth}{0}
+\begin{document}
+
+% --- TITLE PAGE ---
+\begin{titlepage}
+    \centering
+    \vspace*{2cm} 
+    
+    % --- PROJECT LOGO ---
+    \includegraphics[width=0.35\textwidth]{Logo_HealthMaxxin.png} 
+    
+    \vspace{2.5cm} 
+    
+    % --- DOCUMENT TYPE ---
+    {\scshape\Large Use Cases\par}
+    \vspace{0.2cm}
+    {\large Version \docversion \par} % <-- Ora usa la variabile automatica!
+    \vspace{0.5cm}
+    
+    % --- PROJECT TITLE ---
+    {\Large\itshape HealthMaxxin\par}
+    
+    \vfill 
+    
+    % --- AUTHORS ---
+    {\Large \textbf{Authors:} Federico Dapr\`{a}, Giorge Ribic, Luca Galli, Stefano Giroletti\par}
+    {\Large \textbf{Group:} Cursor Maxxing\par}
+    \vspace{0.5cm}
+    
+\end{titlepage}
+
+% --- TABLE OF CONTENTS ---
+\tableofcontents
+\newpage
+
+\section{Use Cases}
+\phantomsection
+\addcontentsline{toc}{subsection}{UC1 Create Treatment / Hospital / Department}
+\hypertarget{UC1}{}
+\usecaseheader
+  {UC1}  % 1: ID
+  {Create Treatment / Hospital / Department} % 2: Titolo
+  {To allow the System Admin to create basic entities for hospital structures.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a system admin.} % 5: Preconditions
+  {A new Treatment / Hospital / Department is created.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: System Admin. Secondary: Database.} % 8: Actors
+  {The System Admin asks the system to create a new Treatment / Hospital / Department.} % 9: Trigger
+\begin{ucrequirements}
+    FR0.1 & Treatment creation \\ \hline
+    FR1.1 & Hospital creation \\ \hline
+    FR1.4 & Department creation \\ \hline
+    NFR4 & Scalability and capacity \\ \hline   
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System Admin asks the system to create a new Treatment / Hospital / Department. \\ \hline
+    2 & The System Admin fills in the required fields. \\ \hline
+    3 & The System Admin saves. \\ \hline
+    4 & The system checks if the "name" field is not duplicate. \\ \hline
+    5 & The system creates the new Treatment / Hospital / Department in the database. \\ \hline
+    6 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the creation process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Validity check fails:}\newline 
+         1. The system identifies a duplicated name.\newline 
+         2. The system returns an error.\newline 
+         3. Go to main flow step 2 to perform a correction. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC2 Create Insurance Policy}
+\hypertarget{UC2}{}
+\usecaseheader
+  {UC2}  % 1: ID
+  {Create Insurance Policy} % 2: Titolo
+  {To enable the System Administrator to create new insurance policies shared across all facilities in the healthcare
+network.} % 3: Goal
+  {Scope: Global Insurance Policy handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a system admin.} % 5: Preconditions
+  {A new Insurance Policy is created.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: System Admin. Secondary: Database.} % 8: Actors
+  {The System Admin asks the system to create a new Insurance Policy.} % 9: Trigger
+\begin{ucrequirements}
+    FR9.1 & Create insurance policy \\ \hline
+    NFR4 & Scalability and capacity \\ \hline     
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System Admin asks the system to create a new Insurance Policy. \\ \hline
+    2 & The System Admin fills in the required fields. \\ \hline
+    3 & The System Admin saves. \\ \hline
+    4 & The system checks if the discount percentage is a valid amount. \\ \hline
+    5 & The system creates the new Insurance Policy in the database. \\ \hline
+    6 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the creation process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Validity check fails:}\newline 
+         1. The system identifies an invalid amount for the discount percentage.\newline 
+         2. The system returns an error.\newline 
+         3. Go to main flow step 2 to perform a correction. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC3 Create Prescription / Exemption}
+\hypertarget{UC3}{}
+\usecaseheader
+  {UC3}  % 1: ID
+  {Create Prescription / Exemption} % 2: Titolo
+  {To enable a doctor to create a new Prescription / Exemption for a specific patient.} % 3: Goal
+  {Scope: Prescriptions / Exemptions. Level: Primary.} % 4: Scope
+  {The doctor is logged into the system.} % 5: Preconditions
+  {A new Prescription / Exemption is created and linked to the patient's profile.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: Doctor. Secondary: Patient, Database, Mail Service.} % 8: Actors
+  {The doctor asks the system to create a new Prescription / Exemption.} % 9: Trigger
+\begin{ucrequirements}
+    FR29 & Prescription creation \\ \hline
+    FR30 & Exemption creation \\ \hline
+    NFR4 & Scalability and capacity \\ \hline     
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The doctor asks the system to create a new Prescription / Exemption. \\ \hline
+    2 & The doctor fills in the required fields, including the selection of the patient to whom the Prescription / Exemption applies. \\ \hline
+    3 & The doctor saves. \\ \hline
+    4 & The system verifies that the selected patient is valid. \\ \hline    
+    5 & The system creates the new Prescription / Exemption in the database. \\ \hline
+    6 & The system returns a success message. \\ \hline
+    7 & The patient is notified via email that the Prescription / Exemption has been linked to their account. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the creation process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Validity check fails:}\newline 
+         1. The system identifies an invalid value for the patient field.\newline 
+         2. The system returns an error.\newline 
+         3. Go to main flow step 2 to perform a correction. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC4 Upload examination}
+\hypertarget{UC4}{}
+\usecaseheader
+  {UC4}  % 1: ID
+  {Upload examination } % 2: Titolo
+  {To allow a doctor to upload and register a completed medical examination, including diagnosis, documents, and notes.} % 3: Goal
+  {Scope: Clinical Records Management. Level: Primary.} % 4: Scope
+  {A medical examination has been performed and the doctor is logged into the system..} % 5: Preconditions
+  {The examination is successfully uploaded and becomes visible in the patient’s dashboard.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: Doctor. Secondary: Patient, Database, Mail Service.} % 8: Actors
+  {The doctor asks the system to upload an examination to the patient clinical record.} % 9: Trigger
+\begin{ucrequirements}
+    FR33 & Examination upload to patient clinical record \\ \hline
+    NFR4 & Scalability and capacity \\ \hline     
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The doctor asks the system to upload an examination to the patient clinical record. \\ \hline
+    2 & The doctor fills in the required fields, including the selection of the patient to whom the Prescription / Exemption applies. \\ \hline
+    3 & The doctor appends as much attachments as wanted. \\ \hline
+    4 & The doctor saves. \\ \hline
+    5 & The system perform field validations. \\ \hline    
+    6 & The system saves the examination record in the patient clinical record. \\ \hline
+    7 & The system returns a success message. \\ \hline
+    8 & The patient is notified via email that a new examination has been uploaded to their record \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the creation process.\newline 
+         2. Use case ends. \\ \hline
+    5a & \textbf{Validity check fails:}\newline 
+         1. The system identifies an invalid value for the patient field.\newline 
+         2. The system returns an error.\newline 
+         3. Go to main flow step 2 to perform a correction. \\ \hline
+    5b & \textbf{Invalid attachment type:}\newline 
+         1. The system identifies an invalid attachment type.\newline 
+         2. The system returns an error.\newline 
+         3. Go to main flow step 3 to perform a correction. \\ \hline
+        
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC5 Edit Treatment / Hospital / Department}
+\hypertarget{UC5}{}
+\usecaseheader
+  {UC5}  % 1: ID
+  {Edit Treatment / Hospital / Department} % 2: Titolo
+  {To allow the System Admin to edit basic entities for hospital structure.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a system admin.} % 5: Preconditions
+  {An existing Treatment / Hospital / Department is edited.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: System Admin. Secondary: Database.} % 8: Actors
+  {The System Admin asks the system to create a new Treatment / Hospital / Department.} % 9: Trigger
+\begin{ucrequirements}
+    FR0.2 & Treatment editing \\ \hline
+    FR1.2 & Hospital editing \\ \hline
+    FR1.5 & Department editing \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System Admin asks the system to edit an existing Treatment / Hospital / Department. \\ \hline
+    2 & The System Admin fills in the required fields. \\ \hline
+    3 & The System Admin saves. \\ \hline
+    4 & The system checks if the "name" field is not duplicate. \\ \hline
+    5 & The system edits the Treatment / Hospital / Department in the database. \\ \hline
+    6 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the editing process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Validity check fails:}\newline 
+         1. The system identifies a duplicated name.\newline 
+         2. The system returns an error.\newline 
+         3. Go to main flow step 2 to perform a correction. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC6 Update Insurance Policy}
+\hypertarget{UC6}{}
+\usecaseheader
+  {UC6}  % 1: ID
+  {Update Insurance Policy} % 2: Titolo
+  {To enable the System Administrator to edit an existing insurance policies shared across all facilities in the healthcare
+network.} % 3: Goal
+  {Scope: Global Insurance Policy handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a system admin.} % 5: Preconditions
+  {An existing Insurance Policy is edited.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: System admin. Secondary: Database.} % 8: Actors
+  {The System Admin asks the system to edit an existing Insurance Policy.} % 9: Trigger
+\begin{ucrequirements}
+        FR9.3 & Update insurance policy \\ \hline 
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System Admin asks the system to update an existing Insurance Policy. \\ \hline
+    2 & The System Admin fills in the required fields. \\ \hline
+    3 & The System Admin saves. \\ \hline
+    4 & The system checks if the discount percentage is a valid amount. \\ \hline
+    5 & The system updates the Insurance Policy in the database. \\ \hline
+    6 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the editing process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Validity check fails:}\newline 
+         1. The system identifies an invalid amount for the discount percentage.\newline 
+         2. The system returns an error.\newline 
+         3. Go to main flow step 2 to perform a correction. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC7 Update User Profile}
+\hypertarget{UC7}{}
+\usecaseheader
+  {UC7}  % 1: ID
+  {Update User Profile} % 2: Titolo
+  {To provide a Registered user with to modify their account information.} % 3: Goal
+  {Scope: users account management. Level: Primary.} % 4: Scope
+  {The user is logged in.} % 5: Preconditions
+  {The account information is successfully updated in the sys-
+tem.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: User. Secondary: Database.} % 8: Actors
+  {The authenticated user wants to update their account.} % 9: Trigger
+\begin{ucrequirements}
+    FR13.2 & Update user profile \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The authenticated user wants to update their account. \\ \hline
+    2 & The user edits some fields. \\ \hline
+    3 & The user saves. \\ \hline
+    4 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The user cancels:}\newline 
+         1. The system aborts the editing process.\newline 
+         2. Use case ends. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC8 Deactivate or close Treatment / Hospital / Department}
+\hypertarget{UC8}{}
+\usecaseheader
+  {UC8}  % 1: ID
+  {Deactivate or close Treatment / Hospital / Department} % 2: Titolo
+  {To allow the System Admin to deactivate or close basic entities for hospital structure.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a system admin.} % 5: Preconditions
+  {An existing Treatment / Hospital / Department is deactivated or closed.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: System Admin. Secondary: Database.} % 8: Actors
+  {The System Admin asks the system to deactivate or close a new Treatment / Hospital / Department.} % 9: Trigger
+\begin{ucrequirements}
+    FR0.3 & Treatment deactivation \\ \hline
+    FR1.3 & Hospital closure \\ \hline
+    FR1.6 & Department closure \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System Admin asks the system to deactivate or close an existing Treatment / Hospital / Department. \\ \hline
+    2 & The System asks for confirmation. \\ \hline
+    3 & The System Admin confirms. \\ \hline
+    4 & The system marks the Treatment / Hospital / Department as deactivated or closed. \\ \hline
+    5 & The system records date and time of deactivation / closure. \\ \hline
+    6 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the deactivation / closing process.\newline 
+         2. Use case ends. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC9 Deactivate Insurance Policy}
+\hypertarget{UC9}{}
+\usecaseheader
+  {UC9}  % 1: ID
+  {Deactivate Insurance Policy} % 2: Titolo
+  {To enable the System Administrator to deactivate an existing insurance policies shared across all facilities in the healthcare
+network.} % 3: Goal
+  {Scope: Global Insurance Policy handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a system admin.} % 5: Preconditions
+  {An existing Insurance Policy is deactivated.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: System admin. Secondary: Database.} % 8: Actors
+  {The System Admin asks the system to deactivate an existing Insurance Policy.} % 9: Trigger
+\begin{ucrequirements}
+    FR9.4 & Delete insurance policy \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System Admin asks the system to deactivate an existing Insurance Policy. \\ \hline
+    2 & The system asks for confirmation. \\ \hline
+    3 & The System Admin confirms. \\ \hline
+    4 & The system marks the Insurance Policy as deactivated. \\ \hline
+    5 & The system records date and time of deactivation. \\ \hline
+    6 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the editing process.\newline 
+         2. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC10 Cancel appointment (Patient)}
+\hypertarget{UC10}{}
+\usecaseheader
+  {UC10}  % 1: ID
+  {Cancel appointment (Patient)} % 2: Titolo
+  {To enable patient to cancel a booked medical appointment} % 3: Goal
+  {Scope: Appointment management. Level: Primary.} % 4: Scope
+  {The patient is logged in.} % 5: Preconditions
+  {An existing medical appointment is deleted.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: Patient. Secondary: Database, Payment Service, Mail Service.} % 8: Actors
+  {Patient asks the system to cancel a booked appointment.} % 9: Trigger
+\begin{ucrequirements}
+    FR16.2 & Cancel appointment (patient) \\ \hline
+    \end{ucrequirements}
+\begin{ucflow}
+    1 & Patient asks the system to cancel a booked appointment. \\ \hline
+    2 & The system asks for confirmation. \\ \hline
+    3 & The patient confirms. \\ \hline
+    4 & The system performs validity check. \\ \hline
+    5 & The system cancels the appointment. \\ \hline
+    6 & The patient is refounded. \\ \hline
+    7 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The patient cancels:}\newline 
+         1. The system aborts the editing process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Late canceling:}\newline 
+         1. The system identifies that the appointment is in less than 48 hours.\newline 
+         2. Cancellation is aborted.\newline 
+         3. The system returns an error.\newline 
+         4. Use case ends. \\ \hline
+    6a & \textbf{Appointment not payed:}\newline 
+         1. The system checks if the appointment was paid ahead.\newline 
+         2. If not go to main flow step 7.\\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC11 Cancel appointment (hospital staff)}
+\hypertarget{UC11}{}
+\usecaseheader
+  {UC11}  % 1: ID
+  {Cancel appointment (Hospital staff)} % 2: Titolo
+  {To enable doctor / head of department to cancel a booked medical appointment} % 3: Goal
+  {Scope: Appointment management. Level: Primary.} % 4: Scope
+  {The doctor / head of department is logged in.} % 5: Preconditions
+  {An existing medical appointment is deleted.} % 6: Success
+  {The system remains unchanged. The system returns an error.} % 7: Failed
+  {Primary: Doctor / Head of department. Secondary: Database, Payment Service, Mail Service.} % 8: Actors
+  {The Doctor / Head of department asks the system to cancel a booked appointment.} % 9: Trigger
+\begin{ucrequirements}
+    FR35.2 & Cancel appointment (Doctor)\\ \hline
+    FR36.2 & Cancel appointment (Head of department) \\ \hline\end{ucrequirements}
+\begin{ucflow}
+    1 & The doctor / head of department asks the system to cancel a booked appointment. \\ \hline
+    2 & The doctor / head of department provides a cancellation reason. \\ \hline
+    3 & The doctor / head of department confirms. \\ \hline
+    4 & The system performs validity check. \\ \hline
+    5 & The system cancels the appointment. \\ \hline
+    6 & The patient is notified via email about the appointment cancellation with the reason. \\ \hline
+    7 & The patient is refounded. \\ \hline
+    8 & The system returns a success message. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The doctor / head of department cancels:}\newline 
+         1. The system aborts the editing process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Late canceling:}\newline 
+         1. The system identifies that the appointment is in less than 48 hours.\newline 
+         2. Cancellation is aborted.\newline 
+         3. The system returns an error.\newline 
+         4. Use case ends. \\ \hline
+    7a & \textbf{Appointment not payed:}\newline 
+         1. The system checks if the appointment was paid ahead.\newline 
+         2. If not go to main flow step 7.\\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC12 Register Doctor}
+\hypertarget{UC12}{}
+\usecaseheader
+  {UC12} % 1: ID
+  {Register Doctor} % 2: Titolo
+  {A System Admin wants to add a new doctor to the hospital’s digital infrastructure.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a System Admin. The relevant hospital structure already exists.} % 5: Preconditions
+  {The doctor is successfully saved in the database, and a set of one-time credentials is provided to the System Admin.} % 6: Success
+  {The registration is aborted due to invalid data or duplication; no credentials are created.} % 7: Failed
+  {Primary: System Admin. Secondary: Database.} % 8: Actors
+  {The System Admin asks the system to create a new doctor account.} % 9: Trigger
+\begin{ucrequirements}
+    FR1.7 & Doctor registration \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System Admin asks the system to create a new doctor account. \\ \hline
+    2 & The System Admin fills in the required fields, including doctor's personal data. \\ \hline
+    3 & The System Admin saves. \\ \hline
+    4 & The system checks if the "name" field is not duplicate. \\ \hline
+    5 & The system creates the new doctor acount in the database. \\ \hline
+    6 & The system returns the new account credentials, which are diplayed just once. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The system aborts the creation process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Validity check fails:}\newline 
+         1. The system identifies duplicated personal data for the doctor.\newline 
+         2. The system returns an error.\newline 
+         3. Go to main flow step 2 to perform a correction. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC13 Assign Doctor}
+\hypertarget{UC13}{}
+\usecaseheader
+  {UC13} % 1: ID
+  {Assign Doctor} % 2: Titolo
+  {To enable the System Administrator to assign a Registered Doctor to operate within a specific hospital structure.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged as a System Admin. The specific hospital has been created. The doctor is registered in the system.} % 5: Preconditions
+  {The selected doctor is successfully assigned to the specified hospital.} % 6: Success
+  {Doctor assignment fails. The previous assignment remains unchanged.} % 7: Failed
+  {Primary: System Admin. Secondary: Database.} % 8: Actors
+  {System Admin wants to assign a doctor to a specific hospital structure.} % 9: Trigger
+\begin{ucrequirements}
+    FR1.8 & Doctor assignment \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & System Admin wants to assign a doctor to a specific hospital structure. \\ \hline
+    2 & System admin picks the selected doctor from the set of registered Doctors. \\ \hline
+    3 & System admin saves. \\ \hline
+    4 & The system asks for confirmation. \\ \hline
+    5 & System admin confirms. \\ \hline
+    6 & The System performs validity checks. \\ \hline
+    7 & The doctor is assigned to the hospital and the system status is updated. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    5a & \textbf{Cancel operation:}\newline 
+         1. System admin cancels.\newline 
+         2. No changes are made to the system.\newline 
+         3. Use case ends. \\ \hline
+    6a & \textbf{Doctor already assigned:}\newline 
+         1. The System finds the specified doctor already assigned.\newline 
+         2. The System asks for permission to reassign already assigned doctor.\newline 
+         3. The System Administrator confirms. (If not, the use case ends) \newline
+         4. Go to main flow step 6. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC14 Appoint Head of Hospital}
+\hypertarget{UC14}{}
+\usecaseheader
+  {UC14} % 1: ID
+  {Appoint Head of Hospital} % 2: Titolo
+  {To enable the System Administrator to appoint a Registered Doctor to the strategic role of Head of Hospital for a specific facility.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a System Administrator. The specific hospital has been created. The doctor is already registered in the system.} % 5: Preconditions
+  {The selected doctor is successfully appointed as Head of Hospital.} % 6: Success
+  {The appointment fails; the system state remains unchanged and the previous head (if any) remains in place.} % 7: Failed
+  {Primary: System Administrator. 
+Secondary: Database.} % 8: Actors
+  {The System Administrator wants to appoint a doctor as Head of Hospital.} % 9: Trigger
+\begin{ucrequirements}
+    FR5 & Strategic role appointment (Head of Hospital) \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System Administrator wants to appoint a doctor as Head of Hospital. \\ \hline
+    2 & The Admin selects the desired doctor from the list of Registered Doctors. \\ \hline
+    3 & The Admin saves. \\ \hline
+    4 & The System prompts the Admin with a confirmation message. \\ \hline
+    5 & The Admin confirms. \\ \hline
+    6 & The System performs validity checks. \\ \hline
+    7 & The doctor is appointed as Head of Hospital and the System status is updated. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{Already existing Head of Hospital:}\newline 
+         1. The system prompts that there is another Head of Hospital for that structure. \newline 
+         2. The system ask if the admin wants to change the Head of Hospital. \newline 
+         3. Admin confirms. \newline 
+         4. Resume at Main Flow Step 6. \\ \hline
+    5a & \textbf{Operation canceled:}\newline 
+         1. Admin cancels the operation. \newline 
+         2. No changes are made to the database. \newline 
+         3. Use case ends. \\ \hline
+    6a & \textbf{Doctor not found:}\newline 
+         1. System cannot find the selected doctor. \newline 
+         2. Operation is aborted. \newline 
+         3. System returns an error. \newline 
+         4. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC15 Appoint Head of Department}
+\hypertarget{UC15}{}
+\usecaseheader
+  {UC15} % 1: ID
+  {Appoint Head of Department} % 2: Titolo
+  {To enable the Head of Hospital to appoint a Registered Doctor to the tactical role of Head of Department within their facility.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged as a Head of Hospital. The specific department has been created. The doctor is registered in the system.} % 5: Preconditions
+  {The selected doctor is successfully appointed as head of department.} % 6: Success
+  {Head of department appointment fails. The system remains unchanged.} % 7: Failed
+  {Primary: Head of Hospital. 
+Secondary: Database.} % 8: Actors
+  {The Head of Hospital wants to appoint a doctor as Head of Department.} % 9: Trigger
+\begin{ucrequirements}
+    FR3 & Tactical role appointment (Head of Department) \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The Head of Hospital wants to appoint a doctor as Head of Department. \\ \hline
+    2 & The Head of Hospital picks the selected doctor from the set of Registered Doctors in their facility. \\ \hline
+    3 & The Head of Hospital saves. \\ \hline
+    4 & The Head of Hospital is prompted with a confirmation message. \\ \hline
+    5 & The Head of Hospital confirms. \\ \hline
+    6 & The System performs validity checks. \\ \hline
+    7 & The doctor is appointed as head of department and the System status is updated. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{Already existing Head of Department:}\newline 
+         1. The system prompts that there is another Head of Department for that department. \newline 
+         2. The system ask if the Head of Hospital wants to change the Head of Department. \newline 
+         3. Head of Hospital confirms. \newline 
+         4. Resume at Main Flow Step 6. \\ \hline
+    5a & \textbf{Operation canceled:}\newline 
+         1. Head of Hospital cancels the operation. \newline 
+         2. No changes are made to the database. \newline 
+         3. Use case ends. \\ \hline
+    6a & \textbf{Doctor not found:}\newline 
+         1. System cannot find the selected doctor. \newline 
+         2. Operation is aborted. \newline 
+         3. System returns an error. \newline 
+         4. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC16 Assign Doctor to Department}
+\hypertarget{UC16}{}
+\usecaseheader
+  {UC16} % 1: ID
+  {Allocate facility's doctors} % 2: Titolo
+  {To enable the Head of Hospital to allocate operational resources to a specific department within their facility.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a Head of Hospital. The specific departments have been created. The specific doctors are registered in the system.} % 5: Preconditions
+  {The selected doctors are successfully allocated to the selected department.} % 6: Success
+  {The doctors’ allocation fails; the previous allocation remains unchanged.} % 7: Failed
+  {Primary: Head of Hospital. 
+Secondary: Database.} % 8: Actors
+  {The Head of Hospital wants to allocate doctors for a specific facility.} % 9: Trigger
+\begin{ucrequirements}
+    FR4 & Facility Doctors allocation \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The Head of Hospital wants to allocate doctors for a specific facility. \\ \hline
+    2 & The Head of Hospital picks the selected doctors from the set of Registered Doctors within the system. \\ \hline
+    3 & The Head of Hospital saves the selection. \\ \hline
+    4 & The System performs validity checks. \\ \hline
+    5 & The doctors are allocated to the department and the System status is updated. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    4a & \textbf{Doctors already allocated:}\newline 
+         1. The System identifies that the specified doctors are already allocated to another department. \newline 
+         2. The System asks for permission to reassign the already allocated doctors. \newline 
+         3. The Head of Hospital confirms (if not, the use case ends). \newline 
+         4. Resume at Main Flow Step 6. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC17 Configure Department's services}
+\hypertarget{UC17}{}
+\usecaseheader
+  {UC17} % 1: ID
+  {Configure Department's services} % 2: Titolo
+  {To enable the Head of Department to configure and update the list of medical treatments offered by their specific department.} % 3: Goal
+  {Scope: Managing the global hospital catalog. Level: Primary.} % 4: Scope
+  {The hospital and department have been created, and the global catalog has been populated.} % 5: Preconditions
+  {The offered treatments for the specific department are successfully updated in the system.} % 6: Success
+  {The changes are not saved; the department's treatment offerings remain in their previous state.} % 7: Failed
+  {Primary: Head of Department. 
+Secondary: Database, Global Treatment Catalog.} % 8: Actors
+  {The Head of Department wants to configure the list of medical treatments offered for their department.} % 9: Trigger
+\begin{ucrequirements}
+    FR5 & Departmental service configuration \\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The Head of Department wants to configure the list of medical treatments offered for their department. \\ \hline
+    2 & The System displays all available treatments retrieved from the global catalog. \\ \hline
+    3 & The Head of Department disables or enables a specific treatment. \\ \hline
+    4 & The Head of Department clicks saves. \\ \hline
+    5 & The System performs validity checks. \\ \hline
+    6 & The System updates the department records and confirms the changes to the user. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    5a & \textbf{Data validation fails:}\newline 
+         1. The System cannot find selected treatment in the database. \newline 
+         2. Operation is aborted. \newline 
+         3. The system prompts an error message. \newline 
+         4. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC18 View Insurances' Debts}
+\hypertarget{UC18}{}
+\usecaseheader
+  {UC18} % 1: ID
+  {View Insurances' Debts} % 2: Titolo
+  {To enable the Head of Hospital to view and monitor the outstanding financial debt owed by insurance companies to their facility.} % 3: Goal
+  {Scope: Managing insurance. Level: Primary.} % 4: Scope
+  {The user is logged in with Head of Hospital privileges.} % 5: Preconditions
+  {The Head of Hospital successfully views the current debt breakdown.} % 6: Success
+  {The system fails to retrieve financial records; the Head of Hospital is notified of the data unavailability.} % 7: Failed
+  {Primary: Head of Hospital. 
+Secondary: Database.} % 8: Actors
+  {The Head of Hospital wants to monitor the outstanding debt owned by insurance companies to their facility.} % 9: Trigger
+\begin{ucrequirements}
+    FR6.1 & Insurance debt dashboard \\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The Head of Hospital wants to monitor the outstanding debt owned by insurance companies to their facility. \\ \hline
+    2 & The System displays a list of debt amounts categorized by each individual insurance company. \\ \hline
+    3 & The Head of Hospital reviews the high-level financial summary. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    1a & \textbf{Data not found:}\newline 
+         1. The system fails to retrieve insurance data. \newline 
+         2. The Head of Hospital is prompted with an error message. \newline 
+         3. Use case ends. \\ \hline
+    2a & \textbf{View historical records:}\newline 
+         1. The Head of Hospital wants to monitor historical records. \newline 
+         2. The System displays a detailed historical debt record. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC19 Insurance Debt History}
+\hypertarget{UC19}{}
+\usecaseheader
+  {UC19}  % 1: ID
+  {Insurance Debt History} % 2: Titolo
+  {To enable the Head of Hospital to view the detailed information of a specific insurance company’s debt history regarding their facility.} % 3: Goal
+  {Scope: Managing insurance. Level: Primary.} % 4: Scope
+  {The user is logged in as Head of Hospital, the insurance company has some insurance policy registered in the system.} % 5: Preconditions
+  {The system successfully retrieves and displays the debt history for the specific insurance company.} % 6: Success
+  {The system is unable to display information and returns an error.} % 7: Failed
+  {Primary: Head of Hospital. Secondary: Database.} % 8: Actors
+  {The Head of Hospital wants to see the debt history for a specific insurance company.} % 9: Trigger
+\begin{ucrequirements}
+    FR6.2 & Insurance Debt History \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The Head of Hospital selects a specific insurance company to view its debt history. \\ \hline
+    2 & The system validates the user's access rights for this specific action. \\ \hline
+    3 & The system queries the Database to retrieve the current outstanding debt. \\ \hline
+    4 & The system queries the Database to retrieve previous debt settlements along with their associated dates and amounts. \\ \hline
+    5 & The system displays the comprehensive debt history to the Head of Hospital. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{Access validation fails:}\newline 
+         1. The system identifies that the user lacks the specific rights to view this detailed record.\newline 
+         2. The system prompts an error.\newline 
+         3. The view process is aborted. Use case ends. \\ \hline
+    3a & \textbf{Entity not found:}\newline 
+         1. The system is unable to locate the insurance company in the database.\newline 
+         2. The system prompts an error message explaining that the entity is no longer available.\newline 
+         3. Use case ends. \\ \hline
+    4a & \textbf{No previous debt history:}\newline
+         1. The system finds no past settlements for the selected insurance company.\newline
+         2. The system displays an error. \newline
+         3. Use case ends. \\ \hline
+         
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC20 Register insurance payment}
+\hypertarget{UC20}{}
+\usecaseheader
+  {UC20} % 1: ID
+  {Register insurance payment} % 2: Titolo
+  {To enable the Head of Hospital to manually settle and clear the outstanding financial balance owed by a specific insurance company to their facility.} % 3: Goal
+  {Scope: Managing insurance. Level: Primary.} % 4: Scope
+  {The user is logged in as the Head of Hospital. The hospital exists, an outstanding debt is present, and the insurance company has paid out the debt.} % 5: Preconditions
+  {The outstanding debt is marked as settled, and the transaction is recorded in the system.} % 6: Success
+  {The settlement process is cancelled or fails; the debt remains unchanged.} % 7: Failed
+  {Primary: Head of Hospital. 
+Secondary: Financial Database.} % 8: Actors
+  {The Head of Hospital wants to settle the outstanding debt for a specific insurance company.} % 9: Trigger
+\begin{ucrequirements}
+    FR7 & Manual settlement of insurance debt \\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The Head of Hospital wants to settle the outstanding debt for a specific insurance company. \\ \hline
+    2 & The Head of Hospital fills in the payment data. \\ \hline
+    3 & The Head of Hospital saves. \\ \hline
+    4 & The System validates the input fields. \\ \hline
+    5 & The System displays a confirmation alert showing the exact amount being settled. \\ \hline
+    6 & The Head of Hospital confirms. \\ \hline
+    7 & The System updates the database to reflect the settled status and adjusts the total debt. \\ \hline
+    8 & The System provides a success notification. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    4a & \textbf{Validity check fails:}\newline 
+         1. The system identifies an invalid field for the payment details. \newline 
+         2. The system displays an error message . \newline 
+         3. Resume at Main Flow Step 2. \\ \hline
+    6a & \textbf{Head of Hospital cancels:}\newline 
+         1. No changes are made to the database. \newline 
+         2. The settlement process is immediately terminated. \newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC21 Departmental capacity configuration}
+\hypertarget{UC21}{}
+\usecaseheader
+  {UC21} % 1: ID
+  {Departmental operational management} % 2: Titolo
+  {To enable the Head of Department to configure the operational capacity of the department.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a Head of Department.} % 5: Preconditions
+  {The operational capacity is successfully updated.} % 6: Success
+  {The operational capacity remains unchanged.} % 7: Failed
+  {Primary: Head of Department. 
+Secondary: Database} % 8: Actors
+  {The Head of Department wants to configure operational capacity.} % 9: Trigger
+\begin{ucrequirements}
+    FR8.1 & Department capacity configuration \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+        1 & The Head of Department wants to configure operational capacity (number and type of rooms). \\ \hline 
+        2 & The Head of Department updates the desired fields and saves. \\ \hline 
+        3 & The system validates input fields.\\ \hline 
+        4 & The System updates the database to reflect the new operational capacity. \\ \hline
+        5 & The System provides a success notification. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{Validity check fails:}\newline 
+         1. The system identifies an invalid field for the operational capacity. \newline 
+         2. The system displays an error message highlighting the invalid field. \newline 
+         3. Resume at Main Flow Step 2. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC22 Generate Insurance Policy code}
+\hypertarget{UC22}{}
+\usecaseheader
+  {UC22} % 1: ID
+  {Generate Insurance Policy code} % 2: Titolo
+  {To provide the System Administrator the ability to generate the insurance policy code.} % 3: Goal
+  {Scope: Insurance policies management. Level: Primary.} % 4: Scope
+  {The insurance policy has been created and the Patient is registered in the system.} % 5: Preconditions
+  {The unique code is successfully created.} % 6: Success
+  {The unique code is not created.} % 7: Failed
+  {Primary: System Admin. 
+Secondary: Database.} % 8: Actors
+  {The System Administrator wants to generate a univoque insurance code for a specific policy.} % 9: Trigger
+\begin{ucrequirements}
+    FR10 & Simulated Insurance code generation \\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The System Administrator wants to generate a univoque insurance code for a specific policy. \\ \hline
+    2 & The System generate a code. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{System error during generation:}\newline 
+         1. The System encounters a database or internal error and cannot generate the code. \newline 
+         2. The System displays an error message prompting to try again. \newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC23 User registration and validation}
+\hypertarget{UC23}{}
+\usecaseheader
+  {UC23} % 1: ID
+  {User registration and validation} % 2: Titolo
+  {To allow an Unregistered Patient to create and validate an account within the system} % 3: Goal
+  {Scope: Users account management. Level: Primary Task.} % 4: Scope
+  {The patient is not authenticated and does not have an active account.} % 5: Preconditions
+  {A new account is registered in the system and successfully validated.} % 6: Success
+  {No new account is created, or the account remains unverified; the user is prompted with an error message.} % 7: Failed
+  {Primary: Patient. Secondary: Database, Mail Service, Identity Provider (SPID/CIE).} % 8: Actors
+  {The Unregistered Patient wants to register in the system.} % 9: Trigger
+\begin{ucrequirements}
+    FR11.1 & User registration \\ \hline
+    FR11.2 & User validation \\ \hline
+    NFR0 & Security and privacy \\ \hline
+    NFR6 & SPID/CIE-based registration and authentication \\ \hline
+    NFR7 & Login validity period \\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The System asks the Unregistered Patient to insert their email and personal information. \\ \hline
+    2 & The patient fills in the required information. \\ \hline
+    3 & The Unregistered Patient submits. \\ \hline
+    4 & The System validates the input fields. \\ \hline
+    5 & The patient is prompted to create a password. \\ \hline
+    6 & The patient submits a password. \\ \hline
+    7 & The System checks password security (complexity and strength). \\ \hline
+    8 & The System creates a new unverified account in the database. \\ \hline
+    9 & The System sends a verification token to the provided email address via the Mail Service. \\ \hline
+    10 & The User accesses their mailbox and clicks on the validation link. \\ \hline
+    11 & The System retrieves the validation token sent with the request. \\ \hline
+    12 & The System checks for token validity and matching records in the database. \\ \hline
+    13 & The System marks the account as verified and active. \\ \hline
+    14 & The System automatically logs the user in and redirects them to the home page. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    4a & \textbf{Duplicated fiscal code:}\newline 
+         1. The System identifies a duplicated fiscal code. \newline 
+         2. The patient is prompted with an error message highlighting the invalid field. \newline 
+         3. Resume at Main Flow Step 2. \\ \hline
+    4b & \textbf{Email already taken:}\newline 
+         1. The System finds another account already associated with the provided email. \newline 
+         2. The patient is prompted with an error message suggesting to log in or reset the password. \newline 
+         3. Use case ends. \\ \hline
+    6a & \textbf{Password security check fails:}\newline 
+         1. The System identifies the provided password as unsafe or too simple. \newline 
+         2. The System prompts an error message with security requirements. \newline 
+         3. Resume at Main Flow Step 5. \\ \hline
+    11a & \textbf{Invalid or Expired validation token:}\newline 
+         1. The System identifies that the token from the email link is invalid or has expired.\newline 
+         2. The patient is prompted with an error message and asked if they want to receive a new validation email.\newline 
+         3. The patient either confirms (go to Main flow step 9) or declines (use case ends). \\ \hline
+\end{ucextensions}
+
+\begin{ucsubvariations}
+    2a & \textbf{SPID or CIE register:}\newline 
+         1. The User selects to register using a National Digital Identity Provider (SPID/CIE).\newline 
+         2. Authentication is performed by the external authority, which returns a secure token.\newline 
+         3. The System maps the token to the corresponding user account.\newline
+         4. Use case ends. \\ \hline
+\end{ucsubvariations}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC24 User Login}
+\hypertarget{UC24}{}
+\usecaseheader
+  {UC24} % 1: ID
+  {User Login} % 2: Titolo
+  {To allow a registered user to securely log into their account.} % 3: Goal
+  {Scope: Account management. Level: Primary Task.} % 4: Scope
+  {The user has a registered and validated account in the system.} % 5: Preconditions
+  {The user successfully logs in and is redirected to their dashboard.} % 6: Success
+  {The login fails, and the user is prompted with an error message.} % 7: Failed
+  {Primary: User. Secondary: Database, Identity Provider (SPID/CIE).} % 8: Actors
+  {The user wants to log into the system.} % 9: Trigger
+\begin{ucrequirements}
+    FR11.3 & User login \\ \hline
+    NFR0 & Security and privacy \\ \hline
+    NFR6 & SPID/CIE-based registration and authentication \\ \hline
+    NFR7 & Login validity period \\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The User inputs their registered email and password. \\ \hline
+    2 & The System verifies the provided credentials against the database. \\ \hline
+    3 & The user succesfully logs in. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{Invalid Credentials:}\newline 
+         1. The System identifies that the provided email or password is incorrect. \newline 
+         2. The System displays an error message. \newline
+         3. Resume at Main Flow Step 1. \\ \hline
+    3a & \textbf{Mandatory Password Change:}\newline 
+         1. The System detects that the User (e.g., a newly registered Doctor) is logging in for the first time using a system-generated default password. \newline 
+         2. The User is prompted to update their credentials through the \hyperlink{UC26}{Account recovery} use case. \newline
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+
+\begin{ucsubvariations}
+    1a & \textbf{SPID or CIE login:}\newline 
+         1. The User selects to log in using a National Digital Identity Provider (SPID/CIE).\newline 
+         2. Authentication is performed by the external authority, which returns a secure token.\newline 
+         3. The System maps the token to the corresponding user account.\newline
+         4. Resume at Main Flow Step 3. \\ \hline
+\end{ucsubvariations}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC25 Automated Doctor Assignment}
+\hypertarget{UC25}{}
+\usecaseheader
+  {UC25} % 1: ID
+  {Automated Doctor Assignment} % 2: Titolo
+  {To automatically assign the most suitable doctor to a newly requested appointment based on specialty and continuity of care.} % 3: Goal
+  {Scope: Doctor assignment. Level: Subfunction.} % 4: Scope
+  {The calling use case has provided the examination type, requested date, hospital, and available room.} % 5: Preconditions
+  {A suitable doctor is successfully assigned to the appointment.} % 6: Success
+  {No doctor is assigned; the system notifies the Head of Department of the failure.} % 7: Failed
+  {Primary: System. 
+Secondary: Patient, Database, Mail Service, Head of Department.} % 8: Actors
+  {The use case is triggered automatically when a patient is booking or rescheduling an appointment.} % 9: Trigger
+\begin{ucrequirements}
+    FR12 & Automated doctor assignment\\ \hline
+    NFR1 & Algorithm performance\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The use case is triggered automatically when a patient is booking or rescheduling an appointment \\ \hline
+    2 & The System filters for doctors whose specialty matches the requested examination type. \\ \hline
+    3 & The System filters for doctors that have already visited the patient. \\ \hline
+    4 & The System picks the doctor with the earliest availability closest to the requested date, provided they are available within a 30-day window. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{No doctor found with required specialty:}\newline 
+         1. The System sends a notification to the Head of Department. \newline 
+         2. The System returns an error to the calling use case. \newline 
+         3. Use case ends. \\ \hline
+    3a & \textbf{No doctor found who has previously visited the patient:}\newline 
+         1. The System bypasses the continuity filter from Step 2 and considers all doctors from Step 1. \newline 
+         2. Resume at Main Flow Step 4. \\ \hline
+    4a & \textbf{No past doctor available within 30 days:}\newline 
+         1. The System bypasses the continuity filter and considers all doctors from Step 1. \newline 
+         2. The System picks the doctor with the earliest availability closest to the requested date. \newline 
+         3. If still no doctor is found, proceed to Step 4b. \\ \hline
+    4b & \textbf{No available doctor found:}\newline 
+         1. The System sends a notification to the Head of Department reporting the error. \newline 
+         2. The System returns an error to the calling use case. \newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC26 Account recovery}
+\hypertarget{UC26}{}
+\usecaseheader
+  {UC26} % 1: ID
+  {Account recovery} % 2: Titolo
+  {To provide the user with a way to recover their account access by resetting their password.} % 3: Goal
+  {Scope: users account management. Level: Primary.} % 4: Scope
+  {The user has a registered account in the system.} % 5: Preconditions
+  {The account password is successfully changed.} % 6: Success
+  {The password is not changed; the account remains inaccessible via the old credentials.} % 7: Failed
+  {Primary: User. 
+Secondary: Database, Mail Service.} % 8: Actors
+  {The user wants to recover their account access.} % 9: Trigger
+\begin{ucrequirements}
+    FR14& Account recovery\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The user wants to recover their account access. \\ \hline
+    2 & The user enters the email and submits. \\ \hline
+    3 & The System validates the email address. \\ \hline
+    4 & The System sends an email containing a secure, time-limited, password reset link. \\ \hline
+    5 & The System displays a confirmation message. \\ \hline
+    6 & The user clicks the link in their email. \\ \hline
+    7 & The user inputs a new password and confirms. \\ \hline
+    8 & The System checks the password security and complexity. \\ \hline
+    9 & The user's password is updated and saved securely in the System. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{Email not in the database:}\newline 
+         1. The System identifies that the email does not belong to any Registered User. \newline 
+         2. The System fails silently (no mail is sent) to protect user privacy. \newline 
+         3. Use case ends. \\ \hline
+    3b & \textbf{Wrong email format:}\newline 
+         1. The System identifies an invalid email format. \newline 
+         2. An error message is displayed. \newline 
+         3. Resume at Main Flow Step 1. \\ \hline
+    6a & \textbf{Invalid or expired token:}\newline 
+         1. If the reset link is invalid or has expired, the System displays an error message. \newline 
+         2. Use case ends. \\ \hline
+    8a & \textbf{Password security check fails:}\newline 
+         1. The System identifies the provided password as unsafe or weak. \newline 
+         2. The System prompts an error message. \newline 
+         3. Resume at Main Flow Step 7. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC27 Appointment booking}
+\hypertarget{UC27}{}
+\usecaseheader
+  {UC27} % 1: ID
+  {Appointment booking} % 2: Titolo
+  {To provide a logged-in Patient a way to book a medical visit.} % 3: Goal
+  {Scope: Appointment management. Level: Primary.} % 4: Scope
+  {The patient is logged into the system.} % 5: Preconditions
+  {An appointment (comprising date, time, hospital, department, and doctor) is successfully booked.} % 6: Success
+  {No appointment is booked; the system remains unchanged.} % 7: Failed
+  {Primary: Patient. 
+Secondary: Database, Mail Service.} % 8: Actors
+  {The patient wants to book an appointment.} % 9: Trigger
+\begin{ucrequirements}
+    FR15 & Appointment booking\\ \hline
+    NFR1 & Algorithm performance\\ \hline
+    NFR4 & Scalability and capacity\\ \hline
+    NFR5 & Accessibility\\ \hline
+    NFR8 & Concurrency and data integrity\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The patient selects the desired examination and, optionally, a preferred hospital and a target future date. \\ \hline
+    2 & The patient submits the search request. \\ \hline
+    3 & The System selects all periods in which at least one correct examination room is available. \\ \hline
+    4 & \textbf{Include: \hyperlink{FR12}{FR12 Automated doctor assignment.}} The System retrieves a suitable doctor, and date and time of the appointment. \\ \hline
+    5 & The System presents the proposed appointment details (date, time, hospital, department, and doctor) to the patient. \\ \hline
+    6 & The patient confirms. \\ \hline
+    7 & The System saves the appointment in the database. \\ \hline
+    8 & The System sends an email notification to the patient. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{Examination not available in the preferred hospital:}\newline 
+         1. The System displays an alert stating the examination is unavailable at the selected hospital. \newline 
+         2. The System automatically selects the closest hospital to the patient's registered address that offers the selected examination. \newline 
+         3. Resume at Main Flow Step 3. \\ \hline
+    2b & \textbf{No preferred hospital:}\newline 
+         1. The System automatically selects the closest hospital to the patient's registered address that offers the selected examination. \newline 
+         2. Resume at Main Flow Step 3. \\ \hline
+    2c & \textbf{No preferred date:}\newline 
+         1. The System automatically defaults to the current date as the search starting point. \newline 
+         2. Resume at Main Flow Step 3. \\ \hline
+    3a & \textbf{No room available found within 30 days:}\newline 
+         1. The System displays an error message asking the patient to select another hospital or date range. \newline 
+         2. Resume at Main Flow Step 1. \\ \hline
+    4a & \textbf{No suitable appointment is found:}\newline 
+         1. The System displays an error message asking the patient to select another hospital or date range. \newline 
+         2. Resume at Main Flow Step 1. \\ \hline
+    6a & \textbf{The patient cancels:}\newline 
+         1. No action is taken and the system remains unchanged. \newline 
+         2. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC28 Appointment View}
+\usecaseheader
+  {UC28} % 1: ID
+  {Appointment View} % 2: Titolo
+  {To provide a patient / Doctor / Head of department a way to consult booked medical visits.} % 3: Goal
+  {Scope: Appointment management. Level: Primary.} % 4: Scope
+  {The user is logged into the system as a Patient / Doctor / Head of Department.} % 5: Preconditions
+  {The system successfully retrieves and displays the detailed information of the appointment.} % 6: Success
+  {The system is unable to display the details and returns an error.} % 7: Failed
+  {Primary: Patient / Doctor / Head of Department. Secondary: Database.} % 8: Actors
+  {The patient / Doctor / Head of Department wants to see the details of an appointment they are entitled to see.} % 9: Trigger
+
+\begin{ucrequirements}
+    FR16.1 & View appointment (patient) \\ \hline
+    FR35.1 & View appointment (doctor)\\ \hline
+    FR36.1 & View appointment (head of department)\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The patient / Doctor / Head of Department wants to see the details of an appointment they are entitled to see. \\ \hline
+    2 & The system checks the user's access rights for that specific appointment. \\ \hline
+    3 & The system retrieves the appointment details from the database. \\ \hline
+    4 & The system displays the detailed information of the appointment to the user. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{Access validation fails:}\newline 
+         1. The system identifies that the user lacks the rights to view this appointment (e.g., a Patient trying to view an appointment not linked to their account).\newline 
+         2. The system returns an error.\newline 
+         3. Use case ends. \\ \hline
+    3a & \textbf{Appointment not found:}\newline 
+         1. The system is unable to locate the appointment in the database.\newline 
+         2. The system returns an error.\newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC29 Appointment rescheduling}
+\hypertarget{UC29}{}
+\usecaseheader
+  {UC29} % 1: ID
+  {Appointment Rescheduling} % 2: Titolo
+  {To allow a logged-in patient to reschedule an existing appointment to a new available time slot, provided they give at least 48 hours of notice.} % 3: Goal
+  {Scope: Appointment management. Level: Primary.} % 4: Scope
+  {The patient is logged into the system and has a booked future appointment.} % 5: Preconditions
+  {The appointment is successfully rescheduled to a new date, time, and assigned doctor.} % 6: Success
+  {The appointment remains unchanged. The system prompts an error (e.g., < 48 hours notice, no slots available).} % 7: Failed
+  {Primary: Patient. Secondary: Database, Mail Service.} % 8: Actors
+  {The patient wants to reschedule a specific medical appointment.} % 9: Trigger
+\begin{ucrequirements}
+    FR16.3 & Reschedule Appointment\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The patient wants to reschedule a specific medical appointment. \\ \hline
+    2 & The System verifies that the scheduled appointment is at least 48 hours away. \\ \hline
+    3 & The System prompts the patient to select a new target future date. \\ \hline
+    4 & The Patient submits the search request for the new date. \\ \hline
+    5 & The System selects all periods in which at least one correct examination room is available. \\ \hline
+    6 & \textbf{Include: \hyperlink{FR12}{FR12 Automated doctor assignment.}} The System retrieves a suitable doctor, and date and time of the appointment based on the new request. \\ \hline
+    7 & The System presents the newly proposed appointment details (date, time, and assigned doctor) to the patient. \\ \hline
+    8 & The Patient accepts. \\ \hline
+    9 & The System updates the appointment record in the database with the new details. \\ \hline
+    10 & The System sends an email notification to the patient confirming the new schedule. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    2a & \textbf{Less than 48 hours notice:}\newline 
+         1. The System identifies that the appointment is less than 48 hours away. \newline 
+         2. The System blocks the action and prompts an error message stating that rescheduling is no longer allowed. \newline 
+         3. Use case ends. \\ \hline
+    3a & \textbf{No preferred date selected:}\newline 
+         1. The System automatically defaults to the current date as the search starting point. \newline 
+         2. Resume at Main Flow Step 5. \\ \hline
+    5a & \textbf{No room available found within 30 days:}\newline 
+         1. The System displays an error message asking the patient to select another date range. \newline 
+         2. Resume at Main Flow Step 3. \\ \hline
+    6a & \textbf{No suitable appointment is found:}\newline 
+         1. The System displays an error message asking the patient to select another date range. \newline 
+         2. Resume at Main Flow Step 3. \\ \hline
+    8a & \textbf{The patient clicks on the “Cancel” button:}\newline 
+         1. No action is taken and the original appointment remains unchanged. \newline 
+         2. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC30 Internal calendar integration}
+\hypertarget{UC30}{}
+\usecaseheader
+  {UC30} % 1: ID
+  {Internal calendar integration} % 2: Titolo
+  {To provide a centralized view where users can view all scheduled medical appointments within the application.} % 3: Goal
+  {Scope: Appointment Management. Level: Primary.} % 4: Scope
+  {The user is authenticated and has an active account.} % 5: Preconditions
+  {The system successfully renders a calendar interface populated with the user’s specific appointment data.} % 6: Success
+  {The calendar fails to load or appointments are not visible; the user receives an error message.} % 7: Failed
+  {Primary: User. 
+Secondary: Database.} % 8: Actors
+  {The user wants to consult their calendar.} % 9: Trigger
+\begin{ucrequirements}
+    FR17 & Internal calendar integration\\ \hline
+\end{ucrequirements}
+
+
+\begin{ucflow}
+    1 & The user wants to consult their calendar. \\ \hline
+    2 & The system displays the user's scheduled appointments in a calendar view, showing basic information. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{No appointments found:}\newline 
+         1. The system doesn’t find appointments to populate the calendar page. \newline 
+         2. The system displays an error message. \newline 
+         3. Use case ends \\ \hline
+    2b & \textbf{User changes view:}\newline 
+         1. The User selects a different time scale (Daily, Weekly, or Monthly). \newline 
+         2. The System re-formats the displayed data according to the selected scale. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC31 Appointment export}
+\hypertarget{UC31}{}
+\usecaseheader
+  {UC31} % 1: ID
+  {Appointment export} % 2: Titolo
+  {To provide users with a dynamic synchronization link that displays their medical appointments within external calendar applications (Google, Apple, Outlook).} % 3: Goal
+  {Scope: External Integration. Level: Primary.} % 4: Scope
+  {The user is authenticated and has at least one scheduled or historical appointment record.} % 5: Preconditions
+  {A unique, secure URL is generated and provided to the user for external calendar synchronization.} % 6: Success
+  {Calendar export fails; the user is notified of the error.} % 7: Failed
+  {Primary: User. 
+Secondary: External Calendar Provider (e.g., Google Calendar Service).} % 8: Actors
+  {The user wants to export their calendar with an external application.} % 9: Trigger
+\begin{ucrequirements}
+    FR18 & Appointment Export\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The user wants to export their calendar with an external application. \\ \hline
+    2 & The System generates a unique, non-guessable URL containing a secure access token. \\ \hline
+    3 & The System presents the URL to the user. \\ \hline
+    4 & The User uses the URL to import the calendar into their external application. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    4a & \textbf{Token Expired/Invalid:}\newline 
+         1. The System receives a request from an external application with an invalid or expired token. \newline 
+         2. The System returns a synchronization error. \newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC32 Payment management}
+\hypertarget{UC32}{}
+\usecaseheader
+  {UC32} % 1: ID
+  {Payment management} % 2: Titolo
+  {To provide a secure, real-time financial transaction to pay upfront for medical services.} % 3: Goal
+  {Scope: Billing and Payment management. Level: Primary.} % 4: Scope
+  {The patient is logged in and has booked a medical appointment.} % 5: Preconditions
+  {A payment authorization is received, a transaction ID is logged, and the appointment is marked as paid} % 6: Success
+  {The payment fails and the system remains unchanged} % 7: Failed
+  {Primary: Patient. 
+Secondary: Payment Gateway (e.g., Stripe, PayPal, Adyen), Database.} % 8: Actors
+  {The user wants to pay a booked appointment.} % 9: Trigger
+\begin{ucrequirements}
+    FR19 & Payment management\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The System retrieves the base price for the selected medical service. \\ \hline
+    2 & \textbf{Include: \hyperlink{UC33}{Exemption application during payment.}} The System calculates and applies health exemptions to the price. \\ \hline
+    3 & \textbf{Include: \hyperlink{UC34}{Insurance application.}} The System calculates and applies any valid insurance coverage to the price. \\ \hline
+    4 & The user is presented with a payment summary showing the final amount. \\ \hline
+    5 & The User selects a payment method (Credit Card, Google Pay, or Apple Pay). \\ \hline
+    6 & The User enters credentials for the selected payment method. \\ \hline
+    7 & The System logs the transaction ID, along with applied insurance or exemption deductions, and updates the appointment status. \\ \hline
+    8 & The System displays a payment confirmation message to the user. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    7a & \textbf{Transaction Declined:}\newline 
+         1. The Gateway returns a declined error. \newline 
+         2. The User is prompted with the error message. \newline 
+         3. Use case ends. \\ \hline
+    7b & \textbf{Session Timeout:}\newline 
+         1. The User abandons the payment page or the gateway connection drops. \newline 
+         2. The System notifies the user of the session failure. \newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC33 Exemption application during payment}
+\hypertarget{UC33}{}
+\usecaseheader
+  {UC33} % 1: ID
+  {Exemption application during payment} % 2: Titolo
+  {To automatically calculate and apply discounts based on exemptions that apply to the patient’s profile.} % 3: Goal
+  {Scope: Billing and Payment management. Level: Subfunction.} % 4: Scope
+  {The patient is logged in, has initiated a payment flow, and the initial price is known.} % 5: Preconditions
+  {The total cost is correctly reduced by the applicable percentage based on the patient's exemptions.} % 6: Success
+  {The system defaults to the full price; no discounts are applied.} % 7: Failed
+  {Primary: System. 
+Secondary: Patient, Database.} % 8: Actors
+  {The use case is triggered automatically when a patient wants to pay an examination. (\textbf{\hyperlink{UC32}{UC32}})} % 9: Trigger
+
+\begin{ucrequirements}
+    FR20 & Exemption application during payment\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The System identifies the specific treatment associated with the requested appointment. \\ \hline
+    2 & The System verifies the validity and applicability of each found exemption against the selected treatment for the specific patient. \\ \hline
+    3 & The System calculates the cumulative discount and applies it to the base price. \\ \hline
+    4 & The System returns the final discounted price and specific discount details to the calling use case. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    2a & \textbf{No Exemptions registered:}\newline 
+         1. No applicable exemption is found for the patient or the specific treatment. \newline 
+         2. The System applies the full price (0\% discount). \newline 
+         3. Resume at Main Flow Step 4. \\ \hline
+    2b & \textbf{Expired Exemption:}\newline 
+         1. The System finds an exemption that has passed its validity date. \newline 
+         2. The discount from that specific exemption is not applied. \newline 
+         3. Resume at Main Flow Step 4. \\ \hline
+    3a & \textbf{Price goes to 0 or below:}\newline 
+         1. After applying the exemptions, the resulting price is calculated as $\leq 0$. \newline 
+         2. The System sets the final discounted price to exactly 0. \newline 
+         3. Resume at Main Flow Step 4. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC34 Insurance application during payment}
+\hypertarget{UC34}{}
+\usecaseheader
+  {UC34} % 1: ID
+  {Insurance application during payment} % 2: Titolo
+  {To automatically calculate and apply discounts based on insurance policies that apply to the patient’s profile.} % 3: Goal
+  {Scope: Billing and Payment management. Level: Subfunction.} % 4: Scope
+  {The patient is logged in, has initiated a payment flow, and the initial price is known.} % 5: Preconditions
+  {The total cost is correctly reduced by the applicable percentage based on the insurance coverage.} % 6: Success
+  {The system defaults to the full price; no insurance discount is applied.} % 7: Failed
+  {Primary: System. 
+Secondary: Patient, Database.} % 8: Actors
+  {The use case is triggered automatically when a patient wants to pay an examination. (\textbf{\hyperlink{UC32}{UC32}}).} % 9: Trigger
+\begin{ucrequirements}
+    FR21 & Insurance application during payment\\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The System identifies the specific treatment associated with the requested appointment. \\ \hline
+    2 & The System verifies the validity and applicability of each active insurance policy against the selected treatment for the patient. \\ \hline
+    3 & The System calculates the cumulative discount and applies it to the base price. \\ \hline
+    4 & The System returns the final discounted price and specific coverage details to the calling use case. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    2a & \textbf{No Insurance policy registered:}\newline 
+         1. No suitable or active insurance policy is found for the patient. \newline 
+         2. The System applies the full price. \newline 
+         3. Resume at Main Flow Step 4. \\ \hline
+    2b & \textbf{Expired Insurance policy:}\newline 
+         1. The System finds a policy that has passed its validity date. \newline 
+         2. The discount from that policy is not applied to the transaction. \newline 
+         3. Resume at Main Flow Step 4. \\ \hline
+    3a & \textbf{Price goes to 0 or below:}\newline 
+         1. After applying the insurance discount, the resulting price is calculated as $\leq 0$. \newline 
+         2. The System sets the final price to exactly 0. \newline 
+         3. Resume at Main Flow Step 4. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC35 Automatic appointment booking from prescription}
+\hypertarget{UC35}{}
+\usecaseheader
+  {UC35} % 1: ID
+  {Automatic appointment booking from prescription} % 2: Titolo
+  {To automatically initiate the booking process from the prescriptions page.} % 3: Goal
+  {Scope: Appointment Management. Level: Primary.} % 4: Scope
+  {The patient is authenticated and has at least one active digital prescription stored in the system.} % 5: Preconditions
+  {The system extracts the relevant prescription data initiates the booking process with pre-filled information about the treatment.} % 6: Success
+  {The initiation fails.} % 7: Failed
+  {Primary: Patient. 
+Secondary: Database.} % 8: Actors
+  {Patient wants to directly book an appointment for a specific prescription.} % 9: Trigger
+\begin{ucrequirements}
+    FR22 & Automatic appointment booking from prescription\\ \hline
+    NFR1 & Algorithm performance \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & Patient wants to directly book an appointment for a specific prescription.. \\ \hline
+    2 & The System checks whether the prescription has already been used and verifies its validity period to ensure it has not expired. \\ \hline
+    3 & The System reads the treatment category from the prescription data. \\ \hline
+    4 & The System initiates the appointment booking process with the treatment field pre-filled. \\ \hline
+    5 & The System tags the prescription as fulfilled, blocking other appointments related to the same prescription. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    2a & \textbf{Prescription Already Used:}\newline 
+         1. The System detects that the prescription has already been fulfilled by a previous booking. \newline 
+         2. The Patient is prompted with an error message. \newline 
+         3. Use case ends. \\ \hline
+    2b & \textbf{Expired Prescription:}\newline 
+         1. The System identifies that the prescription is expired. \newline 
+         2. The Patient is prompted with an error message. \newline 
+         3. Use case ends. \\ \hline
+    4a & \textbf{Redirect Failure:}\newline 
+         1. The System fails to redirect the Patient to the book appointment tab. \newline 
+         2. The Patient is prompted with an error message. \newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC36 Patient insurance registration via unique code}
+\hypertarget{UC36}{}
+\usecaseheader
+  {UC36} % 1: ID
+  {Patient insurance registration via unique code} % 2: Titolo
+  {To enable users to securely link their private insurance coverage to their account profile using a provider-issued identification code.} % 3: Goal
+  {Scope: Patient Profile Management. Level: Primary.} % 4: Scope
+  {The patient is logged-in. The patient has a valid insurance policy code.} % 5: Preconditions
+  {The policy is successfully linked to the user's profile for future use in billing, typically through \textbf{\hyperlink{UC34}{Insurance application during payment}}.} % 6: Success
+  {The unique code is unrecognized, expired, or already associated with a different primary account.} % 7: Failed
+  {Primary: Patient. 
+Secondary: Database.} % 8: Actors
+  {The Patient wants to link an existing insurance policy to their hospital profile using their policy code.} % 9: Trigger
+\begin{ucrequirements}
+    FR23 & Patient insurance registration via unique code\\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The Patient wants to link an existing insurance policy to their hospital profile using their policy code.\\ \hline
+    2 & The Patient enters their unique insurance code. \\ \hline
+    3 & The System validates the insurance code. \\ \hline
+    4 & The System displays a summary of the retrieved policy for the Patient to confirm. \\ \hline
+    5 & The Patient confirms that the displayed insurance information is correct. \\ \hline
+    6 & The System links the insurance policy to the Patient's profile. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{Invalid Code:}\newline 
+         1. The System finds no match for the provided code. \newline 
+         2. The System displays an error message. \newline 
+         3. Use case ends. \\ \hline
+    2b & \textbf{Duplicate Code:}\newline
+         1. The System detects that the code is already linked to another active User ID \newline
+         2. The System displays an error message. \newline 
+         3. Use case ends. \\ \hline
+    2c & \textbf{Expired Policy Record:}\newline 
+         1. The System finds the code, but the database indicates that the policy coverage ended in the past. \newline 
+         2. The System prevents the insurance registration. \newline 
+         3. The Patient is notified to update their policy. \newline 
+         4. Use case ends. \\ \hline
+    4a & \textbf{User Cancels:}\newline 
+         1. The Patient sees the summary and realizes it refers to the wrong insurance plan. \newline 
+         2. The Patient wants to cancel. \newline 
+         3. The System discards the lookup results and returns the Patient to the dashboard. \newline 
+         4. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC37 AI Assistant}
+\hypertarget{UC37}{}
+\usecaseheader
+  {UC37} % 1: ID
+  {AI Assistant} % 2: Titolo
+  {To provide users with an intelligent, conversational interface that simplifies navigation and assists in completing complex tasks such as booking or insurance registration.} % 3: Goal
+  {Scope: User Support. Level: Primary.} % 4: Scope
+  {The patient is authenticated.} % 5: Preconditions
+  {The user receives accurate, context-specific answers or successfully completes a task following the AI Assistant's guidance.} % 6: Success
+  {The AI Assistant fails to interpret the user's intent or provides information that contradicts system rules.} % 7: Failed
+  {Primary: Patient. 
+Secondary: AI Large Language Model API, Database.} % 8: Actors
+  {The user needs to perform an action and doesn't know how or where to do it.} % 9: Trigger
+\begin{ucrequirements}
+    FR24 & AI assistant\\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The user needs to perform an action and doesn't know how or where to do it. \\ \hline
+    2 & The System initializes the AI Chat Interface and greets the Patient, potentially offering a proactive tip based on the current page. \\ \hline
+    3 & The Patient inputs a natural language query. \\ \hline
+    4 & The System retrieves the Patient's user context. \\ \hline
+    5 & The AI Assistant processes the query by cross-referencing the internal knowledge base with the Patient's context. \\ \hline
+    6 & The AI Assistant explains the situation and provides a step-by-step resolution. \\ \hline
+    7 & The AI Assistant presents a redirection for the first action. \\ \hline
+    8 & The Patient selects the redirection. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    4a & \textbf{Ambiguous Query:}\newline 
+         1. The AI Assistant cannot confidently identify the Patient's intent. \newline 
+         2. The System provides a list of ``Did you mean...?'' options. \newline 
+         3. Resume at Main Flow Step 2. \\ \hline
+    5a & \textbf{Policy Limitation or Privacy Restriction:}\newline 
+         1. The Patient asks for information that the AI Assistant is not authorized to share. \newline 
+         2. The AI Assistant politely declines the request. \newline 
+         3. Resume at Main Flow Step 2. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC38 Prescription consultation}
+\hypertarget{UC38}{}
+\usecaseheader
+{UC38} % 1: ID
+{Prescription consultation} % 2: Titolo
+{To allow users to view a list of prescriptions issued to them by healthcare providers.} % 3: Goal
+{Scope: Patient Portal. Level: Primary.} % 4: Scope
+{The user is logged into their account.} % 5: Preconditions
+{The user successfully views the list of prescriptions and can identify their status and provider.} % 6: Success
+{The system fails to retrieve prescription data; an error message is displayed.} % 7: Failed
+{Primary: Patient. Secondary: Database} % 8: Actors
+{The User wants to see their prescriptions.} % 9: Trigger
+\begin{ucrequirements}
+    FR25 & Prescription consultation\\ \hline
+    NFR0 & Security and Privacy\\ \hline
+    NFR5 & Accessibility \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+1 & The User wants to see their prescriptions. \\ \hline
+2 & The System retrieves all prescriptions associated with the User's ID from the database. \\ \hline
+3 & The System displays a list of prescriptions showing high-level information (Date, Provider, Medication/Treatment name). \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+2a & \textbf{No Records Available:}\newline
+1. The System identifies that the user has no issued prescriptions. \newline
+2. The System displays an error message. \newline
+3. Use case ends. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC39 Detailed prescription access}
+\hypertarget{UC39}{}
+\usecaseheader
+{UC39} % 1: ID
+{Detailed prescription access} % 2: Titolo
+{To allow a patient to view the comprehensive details of a specific medical prescription.} % 3: Goal
+{Scope: Patient prescription management. Level: Primary.} % 4: Scope
+{The user is logged in as a Patient. At least one prescription is associated with the patient’s profile.} % 5: Preconditions
+{The patient successfully views the full details of the selected prescription.} % 6: Success
+{The prescription details are not displayed, and the patient remains on the prescription list.} % 7: Failed
+{Primary: Patient. Secondary: Healthcare Database.} % 8: Actors
+{The patient wants to see details for a specific prescription assigned to them.} % 9: Trigger
+\begin{ucrequirements}
+    FR26 & Detailed Prescription access\\ \hline
+    NFR0 & Security and privacy \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The patient wants to see details for a specific prescription assigned to them \\ \hline
+    2 & The System displays a list of the Patient's prescriptions. \\ \hline
+    3 & The Patient selects a specific prescription from the list. \\ \hline
+    4 & The System retrieves the prescription data from the database. \\ \hline
+    5 & The System displays the treatment name, prescribing Doctor, issue date, expiration date, priority level, and any associated notes. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+3a & \textbf{Data retrieval error:}\newline
+1. The system fails to fetch details from the database.\newline
+2. An error message is displayed to the patient.\newline
+3. The patient is redirected back to the prescription list. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC40 Medical record acces (Patient)}
+\hypertarget{UC40}{}
+\usecaseheader
+{UC40} % 1: ID
+{Patient medical record access (Patient)} % 2: Titolo
+{To enable a patient to access their medical records and organize them using various filters and sorting criteria.} % 3: Goal
+{Scope: Patient medical history. Level: Primary.} % 4: Scope
+{The user is logged in as a Patient. The system has verified that the user is only accessing records linked to their specific ID.} % 5: Preconditions
+{The patient views their filtered/sorted medical records and exam results.} % 6: Success
+{The patient cannot access the records or sees an empty list due to a system error.} % 7: Failed
+{Primary: Patient. Secondary: Database.} % 8: Actors
+{The patient wants to access their medical records.} % 9: Trigger
+
+\begin{ucflow}
+1 & The patient wants to access their medical records. \\ \hline
+2 & The system retrieves and displays all medical records and exam results for the authenticated patient. \\ \hline
+3 & Patient chooses to sort the records. \\ \hline
+4 & Patient selects a sorting criterion (type, date/time, doctor, or location). \\ \hline
+5 & The system reorders the records based on the selected parameter. \\ \hline
+6 & Patient selects an individual record or result to consult. \\ \hline
+7 & The system displays the full content of the selected record. \\ \hline
+\end{ucflow}
+
+\begin{ucrequirements}
+    FR27 & Patient medical records and result access\\ \hline
+    NFR0 & Security and privacy \\ \hline
+    NFR1 & Algorithm performance \\ \hline
+\end{ucrequirements}
+\begin{ucextensions}
+1a & \textbf{Access Violation Attempt:}\newline
+1. The system detects an attempt to access records not belonging to the logged-in ID.\newline
+2. Access is denied and a security warning is logged.\newline
+3. The use cases ends. \\ \hline
+3a & \textbf{No records found:}\newline
+1. The system finds no records matching the patient's ID.\newline
+2. The system displays an error message. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC41 Account Deletion}
+\hypertarget{UC41}{}
+\usecaseheader
+  {UC41} % 1: ID
+  {Account Deletion} % 2: Titolo
+  {To allow users to permanently delete their HealthMaxxin account, ensuring the complete removal of their personal data from the platform.} % 3: Goal
+  {Scope: Users account management. Level: Primary.} % 4: Scope
+  {The user account exists and the user is logged in.} % 5: Preconditions
+  {The user account and all associated authentication and personal data are deleted.} % 6: Success
+  {The deletion request is aborted and the account remains unchanged.} % 7: Failed
+  {Primary: User. 
+Secondary: Database, Mail Service.} % 8: Actors
+  {The user want to delete their account.} % 9: Trigger
+\begin{ucrequirements}
+    FR28 & Accout Deletion \\ \hline
+    NFR0 & Security and privacy \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The user deletes their account. \\ \hline
+    2 & The System prompts the user with a confirmation message asking whether they really want to delete their account. \\ \hline
+    3 & The user confirms. \\ \hline
+    4 & The System deletes the account and personal data, keeping a local copy for 30 days. \\ \hline
+    5 & The System automatically sends a confirmation email to the user's registered email address after the successful deletion of the account. \\ \hline
+\end{ucflow}
+
+
+
+\begin{ucextensions}
+    2a & \textbf{Deletion Aborted:}\newline 
+         1. The user cancels during the confirmation step. \newline 
+         2. The System aborts the deletion request. \newline 
+         3. No changes are made to the account or personal data. \newline 
+         4. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC42 Medical record access (Doctor)}
+\hypertarget{UC42}{}
+\usecaseheader
+  {UC42} % 1: ID
+  {Medical record access (Doctor)} % 2: Titolo
+  {To allow a doctor to retrieve a patient's clinical history by either manually entering their Fiscal Code or scanning their Sanitary Card barcode.} % 3: Goal
+  {Scope: Accessing Patient Clinical History. Level: Primary Task.} % 4: Scope
+  {The patient is registered in the system.} % 5: Preconditions
+  {The Doctor successfully retrieves and views the patient's relevant clinical history.} % 6: Success
+  {No records are found, the input is invalid, or access is restricted; the System shows an error and no data is retrieved.} % 7: Failed
+  {Primary: Doctor. Secondary: Database.} % 8: Actors
+  {The Doctor wants to search for clinical records.} % 9: Trigger
+\begin{ucrequirements}
+    FR31 & Patient medical record access via manual ID entry \\ \hline
+    FR32 & Patient medical record access via barcode scan \\ \hline
+    NFR0 & Security and privacy \\ \hline
+    NFR1 & Algorithm performance \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The Doctor wants to search for clinical records. \\ \hline
+    2 & The Doctor inputs the Patient's Fiscal Code manually or the manual ID entry. \\ \hline
+    3 & The System validates the format of the input. \\ \hline
+    4 & The System searches the database for matching Patient records. \\ \hline
+    5 & The System retrieves only the clinical information relevant to the booked visit (the Patient's full history is restricted due to privacy concerns). \\ \hline
+    6 & The Doctor views the retrieved clinical information. \\ \hline
+\end{ucflow}
+
+\begin{ucsubvariations}
+    1a & \textbf{Barcode Scan Input:}\newline 
+         1. The Doctor scans the barcode from the Patient's Sanitary Card instead of typing manually.\newline 
+         2. The System processes and decodes the barcode to extract the Fiscal Code.\newline 
+         3. Resume at Main Flow Step 2. \\ \hline
+\end{ucsubvariations}
+
+\begin{ucextensions}
+    1a.1 & \textbf{Barcode Not Readable:}\newline 
+         1. During a barcode scan attempt, the System fails to read or decode the barcode.\newline 
+         2. The System displays an error message.\newline 
+         3. The Doctor is prompted to enter the Patient information manually.\newline 
+         4. Resume at Main Flow Step 1. \\ \hline
+    2a & \textbf{Invalid Input Format:}\newline 
+         1. The System detects that the entered or scanned Fiscal Code has an invalid format. \newline 
+         2. The System displays an error message. \newline 
+         3. The Doctor corrects the input and submits it again. \newline 
+         4. Resume at Main Flow Step 1. \\ \hline
+    3a & \textbf{Patient Not Found:}\newline 
+         1. The System does not find any matching Patient records. \newline 
+         2. The System displays a message indicating that the Patient is not present in the system. \newline 
+         3. Use case ends. \\ \hline
+    4a & \textbf{No Relevant Record Found:}\newline 
+         1. The System detects that the Patient has no clinical records relevant to the current context or previous visits with the Doctor. \newline 
+         2. The System displays a message indicating that no clinical records are available. \newline 
+         3. Use case ends. \\ \hline
+    4b & \textbf{Access Restricted Due to Privacy:}\newline 
+         1. The System detects that access to the Patient's clinical history is restricted due to privacy settings. \newline 
+         2. The System displays an authorization message indicating that the Doctor cannot access the Patient's clinical information. \newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC43 Doctor chronological report}
+\hypertarget{UC43}{}
+\usecaseheader
+  {UC43} % 1: ID
+  {Doctor chronological report} % 2: Titolo
+  {To allow a doctor to view a chronological report of their performed examinations from the last year for review and clinical decision-making.} % 3: Goal
+  {Scope: Doctor Examination History Reporting. Level: Primary.} % 4: Scope
+  {The doctor is authenticated in the system and at least one examination or visit record exists for the doctor in the last year.} % 5: Preconditions
+  {The Doctor successfully views the chronological report of examinations up to the last year.} % 6: Success
+  {The report cannot be generated due to a system error or data retrieval failure.} % 7: Failed
+  {Primary: Doctor.
+Secondary: Database.} % 8: Actors
+  {The use case is triggered when the Doctor wants to view the chronological report from their dashboard.} % 9: Trigger
+
+\begin{ucrequirements}
+    FR34 & Doctor chronological report \\ \hline   
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The Doctor wants to view the chronological report. \\ \hline
+    2 & The System retrieves the Doctor's examinations from the past year. \\ \hline
+    3 & The System shows a chronological list of the Doctor's performed visits from the past year. \\ \hline
+    4 & The Doctor can filter the list for a more detailed view. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    2a & \textbf{No Examination Records Found:}\newline 
+         1. The System finds no examination records for the Doctor from the past year. \newline 
+         2. The System displays an empty report or a message indicating that no records are available. \newline 
+         3. Use case ends. \\ \hline
+\end{ucextensions}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC44 Assign doctor shift}
+\usecaseheader
+  {UC44} % 1: ID
+  {Assign doctor shift} % 2: Titolo
+  {To enable the Head of Department to specify shift patterns for doctors.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a Head of Department. The doctors are registered in the system and assigned to the department.} % 5: Preconditions
+  {The shift patterns for doctors are successfully updated.} % 6: Success
+  {The system remains unchanged; shift patterns stay as they were.} % 7: Failed
+  {Primary: Head of Department. 
+Secondary: Database, Mail Service.} % 8: Actors
+  {The Head of Department wants to specify shift patterns for doctors.} % 9: Trigger
+\begin{ucrequirements}
+    FR8.2 & Doctor shift assignement \\ \hline
+\end{ucrequirements}
+\begin{ucflow}
+    1 & The Head of Department wants to specify shift patterns for doctors. \\ \hline
+    2 & The Head of Department selects a specific doctor. \\ \hline
+    3 & The Head of Department enters the new shift pattern for the selected doctor. \\ \hline
+    4 & The Head of Department saves. \\ \hline
+    5 & The System performs validity checks. \\ \hline
+    6 & The shift pattern is updated and a notification is sent to the doctor via the Mail Service. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    5a & \textbf{Shift pattern invalid:}\newline 
+         1. The System identifies the shift pattern as invalid (e.g., overlapping shifts). \newline 
+         2. The System returns an error. \newline 
+         3. Resume at Main Flow Step 3. \\ \hline
+\end{ucextensions}
+
+
+
+\section{Activity Diagram}
+
+% --- BUNDLE 1 ---
+\begin{minipage}{\textwidth}
+    \subsection{1. Book Appointment}
+    Here there's the entire flow of the booking of an appointment.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/BookAppointments.png}
+        \captionof{figure}{Activity Diagram for Book Appointment}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:}
+        \hyperlink{UC25}{Automated doctor assignment}, 
+        \hyperlink{UC27}{Appointment booking}, 
+        \hyperlink{UC32}{Payment management}, \hyperlink{UC33}{Exemption application during payment},
+        \hyperlink{UC34}{Insurance application during payment},
+        \hyperlink{UC35}{Automatic appointment booking from prescription}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+% --- BUNDLE 2 ---
+\begin{minipage}{\textwidth}
+    \subsection{2. Calendar Management}
+    Here there's the entire flow of the management of a calendar.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/CalandarManagement.png}
+        \captionof{figure}{Activity Diagram for Calendar Management}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:}
+        \hyperlink{UC28}{Patient appointment view},
+        \hyperlink{UC10}{Patient appointment cancellation},
+        \hyperlink{UC29}{Patient appointment rescheduling},
+        \hyperlink{UC30}{Internal calendar integration},
+        \hyperlink{UC45}{HoD appointment view}, \hyperlink{UC11}{Hospital staff appointment cancellation}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+% --- BUNDLE 3 ---
+\begin{minipage}{\textwidth}
+    \subsection{3. Admin Actions}
+    Here the flow of all the admin's possible actions.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/AdminActions.png}
+        \captionof{figure}{Activity Diagram for Admin Actions}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:}
+        \hyperlink{UC1}{Hospital and Department creation},
+        \hyperlink{UC5}{Hospital and Department edit},
+        \hyperlink{UC8}{Hospital and Department closure},
+        \hyperlink{UC12}{Doctor registration},
+        \hyperlink{UC13}{Doctor assignment to a hospital},
+        \hyperlink{UC14}{Promote doctor to HoH}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+% --- BUNDLE 4 ---
+\begin{minipage}{\textwidth}
+    \subsection{4. Head of Hospital Actions}
+    Here there's the entire flow of all the Head of Hospital's possible actions.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/HeadOfHospitalActions.png}
+        \captionof{figure}{Activity Diagram for Head of Hospital Actions}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC15}{Appoint HoD}, 
+        \hyperlink{UC16}{Macro-allocate Doctors to Deparments},
+        \hyperlink{UC18}{Insurance debt tracking and reporting},
+        \hyperlink{UC19}{Insurance debt History},
+        \hyperlink{UC20}{Manual settlement of insurance debt}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+% --- BUNDLE 5 ---
+\begin{minipage}{\textwidth}
+    \subsection{5. Head of Department Actions}
+    Here there's the entire flow of all the Head of Department's possible actions.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/HeadOfDepartmentActions.png}
+        \captionof{figure}{Activity Diagram for Head of Department Actions}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC17}{Enable/Disable Examinations},
+        \hyperlink{UC21}{Configure Operational Capacity},
+        \hyperlink{UC44}{Assign Doctor Shift},
+        \hyperlink{UC28}{Appointment View},
+        \hyperlink{UC11}{Appointment Cancellation}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+% --- BUNDLE 6 ---
+\begin{minipage}{\textwidth}
+    \subsection{6. Doctor Operations}
+    Here's the flow of the doctor's action to manage the their patients' account (exemptions/examinations/prescriptions).
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/DoctorOperations.png}
+        \captionof{figure}{Activity Diagram for Doctor Operations}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC42}{Access Medical Record via CF or Scan},
+        \hyperlink{UC3}{Insert Prescription},
+        \hyperlink{UC4}{Insert Diagnosis},
+        \hyperlink{UC3}{Insert Exemption}
+    \end{itemize}
+\end{minipage}
+
+% --- BUNDLE 7 ---
+\begin{minipage}{\textwidth}
+    \subsection{7. Account Lifecycle}
+    Here's the activity flow of all the action related to the creation/management/deletion of an user account (which can be doctors or patients).
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/AccountLifecycle.png}
+        \captionof{figure}{Activity Diagram for Account Lifecycle}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:}
+        \hyperlink{UC12}{Doctor Registration},
+        \hyperlink{UC23}{User Registration and Authentication via Email},
+        \hyperlink{UC26}{Password Recover},
+        \hyperlink{UC24}{Login},
+        \hyperlink{UC41}{Delete Account},
+        \hyperlink{UC7}{Update Account}
+    \end{itemize}
+\end{minipage}
+
+\section{Sequence Diagram}
+
+% --- BUNDLE 1 ---
+\begin{minipage}{\textwidth}
+    \subsection{1. Reschedule Appointment}
+    Here there's the sequence diagram of the reschedule of an appointment.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Sequence_Diagram/RescheduleAppointment.png}
+        \captionof{figure}{Sequence Diagram for Reschedule Appointment}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC29}{Patient Appointment Rescheduling}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+% --- BUNDLE 2 ---
+\begin{minipage}{\textwidth}
+    \subsection{2. Cancel Appointment}
+    Here is the sequence diagram of the cancel of an appointment, from both patient or hospital staff point of view.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Sequence_Diagram/CancelAppointment.png}
+        \captionof{figure}{Sequence Diagram for Cancel Appointment}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC10}{Patient cancel appointment},
+        \hyperlink{UC11}{Hospital staff cancel appointment}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+% --- BUNDLE 3 ---
+\begin{minipage}{\textwidth}
+    \subsection{3. Doctor Upload Document}
+    Here is the sequence activity related to the upload of documents by doctor into the patient's medical record.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Sequence_Diagram/DoctorUploadDocument.png}
+        \captionof{figure}{Sequence Diagram for Doctor Upload Document}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC42}{Access Medical Record via CF or Scan},
+        \hyperlink{UC3}{Insert Prescription},
+        \hyperlink{UC4}{Insert Diagnosis},
+        \hyperlink{UC3}{Insert Exemption}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+% --- BUNDLE 4 ---
+\begin{minipage}{\textwidth}
+    \subsection{4. Registration User}
+    Here is the sequence diagram about the registration of an user (that can be either a doctor or a patient).
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Sequence_Diagram/RegistrationUser.png}
+        \captionof{figure}{Sequence Diagram for Registration User}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC12}{Doctor Registration},
+        \hyperlink{UC23}{User Registration and Authentication via Email}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+
+% --- BUNDLE 5 ---
+\begin{minipage}{\textwidth}
+    \subsection{5. Book Appointment}
+    Here the sequence diagram about the book of an appointment by a patient.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Sequence_Diagram/BookAppointment.png}
+        \captionof{figure}{Sequence Diagram for Book Appointment}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC25}{Automated doctor assignment}, 
+        \hyperlink{UC27}{Appointment booking}, 
+        \hyperlink{UC32}{Payment management}, \hyperlink{UC33}{Exemption application during payment},
+        \hyperlink{UC34}{Insurance application during payment},
+        \hyperlink{UC35}{Automatic appointment booking from prescription}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+
+% --- BUNDLE 6 ---
+\begin{minipage}{\textwidth}
+    \subsection{6. Account Login and Password Recovery}
+    Here is the sequence diagram about the password recovery, that need the context of the user login, so we decided to implement them in a unique sequence diagram.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Sequence_Diagram/LoginUserAndRecovery.png}
+        \captionof{figure}{Sequence Diagram for Login and Password Recovery}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC26}{Password Recover},
+        \hyperlink{UC24}{Login}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+
+% --- BUNDLE 7 ---
+\begin{minipage}{\textwidth}
+    \subsection{7. Account Management}
+    Here the sequence diagram about the operations related to the edit and deletion of an user account (that can be either a doctor or a patient).
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Sequence_Diagram/AccountManagement.png}
+        \captionof{figure}{Sequence Diagram for Account Management Operations}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Using:} 
+        \hyperlink{UC41}{Delete Account},
+        \hyperlink{UC7}{Update Account}
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+
+\section{Class Diagram}
+For readability purposes, the class diagram has been attached separately as a PDF document.
+\end{document}

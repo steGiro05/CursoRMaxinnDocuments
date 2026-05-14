@@ -1,0 +1,700 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- PACKETS ---
+\usepackage{graphicx} 
+\usepackage{geometry}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{fancyhdr} 
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,     % Enables link coloring
+    linkcolor=black,      % Color for internal links (like \nameref or \ref)
+    filecolor=magenta,   % Color for local file links
+    urlcolor=cyan,       % Color for web links (URLs)
+    citecolor=green      % Color for bibliography citations
+}
+
+\usepackage[colorinlistoftodos]{todonotes}
+% The [normalem] option is very important! It stops ulem from 
+% changing your standard italicized text (\emph{}) into underlines.
+\usepackage[normalem]{ulem}
+\usepackage{xcolor}
+\usepackage{soul}
+
+% --- SETUP HEADER E FOOTER ---
+% --- DEFINIZIONE VERSIONAMENTO ---
+\newcommand{\docversion}{1.1}
+\pagestyle{fancy}
+\fancyhf{} % Clean defaults
+\fancyhead[L]{HealthMaxxin} % Top left
+\fancyhead[R]{Deliverable 1 -- Requirements Analysis} % Top right
+\fancyfoot[C]{\thepage} % Page numbering
+\renewcommand{\headrulewidth}{0.4pt} % Header line
+\setlength{\headheight}{15pt}
+
+
+\setcounter{secnumdepth}{0}
+\begin{document}
+
+% --- TITLE PAGE ---
+\begin{titlepage}
+    \centering
+    \vspace*{2cm} 
+    
+    % --- PROJECT LOGO ---
+    \includegraphics[width=0.35\textwidth]{Logo_HealthMaxxin.png} 
+    
+    \vspace{2.5cm} 
+    
+    % --- DOCUMENT TYPE ---
+    {\scshape\Large Functionalities Analysis\par}
+    \vspace{0.2cm}
+    {\large Version \docversion \par}
+    \vspace{0.5cm}
+    
+    % --- PROJECT TITLE ---
+    {\Large\itshape HealthMaxxin\par}
+    
+    \vfill 
+    
+    % --- AUTHORS ---
+    {\Large \textbf{Authors:} Federico Dapr\`{a}, Giorge Ribic, Luca Galli, Stefano Giroletti\par}
+    {\Large \textbf{Group:} Cursor Maxxing\par}
+    \vspace{0.5cm}
+    
+\end{titlepage}
+
+% --- TABLE OF CONTENTS ---
+\tableofcontents
+\newpage 
+
+% --- PURPOSE OF THE DOCUMENT ---
+\section{Purpose of the Document}
+This document presents the functionalities analysis for the HealthMaxxin platform. It defines the project context and scope, outlines the system objectives, identifies the relevant stakeholders, and specifies the modifications to the functional and non-functional requirements. Moreover, it describes in detail the system boundaries and uses cases, both through text and graphical representation. The document serves as a reference for all subsequent design, planning, and implementation phases of the project.
+
+%--- MODIFICATIONS TO D1 ---
+\section{Modifications to D1}
+The sections "Context Description", "Project Objectives", "Stakeholders" and "Stakeholders-Requirement Mapping" were not modified.
+\\ Of the section "Functional Requirements" the following points were modified:
+\begin{itemize}
+    \item \nameref{FR0}
+    \item \nameref{FR1}
+    \item \nameref{FR4}
+    \item \nameref{FR6}
+    \item \nameref{FR8}
+    \item \nameref{FR9}
+    \item \nameref{FR11}
+    \item \nameref{FR13}
+    \item \nameref{FR29}
+    \item \nameref{FR35}
+    \item \nameref{FR36}
+\end{itemize}
+Of the section "Non-Functional Requirements" the following point was modified:
+\begin{itemize}
+    \item \nameref{NFR4}
+\end{itemize}
+
+% --- CONTEXT DESCRIPTION ---
+\section{Context Description}
+
+\subsection{General Overview}
+This project involves the design of an extensive and centralized software application, intended for use in the administration of the operations of a network of private healthcare services spread over the Italian territory. This application, operating exclusively on an outpatient and ambulatory model, seeks to digitalize key administrative operations, thereby optimizing the entire experience for all relevant stakeholders involved in the healthcare sector.
+
+At the heart of this application is the ``Examination,'' defined as a specific, scheduled transaction between a patient and a doctor. In order to support this model, the application will offer medical professionals tools for scheduling, administrators an extensive toolset for overseeing hospital operations, and patients an optimized interface for scheduling examinations and processing transactions.
+
+The specific features and step-by-step operations for each of these stakeholders will be discussed in the objectives and requirements sections of the application.
+
+\subsection{System Boundaries}
+A major technical limit of this system is its ability to integrate with third-party insurance providers. The application will be unable to verify policies in real time, as it will not have access to any external, live databases from third-party insurance providers. The system will, therefore, rely on a simulated system for managing patient insurance information, with codes created internally. The process of reconciling insurance claims and outstanding debts owed to the hospital will, therefore, not be automated but will be internally simulated.
+\\ \\
+In addition, the fact that the platform has been specifically designed for the logistics of the scheduled outpatient examinations means that the current scope of the system has been specifically defined in terms of doctors, facility managers, and patients. There has been no specific design of the system in terms of dedicated interfaces and access levels for other professional figures in the hospital scenario, such as nurses, medical technicians, and administrative secretaries.
+\\ \\      
+Furthermore, the administration of medications and pharmaceuticals is completely out of the scope of this project. The functionality of the application still remains completely focused on the administration and processing of medical consultations.
+\newpage
+% --- OBJECTIVES ---
+\section{Project Objectives}
+
+\subsection{O1. Hierarchical organization of health facilities} \label{O1}
+The system shall allow the management of the hierarchical structure of the healthcare network by defining the hospitals and the departments within the hospital, and also allow the allocation of doctors and medical equipment to the different departments. This goal specifically deals with the main infrastructure of the hospital and does not include the sub-departments or the management of the General Practitioners.
+
+\subsection{O2. User-friendly examination booking and payment system} \label{O2}
+The platform shall allow for an intuitive interface for patients to register within the system and book the nearest available appointments based on location and time, as well as receive information on appointments and make advance payments that take into account insurance and exemption information. It is specified that there will be no validation of insurance policy status in real-time with providers.
+
+\subsection{O3. Secure consultation of patient medical records} \label{O3}
+The patients shall have unhindered and secured access to view their own medical history, specifically in terms of their records and notes on treatments registered directly within the platform. In consideration of the sensitivity of health information, there shall be stringent data protection mechanisms and controls in place for total confidentiality as discussed in \nameref{NFR0}.
+
+\subsection{O4. Medical prescriptions, exemptions, and results management} \label{O4}
+Doctors must be entrusted with the power to order medical examinations, grant specific exemptions, and upload the results of the diagnoses for the patients they handle. The exemptions must be visible to the patient and must be correctly applied in the payment process. This goal is specific to medical consultations only and does not include the prescription of drugs.
+
+\subsection{O5. Comprehensive medical schedule and appointment management} \label{O5}
+The system shall provide a centralized scheduling engine for the complete life cycle of managing medical appointments. The system shall provide doctors with their own dashboards for tracking their workload. The system shall allow authorized personnel hierarchical oversight. 
+\newpage
+% --- STAKEHOLDERS ---
+\section{Stakeholders}
+
+\subsection{Internal / Humans}
+\begin{itemize}
+    \item \textbf{Healthcare Network Corporation (The Client):} The legal entity and main stakeholder who is commissioning the project. As owner of the private healthcare network, he/she sets the business strategy, general requirements, and investment goals. The commissioning is differentiated from operational users such as the Head of Hospital, as he/she is concerned with the return on investment of the platform and its alignment with corporate policies.
+
+    \item \textbf{System Administrator (Admin):} Responsible for managing the overall system structure, including creating, editing and deleting hospitals and assigning leadership roles such as Head of Hospital and Head of Department.
+
+    \item \textbf{Development Team}: Responsible for the design, implementation, testing and maintenance of the system.
+
+    \item \textbf{Data Protection Officer (DPO)}: Responsible for ensuring that the system complies with data protection regulations (e.g., GDPR). The DPO oversees data handling practices, monitors compliance and advises on security and privacy requirements (see \nameref{NFR0}).
+   
+\end{itemize}
+
+\subsection{Internal / Non-Humans}
+\begin{itemize}
+    \item \textbf{Appointment and Scheduling System:} Responsible for managing bookings and allocating time slots efficiently. It determines the best available appointment based on doctor availability, patient preferences and real-time availability constraints.
+
+    \item \textbf{Medical Records and Prescription System:} Handles the storage, retrieval and management of patient health data and prescriptions. It incorporates cryptographic mechanisms to ensure data privacy, integrity and secure access control.
+
+    \item \textbf{Doctor Assignment Algorithm:} Automatically assigns patients to doctors by evaluating availability and predefined criteria such as specialization and workload. It aims to optimise resource usage and reduce waiting times.
+\end{itemize}
+
+\subsection{External / Humans}
+\begin{itemize}
+    \item \textbf{Patients:} Use the application to book appointments, access their medical records, consult prescriptions and manage payments. They depend on the system for an intuitive, transparent and secure interaction with healthcare services.
+
+
+     \item \textbf{Hospital Personnel:} 
+    These roles represent the primary professional users of the platform. Although they operate within the healthcare network, they interact with the system as end users to facilitate their daily operations.
+    \begin{itemize} 
+        \item \textbf{Head of Hospital:} Responsible for managing hospital-level operations, including resource allocation and organizational structure within a specific hospital.
+    
+        \item \textbf{Head of Department:} Responsible for managing department-level resources such as equipment, staff coordination and doctor availability within their assigned unit.
+    
+        \item \textbf{Doctors:} Use the application to view their schedules, appointments, create prescriptions and exemptions, and view patients' medical records when authorized. They use the application to improve their workflow.
+    \end{itemize}
+\end{itemize}
+
+\subsection{External / Non-Humans}
+\begin{itemize}
+    \item \textbf{Insurance Companies:} Act as external stakeholders and provide the necessary insurance cover to the patients. They are also responsible for setting the policy rules and conditions, and have a special interest in the proper integration of the insurance information in the payment process.
+    
+    \item \textbf{Authentication System:} Provides secure user authentication through national identity providers (e.g., SPID, CIE). It ensures reliable identity verification and compliance with governmental standards.
+
+    \item \textbf{Payment Gateway:} A third-party service (e.g., Stripe, PayPal) that handles financial transactions. It operates under its own compliance requirements and service-level agreements (SLAs), ensuring secure and reliable payment processing.
+
+    \item \textbf{Email System:} Manages communication with users by sending appointment reminders, confirmations and cancellation notifications. It ensures timely delivery through external providers (e.g., Resend).
+
+    \item \textbf{Barcode Scanning Services:} External components (e.g., Google ML Kit, ZXing) responsible for processing barcode scans to retrieve the patient's unique identifier and enable access to associated health records.
+
+    \item \textbf{GDPR:} The General Data Protection Regulation is a European Union regulation governing the collection, processing and storage of personal data. It imposes strict requirements on data protection, user consent and security measures.
+
+    \item \textbf{Ministero della Salute:} The Italian Ministry of Health, which defines national healthcare policies, regulations and interoperability standards that the system must comply with, particularly regarding electronic health records, prescriptions and data exchange.
+
+    \item \textbf{AgID (Agenzia per l'Italia Digitale):} The Italian authority responsible for digital transformation in the public sector. It defines technical guidelines and standards for digital identity (e.g., SPID), security, interoperability and accessibility that the system must adhere to.
+\end{itemize}
+
+The stakeholder classification is summarized in Table~\ref{tab:stakeholder_matrix}.
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|p{6.5cm}|p{6.5cm}|}
+\hline
+\rowcolor{gray!30}
+& \textbf{HUMAN} & \textbf{NON-HUMAN} \\
+\hline
+
+\rowcolor{blue!10}
+\textbf{INTERNAL} & 
+\vspace{-0.5cm}
+\begin{itemize}
+    \item Healthcare Network Corporation
+    \item Development Team
+    \item System Administrator (Admin)
+    \item Data Protection Officer
+\end{itemize}
+\vspace{-0.5cm}
+& 
+\vspace{-0.5cm}
+\begin{itemize}
+    \item Appointment and Scheduling System
+    \item Medical Records and Prescription System
+    \item Doctor Assignment Algorithm
+\end{itemize} 
+\vspace{-0.5cm} \\
+\hline
+
+\rowcolor{green!10}
+\textbf{EXTERNAL} & 
+\vspace{-0.5cm}
+\begin{itemize}
+    \item Hospital Personnel
+    \item Patients
+\end{itemize}
+\vspace{-0.5cm}
+& 
+\vspace{-0.5cm}
+\begin{itemize}
+    \item Insurance Companies
+    \item Authentication System
+    \item Payment Gateway
+    \item Email System
+    \item Barcode Scanning Services
+    \item GDPR
+    \item Ministero della Salute
+    \item AgID (Agenzia per l'Italia Digitale)
+\end{itemize}
+\vspace{-0.5cm} \\
+\hline
+\end{tabular}
+\caption{Stakeholder Classification Matrix}
+\label{tab:stakeholder_matrix}
+\end{table}
+
+\newpage
+
+\section{Functional Requirements}
+This section presents the functional requirements for the HealthMaxxin platform, grouped according to their respective project objectives. Each requirement is followed by cross-references to the objectives, functional requirements, and non-functional requirements it relates to. The mapping between human stakeholders and functional requirements is provided in Table~\ref{tab:user_fr_mapping_fixed}.
+% --- OBJECTIVE O1 ---
+\subsection{FR0. Global catalog management} \label{FR0}
+\hl{The system shall allow the System Administrator to manage a centralized global catalog for medical treatments and examinations which shall serve as a reference for all the facilities within the healthcare network. This management shall include the following functionalities:}
+
+\begin{itemize}
+    \item \hl{\textbf{FR0.1 Treatment creation :} The system shall allow the addition of new medical treatments, defining basic attributes such as name, description, and base pricing.}
+    \item \hl{\textbf{FR0.2 Treatment  editing:} The system shall allow the modification of existing treatments, editing basic attributes such as name, description, and base pricing.}
+    \item \hl{\textbf{FR0.3 Treatment deactivation:} The system shall allow the deactivation of an existing medical treatment upon user confirmation. Once confirmed, the system shall update the treatment's status to "Deactivated", securely log the date and time of the operation, and ensure the treatment is no longer available for future scheduling across all facilities.}
+\end{itemize}
+\nameref{O1}
+\\
+\\ \textbf{Edit:}
+\hl{Following the review of D1, the functional requirement was split into Treatment creation, Treatment editing, Treatment deactivation, with the goal of achieving a more detailed description for the word "managing" used in the first version of the document.}
+
+
+
+\subsection{FR1. Infrastructure and facility management} \label{FR1}
+\hl{The system shall allow the System Administrator to manage the physical infrastructure and primary personnel of the network through the following functionalities:}
+
+\begin{itemize}
+    \item \hl{\textbf{FR1.1 Hospital creation:} The system shall allow the creation of new hospital structures by providing associated metadata (e.g., name, address, contact information).}
+    \item \hl{\textbf{FR1.2 Hospital editing:} The system shall allow the modification of an existing hospital structure's details (e.g., updating the name, while maintaining unique constraints).}
+    \item \hl{\textbf{FR1.3 Hospital closure:} The system shall enable the formal closure of an existing hospital, logically updating its operational status within the system to preserve historical data, provided no active departments are still linked to it.}
+    \item \hl{\textbf{FR1.4 Department creation:} The system shall allow the addition of new departments and link them to a specific, existing hospital structure.}
+    \item \hl{\textbf{FR1.5 Department editing:} The system shall allow the modification of existing department details (e.g., name) within a specific hospital structure.}
+    \item \hl{\textbf{FR1.6 Department closure:} The system shall enable the formal closure of an existing hospital department, logically updating its operational status within the system.}
+    \item \hl{\textbf{FR1.7 Doctor registration:} The system shall allow the registration of new doctors into the platform by inputting their personal and professional metadata (e.g., Specialty, Tax ID) and automatically generating their initial one-time login credentials.}
+    \item \hl{\textbf{FR1.8 Doctor assignment:} The system shall allow the assignment of registered doctors to specific hospitals and departments, integrating them into the facility's active staff.}
+\end{itemize}
+\nameref{O1}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was split into Hospital creation, Hospital editing, Hospital closure, Department creation, Department editing, Department closure, Doctor registration, Doctor assignment with the goal of achieving a more detailed description for the phrasing "managing the physical infrastructure of the network" used in the first version of the document.}
+
+\subsection{FR2. Strategic role appointment (Head of Hospital)} \label{FR2}
+The system shall allow the System Administrator to promote a specific doctor to the role of Head of Hospital. This promotion grants administrative privilege to the user over a specific facility, allowing them to manage internal resources.
+\\ \nameref{O1}
+
+
+\subsection{FR3. Tactical role appointment (Head of Department)} \label{FR3}
+The system shall allow the Head of Hospital to appoint or replace the Head of Department for any unit within their facility.
+\\ \nameref{O1}
+
+\subsection{FR4. Facility doctors allocation} \label{FR4}
+\hl{The system shall allow the Head of Hospital to macro-allocate doctors within their facility. This shall include assigning doctors to departments in the hospital.}
+\\ \nameref{O1}
+\\
+\\ \textbf{Edit}: \hl{Following the review of D1, the functional requirement was rewritten to highlight the focus of the functionality on the doctor's allocation}
+
+\subsection{FR5. Departmental service configuration} \label{FR5}
+The system shall enable the Head of Department to curate the list of treatments offered by their department. They shall be able to enable or disable specific examinations from the global list.
+\\ \nameref{O1}
+
+\subsection{FR6. Insurance debt tracking and reporting} \label{FR6}
+\hl{The system shall allow the Head of Hospital to monitor the outstanding debts of all insurance companies through the following functionalities:}
+\begin{itemize}
+    \item \hl{\textbf{FR6.1 Insurance Debt Dashboard:} The system shall allow the Head of Hospital to view a dashboard displaying the current outstanding debts of all registered insurance companies.}
+    \item \hl{\textbf{FR6.2 Insurance Debt History:} The system shall allow the Head of Hospital to select a specific insurance company to view a chronological history of its accrued debts and outstanding balances.}
+\end{itemize}
+\nameref{O1}
+\\ \nameref{FR19}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was split into Insurance Debt Dashboard, Insurance Debt History with the goal of achieving a more detailed description for the phrasing "The system shall also display the history of debts accrued and outstanding for an insurance company." used in the first version of the document.}
+
+
+\subsection{FR7. Manual settlement of insurance debt} \label{FR7}
+The system shall allow the Head of Hospital to register a settlement payment from an insurance company with fields: Insurance Company, Amount Settled, and Date Settled. The system shall also allow the entry of an optional text note or reference. 
+\\ \nameref{O1}
+\\ \nameref{O2}
+\\ \nameref{FR6}
+\subsection{FR8. Departmental operational management} \label{FR8}
+\hl{The system shall enable the Head of Department to manage the day-to-day running of their allocated department through the following functionalities:}
+\begin{itemize}
+    \item \hl{\textbf{FR8.1 Department Capacity Configuration:} The system shall allow the Head of Department to configure the operational capacity of the department by defining the total number of available physical resources (for example, the number of examination rooms or treatment stations available for scheduling)}
+    \item \hl{\textbf{FR8.2 Doctor Shift Assignment:} The system shall allow the Head of Department to assign working shifts to doctors allocated to work within the department}
+\end{itemize}
+\nameref{O1}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was split into Department Capacity Configuration, Doctor Shift Assignment with the goal of underlying the independence of the two operations.}
+
+% --- OBJECTIVE O2 ---
+\noindent\rule{\textwidth}{0.4pt}
+\medskip
+\subsection{FR9. Insurance policy management} \label{FR9}
+\hl{The system shall allow the System Administrator to manage insurance policies through the following functionalities:}
+\begin{itemize}
+    \item \hl{\textbf{FR9.1 Create Insurance Policy:} The system shall allow the System Administrator to create a new insurance policy by defining the following parameters: Insurance Company, Discount Percentage, Validity Period, and Covered Medical Treatments.}
+    \item \hl{\textbf{FR9.2 View Insurance Policies:} The system shall allow the System Administrator to view a list of all existing insurance policies and their associated details.}
+    \item \hl{\textbf{FR9.3 Update Insurance Policy:} The system shall allow the System Administrator to modify the details of an existing, active insurance policy.}
+    \item \hl{\textbf{FR9.4 Delete Insurance Policy:} The system shall allow the System Administrator to delete an existing insurance policy.}
+\end{itemize}
+\nameref{O2}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was split into Create Insurance Policy, View Insurance Policies, Update Insurance Policy, Delete Insurance Policy with the goal of achieving a more detailed description of such actions.}
+
+\subsection{FR10. Simulated insurance code generation} \label{FR10} 
+The system shall allow the System Administrator to create unique insurance codes associated with specific insurance policies for demonstration.
+\\ \nameref{O2}
+
+\subsection{FR11. Identity and access management} \label{FR11}
+\hl{The system shall enable users to manage their platform identity and access through the following functionalities:}
+
+\begin{itemize}
+    \item \hl{\textbf{FR11.1 User registration:} The system shall allow unregistered users to create a new account using their email by providing the personal data required for identification, verification and service usage.}
+    \item \hl{\textbf{FR11.2 User validation:} The system shall allow newly registered users to validate their accounts by verifying a secure token sent to their registered email address.}
+    \item \hl{\textbf{FR11.3 User login:} The system shall allow registered users to authenticate and securely access their accounts using their registered email and password credentials, or alternatively through national digital identity providers (e.g., SPID, CIE).}
+\end{itemize}
+\nameref{O2} \\
+\nameref{NFR6} \\
+\nameref{NFR7}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was modified to include the functionality of user authentication.}
+
+\subsection{FR12. Automated doctor assignment} \label{FR12}
+Upon receipt of a booking request, the system shall automatically assign a doctor for the booked appointment through the application of the assignment algorithm, ensuring the right specialty, continuity of care, and balanced distribution of workload among available medical staff.
+\\ \nameref{O2}
+\\ \nameref{FR15}
+\\ \nameref{FR22}
+
+\subsection{FR13. Profile management} \label{FR13}
+\hl{Authenticated users shall be able to manage their profile through the following functionalities:}
+\begin{itemize}
+    \item \hl{\textbf{FR13.1 View Profile:} The system shall allow authenticated users to view their profile}
+    \item \hl{\textbf{FR13.2 Update Profile:} The system shall allow authenticated users to update their profile}
+\end{itemize}
+\nameref{O2}
+\\ \nameref{FR11}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was split into View Profile, Update Profile with the goal of achieving a more detailed description for such actions}
+
+\subsection{FR14. Account recovery}\label{FR14}
+The system shall allow users to recover access to their account through an e-mail based recovery mechanism.
+\\ \nameref{O2} 
+\\ \nameref{FR11}
+
+\subsection{FR15. Appointment booking} \label{FR15}
+The system shall enable patients to book an appointment by selecting an examination type and optionally specifying a preferred doctor. If the patient does not select a doctor, the system shall automatically assign one through the doctor assignment algorithm (see \nameref{FR12}). The results shall be filtered based on location and availability, and the patient shall be able to change their preferred location. The system shall send an email notification to the patient when an appointment is booked.
+\nameref{O2}
+
+\subsection{FR16. Appointment management} \label{FR16}
+The system shall enable patients to manage their booked appointments through the following functionalities:
+
+\begin{itemize}
+    \item \textbf{FR16.1 View appointment:} The system shall allow patients to view a list of their booked appointments, including both past and upcoming sessions.
+    \item \textbf{FR16.2 Cancel appointment:} The system shall enable patients to cancel an appointment, provided that the request is made with at least 48 hours' notice.
+    \item \textbf{FR16.3 Reschedule appointment:} The system shall allow patients to reschedule an appointment by selecting a new available time slot, provided that at least 48 hours' notice is given.
+\end{itemize}
+\nameref{O2} \\
+\nameref{FR15}
+
+\subsection{FR17. Internal calendar integration} \label{FR17}
+The system shall allow patients and doctors to view their appointments through a dedicated calendar section.
+\\ \nameref{O2}
+\\ \nameref{O5}
+\\ \nameref{FR15}
+
+\subsection{FR18. Appointment export} \label{FR18}
+The system shall allow patients and doctors to export appointments to their personal calendar (e.g., Google Calendar, Apple Calendar).
+\\ \nameref{O2}
+\\ \nameref{FR15}
+
+\subsection{FR19. Payment management} \label{FR19}
+The system shall support secure payment handling for medical appointments upfront using a credit card or other payment methods (e.g., Google Pay, Apple Pay).
+\\ \nameref{O2}
+
+\subsection{FR20. Exemption application during payment} \label{FR20}
+The system shall automatically retrieve and apply all valid medical exemptions associated with the authenticated user during the payment process. This shall reduce the total cost by a percentage associated with the exemption. The percentage and the validity period shall be based on the categories of the treatment. See \nameref{FR30}.
+\\ \nameref{O2}
+\\ \nameref{FR19}
+
+\subsection{FR21. Insurance application during payment} \label{FR21}
+The system shall automatically retrieve and apply the user's registered insurance policy during the payment process, reducing the total amount according to the policy's rules, such as the discount percentage, covered treatments, and expiration date.
+\\ \nameref{O2}
+\\ \nameref{FR19}
+
+\subsection{FR22. Automatic appointment booking from prescription} \label{FR22}
+The system shall allow users to automatically initiate appointment booking from a selected prescription. To see more about prescriptions, refer to \nameref{FR25}.
+\\ \nameref{O2}
+\\ \nameref{O3}
+\\ \nameref{FR15}
+
+\subsection{FR23. Patient insurance registration via unique code} \label{FR23}
+The system shall allow users to register and manage their insurance information through the dashboard by providing a unique insurance code.
+\\ \nameref{O2}
+\\ \nameref{FR10}
+\\ \nameref{FR21}
+
+\subsection{FR24. AI assistant} \label{FR24}
+The system shall include an AI assistant that helps the patient navigate the system. The AI assistant shall answer the patient's questions about booking, payment, and prescriptions; assist the patient in booking an appointment by providing the steps involved in the process; and provide suggestions based on the current page or the patient's actions.
+\\ \nameref{O2}
+
+% --- OBJECTIVE O3 ---
+\noindent\rule{\textwidth}{0.4pt}
+\medskip
+
+\subsection{FR25. Prescription consultation} \label{FR25}
+The system shall allow patients to consult their prescriptions through the dashboard or profile section.
+\\ \nameref{O3}
+
+\subsection{FR26. Detailed prescription access} \label{FR26}
+The system shall allow patients to select a prescription and view its full details, including treatment name, prescribing doctor, priority level, issue date, expiration date and any associated notes.
+\\ \nameref{O3}
+\\ \nameref{FR25}
+
+\subsection{FR27. Patient medical records and results access} \label{FR27}
+The system shall allow patients to access and consult their own medical records and exam results. The patient shall be able to sort the records by type, date/time, doctor, and location. The system shall ensure that each patient can only access their own records.
+\\ \nameref{O3}
+
+\subsection{FR28. Account deletion} \label{FR28}
+The system shall provide the capability for users to request deletion of their account in accordance with GDPR requirements. The system shall delete personal information while retaining medical records in accordance with the law, thereby handling the ``Right to be Forgotten'' correctly.
+\\ \nameref{O3}
+\\ \nameref{NFR0}
+
+% --- OBJECTIVE O4 ---
+\noindent\rule{\textwidth}{0.4pt}
+\medskip
+\subsection{FR29. Prescription creation} \label{FR29}
+The system shall allow doctors to \textcolor{red}{\sout{issue digital prescriptions, including treatment name and priority, and shall automatically link them to the patient’s dashboard.}} \textcolor{blue}{\uline{assign digital prescriptions to a patient's profile, including treatment name and priority.}}
+\\ \nameref{O4}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was modified to underline the fact that prescriptions are directly assigned to a patient's profile}
+
+\subsection{FR30. Exemption creation} \label{FR30}
+The system shall allow doctors to assign medical exemptions to a patient's profile, specifying discount percentage, covered treatment categories and expiration date, with immediate availability for payment calculations.
+\\ \nameref{O4}
+
+\subsection{FR31. Patient medical record access via manual ID entry} \label{FR31}
+The system shall enable doctors to view a patient's clinical history by manually inputting the Fiscal Code or Sanitary Card number. The system shall allow access only if there is a scheduled appointment or if the doctor is authorized to view the patient's information for a follow-up examination.
+\\ \nameref{O4}
+
+\subsection{FR32. Patient medical record access via barcode scan} \label{FR32}
+The system shall allow doctors to retrieve patient medical records by scanning a barcode via the application. The same authorization rules defined in \nameref{FR31} shall apply: access shall be granted only if there is a scheduled appointment or if the doctor is authorized for a follow-up examination.
+\\ \nameref{O4}
+
+\subsection{FR33. Examination upload to patient clinical record} \label{FR33}
+The system shall allow doctors to upload and register a completed medical examination in the system, including diagnosis, attached documents, and clinical notes. The results shall be immediately available to the patient through their personal dashboard.
+\\ \nameref{O4}
+
+% --- OBJECTIVE O5 ---
+\noindent\rule{\textwidth}{0.4pt}
+\medskip
+
+\subsection{FR34. Doctor chronological report} \label{FR34}
+The system shall provide a dashboard for doctors to view a record of their own examinations up to the last year.
+\\ \nameref{O5}
+
+\subsection{FR35. Doctor appointment management} \label{FR35}
+\hl{The system shall enable doctors to manage their scheduled appointments from the calendar through the following functionalities:}
+\begin{itemize}
+    \item \hl{\textbf{FR35.1 View appointments:} The system shall allow doctors to view their scheduled appointments from the calendar.}
+    \item \hl{\textbf{FR35.2 Cancel appointments:} The system shall allow doctors to cancel an appointment with a reason provided. The cancellation reason shall be sent to the patient through an email notification, and a full refund shall be issued.}
+\end{itemize}
+\nameref{O5}
+\\ \nameref{FR16}
+\\ \nameref{FR17}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was split into View appointments, Cancel appointments with the goal of achieving a more detailed description for such functionalities.}
+
+\subsection{FR36. Head of Department appointment management} \label{FR36}
+\hl{The system shall enable the Head of Department to manage their department's appointments through the following functionalities:}
+\begin{itemize}
+    \item \hl{\textbf{FR36.1 View appointments:} The system shall allow the Head of Department to view their department's scheduled appointments through an administrative interface.}
+    \item \hl{\textbf{FR36.2 Cancel appointments:} The system shall allow the Head of Department to cancel an appointment within their department with a reason provided. The cancellation reason shall be sent to the patient through an email notification, and a full refund shall be issued.}
+\end{itemize}
+\nameref{O5}
+\\ \nameref{FR16}
+\\
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the functional requirement was split into View appointments, Cancel appointments with the goal of achieving a more detailed description for such functionalities.}
+
+\newpage
+\section{Stakeholders--Requirement Mapping}
+
+Table~\ref{tab:user_fr_mapping_fixed} maps each primary human stakeholder to the functional requirements they interact with, grouped by scope. 
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\rowcolor{gray!30} 
+\textbf{STAKEHOLDER} & \textbf{SCOPE} & \textbf{FUNCTIONAL REQ.} \\ \hline
+
+\rowcolor{blue!10}
+\textbf{Patient} & Personal Health & 
+FR11, FR13--FR14 (Auth \& Profile) \newline
+FR12, FR15--FR18, FR22 (Booking) \newline
+FR19--FR21, FR23 (Payments \& Insurance) \newline
+FR24 (AI Support) \newline
+FR25--FR27 (Medical History) \newline
+FR28 (GDPR Deletion)  \\ \hline
+
+\rowcolor{green!10}
+\textbf{Doctor} & Clinical Operations &
+FR29 (Prescriptions) \newline
+FR30 (Exemptions) \newline
+FR31--FR32 (Access Records) \newline
+FR12, FR33--FR35 (Schedules \& Examinations) \\ \hline
+
+\rowcolor{orange!20}
+\textbf{System Administrator} & System Management & 
+FR0--FR2 (System Configuration) \newline
+FR9--FR10 (Insurance Configuration) \\ \hline
+
+\rowcolor{yellow!20}
+\textbf{Head of Hospital} & Facility Management & 
+FR3--FR4 (Hierarchy \& Resources) \newline
+FR6--FR7 (Insurance Tracking)\\ \hline
+
+\rowcolor{yellow!10}
+\textbf{Head of Department} & Department Management & 
+FR5 (Unit Treatments) \newline
+FR8 (Unit Resources)\newline
+FR36 (Dept. Appointment Management)  \\ \hline
+\end{tabularx}
+\caption{Mapping of Human Stakeholders to Functional Requirements}
+\label{tab:user_fr_mapping_fixed}
+\end{table}
+
+
+
+\newpage
+\section{Non-Functional Requirements}
+
+\subsection{NFR0. Security and privacy} \label{NFR0}
+    \textit{External requirements -- legislative requirements \& Product requirements -- security requirements:}
+    Because the system processes highly sensitive personal health information (PHI), it shall comply with the General Data Protection Regulation (GDPR) and enforce robust security measures.
+
+
+\begin{itemize}
+    \item \textbf{Data Encryption:} All medical records and sensitive personal data shall be strongly encrypted at-rest to protect against data leaks. 
+    
+    \item \textbf{Key Management:} The system shall ensure secure management of cryptographic keys, including protection, storage and periodic renewal, to prevent unauthorized access to sensitive data.
+
+    \item \textbf{Data Minimization \& Access Control:} In compliance with GDPR principles, the system shall enforce strict role-based access. Medical records shall only be displayed to a doctor if strictly necessary, such as during an active scheduled appointment or immediately after the physical scanning of the patient's ``Tessera Sanitaria''.
+
+    \item \textbf{Audit Logging:} The system shall log all access and modification operations on medical records, including timestamp, user identity and reason for access.
+
+    \item \textbf{Data Masking and Pseudonymization:} When accessed by non-clinical staff or used for analysis, sensitive medical data shall be protected through anonymization or pseudonymization techniques to prevent patient identification.
+\end{itemize}
+\nameref{O3}
+\\ \nameref{FR26}
+\\ \nameref{FR27}
+\\ \nameref{FR28}
+\\ \nameref{FR31}
+\\ \nameref{FR32}
+
+\subsection{NFR1. Algorithm performance} \label{NFR1}
+\begin{itemize}
+    \item \textit{Product requirements -- performance requirements:}
+        The automated doctor assignment algorithm shall return a valid assignment with a maximum latency of 2 seconds. This performance threshold must be maintained under the peak load conditions and data volumes defined in \nameref{NFR4}.
+    \\ \nameref{FR12}
+    \\ \nameref{FR15}
+    \\ \nameref{FR22}
+    
+    \item \textit{Product requirements -- performance requirements:}
+    Search results for examinations and the loading of medical record files shall not exceed 3 seconds to ensure efficiency for both patients and doctors.
+    \\ \nameref{FR27}
+    \\ \nameref{FR31}
+    \\ \nameref{FR32}
+    
+\end{itemize}
+
+\subsection{NFR2. Implementation} \label{NFR2}
+    \textit{Organizational requirements -- implementation requirements:}
+    The system shall be implemented as a secure web application, ensuring encrypted communication between client and server.
+    \\ \nameref{NFR0}
+    \\ \nameref{FR11}
+
+\subsection{NFR3. Portability} \label{NFR3}
+    \textit{Product requirements -- portability requirements:}
+    The web application shall be compatible with the current versions of Google Chrome, Mozilla Firefox and Safari (2023 onwards) for both desktop and mobile views.
+    \\ \nameref{NFR2}
+
+\subsection{NFR4. Scalability and capacity} \label{NFR4}
+\textit{Product requirements -- dimensional requirements:}
+\hl{The system architecture shall be scalable in nature, in particular, without compromising performance:}
+\begin{itemize}
+    \item \hl{\textbf{NFR4.1 Storage Capacity:} The system shall support the storage and management of up to 1,000,000 patient records}
+    \item \hl{\textbf{NFR4.2 Retention Capacity:} The system shall maintain up to 10 years of examination history.}
+    \item \hl{\textbf{NFR4.3 Internal Load:} The system shall support up to at least 5,000 internal staff users.}
+    \item \hl{\textbf{NFR4.4 External Load:} The system shall support up to 1,000 concurrent external patient sessions.}
+    \item \hl{\textbf{NFR4.5 Structural Integrity:} The backend system shall be able to accommodate the ever-increasing network of the healthcare system by allowing new hospitals and departments to be integrated seamlessly without requiring structural changes in the database schema.}
+\end{itemize}
+\nameref{NFR2}
+\\ \nameref{FR1}
+\\ \nameref{FR15}
+\\ \textbf{Edit}:
+\hl{Following the review of D1, the non-functional requirement was split into Storage Capacity, Retention Capacity, Internal Load, External Load and Structural Integrity with the goal of achieving a clearer structure.}
+
+
+\subsection{NFR5. Accessibility} \label{NFR5}
+    \textit{External requirements -- ethical requirements:}
+    The system interface shall follow WCAG 2.1 Level AA standards to ensure that patients with visual or motor impairments can use the booking and prescription services.
+    \\ \nameref{NFR3}
+    \\ \nameref{FR15}
+    \\ \nameref{FR25}
+    
+\subsection{NFR6. SPID/CIE-based registration and authentication} \label{NFR6}
+The system shall support authentication through national identity providers (SPID and CIE) to ensure secure and legally verified user access.
+\\ \nameref{O2}
+\\ \nameref{O3}
+\\ \nameref{FR11}
+
+\subsection{NFR7. Login validity period} \label{NFR7}
+    \textit{External requirements -- safety requirements:}
+    To prevent unauthorized access to sensitive clinical data on shared hospital computers, the system shall request re-authentication after 30 minutes of inactivity.
+    \\ \nameref{NFR0}
+    \\ \nameref{NFR6}
+    \\ \nameref{FR11}
+    
+
+\subsection{NFR8. Concurrency and data integrity} \label{NFR8}
+    \textit{Product requirements -- reliability requirements:}
+    The system shall maintain transactional integrity and prevent race conditions in the appointment booking process. If multiple users attempt to book the same appointment slot simultaneously, the system shall assign the booking to only one user, thereby preventing double booking without any system failure.
+    \\ \nameref{NFR4}
+    \\ \nameref{FR15}
+    
+
+\subsection{NFR9. Localization} \label{NFR9}
+\textit{Product requirements -- usability requirements:}
+The system shall implement comprehensive localization by supporting both Italian and English languages, alongside the adaptation to regional conventions for date, time, and currency formats.
+\\ \nameref{NFR5}
+\\ \nameref{FR15}
+\\ \nameref{FR24}
+
+\subsection{NFR10. Email notification}\label{NFR10}
+\textit{Product requirements -- safety requirements:}
+The system shall automatically alert involved patients and doctors upon the completion of key transactions, including bookings, payments, and cancellations. 
+ \\ \nameref{O2}
+ \\ \nameref{FR15}
+ \\ \nameref{FR16}
+ \\ \nameref{FR19}
+ \\ \nameref{FR33}
+ \\ \nameref{FR35}
+ \\ \nameref{FR36}
+ 
+\end{document}

@@ -2859,8 +2859,7 @@ For readability purposes, the class diagram has been attached separately as a PD
 
 \textbf{Description}
 
-The central singleton class representing the entire HealthMaxxing platform. It acts as the top-level container and entry point for the system, tying together the major subsystems: the hospital network, the user base, the treatment catalog, and insurance policies. Its existence ensures that all components operate within a single, coherent system context.
-
+The HealthMaxxing system has a particular class which controls everything. The controlling class in this case acts like a container which contains all the major components of the system. It is both the beginning and the foundation of the system connecting the hospitals network, its users, the list of services and the list of insurances. The controlling class ensures that all these major components are working together in a coordinated manner within the framework of the HealthMaxxing system.
 \textbf{Attributes}
 
 \begin{center}
@@ -2887,8 +2886,7 @@ The central singleton class representing the entire HealthMaxxing platform. It a
 
 \textbf{Description}
 
-The base class for all human actors who interact with the HealthMaxxing platform (excluding \texttt{SystemAdmin}, which is a separate administrative entity). It encapsulates the shared identity and authentication data common to all user roles, patients, doctors, department heads, and hospital heads. Every user has a unique account, can authenticate, and can manage their own profile. 
-
+This is the base class for all actors from the human category that use the HealthMaxxing system (except for the class \texttt{SystemAdmin}, which is another type of actor). This class includes identity and authentication information that is common to any user: each user has his/her own account that is used to authenticate and manage personal information. \texttt{fiscalCode} field has an especially important meaning in the Italian health sector since it is used as a unique patient identifier.
 \textbf{Attributes}
 
 \begin{center}
@@ -2942,9 +2940,7 @@ The base class for all human actors who interact with the HealthMaxxing platform
 
 \textbf{Description}
 
-
-A specialization of \texttt{User} representing individuals who seek and receive medical care within the system. Patients are the primary consumers of healthcare services: they book appointments for treatments, manage their insurance coverage, and accumulate a health history.
-
+This specialization of \texttt{User} pertains to the users of the system who seek medical treatment in it. They are the main consumers of healthcare services; they schedule their treatment sessions, handle their insurance policies, and generate their health histories through medication, physical exams, and exemptions. The \texttt{fiscalCode} attribute obtained from the \texttt{User} specialization is crucial for the patients since doctors use it to look up their medical files.
 \textbf{Attributes}
 
 \begin{center}
@@ -2994,8 +2990,7 @@ A specialization of \texttt{User} representing individuals who seek and receive 
 
 \textbf{Description}
 
-A specialization of \texttt{User} representing licensed medical professionals registered in the system. Doctors are the primary healthcare providers: they conduct appointments, issue prescriptions and exemptions, upload examination results, and access patient records. They are assigned to one or more departments and operate according to scheduled shifts. Doctors form the basis for the more privileged \texttt{HeadOfDepartment} and \texttt{HeadOfHospital} roles.
-
+A specialized class of \texttt{User}, which is a class that represents authorized medical practitioners who have been registered in the system. The doctors are the main care-givers in the application, conducting consultations, prescribing medications and exemptions, uploading test results, and accessing patient records. They can be assigned to work in one or several departments and work in shifts.
 \textbf{Attributes}
 
 \begin{center}
@@ -3047,8 +3042,7 @@ A specialization of \texttt{User} representing licensed medical professionals re
 
 \textbf{Description}
 
-A specialization of \texttt{Doctor} with additional administrative authority scoped to a single department. The Head of Department oversees the operational management of their unit: they configure capacity, define treatment offerings, manage doctor assignments, and maintain shift patterns. They also have visibility into all appointments occurring within their department and can intervene by cancelling them when necessary.
-
+An extension of \texttt{Doctor} that possesses administrative capabilities on the level of one department. The Department Head is responsible for managing the operations of their respective department, such as setting the capacity of their department, defining treatments offered, assigning doctors, and organizing shifts. Additionally, they are aware of all appointments happening in their respective departments and have the ability to cancel them.
 \textbf{Methods}
 
 \begin{center}
@@ -3082,8 +3076,7 @@ A specialization of \texttt{Doctor} with additional administrative authority sco
 
 \textbf{Description}
 
-A specialization of \texttt{Doctor} with the highest level of administrative authority within a specific hospital. The Head of Hospital oversees the appointment and allocation of staff at the departmental and hospital-wide level. They are also the key actor in financial management, having visibility into insurance-related debts and the ability to settle outstanding balances with insurance companies.
-
+Specialization of Doctor that holds the highest rank regarding administrative rights in a particular hospital. The Head of Hospital plays an important role in staff deployment and hiring, both in the departmental and organizational levels. He is also responsible for handling the organization’s finance because he knows how much insurance debt there is and can pay it off.
 \textbf{Methods}
 
 \begin{center}
@@ -3115,8 +3108,7 @@ A specialization of \texttt{Doctor} with the highest level of administrative aut
 
 \textbf{Description}
 
-A privileged, platform-level administrator who sits outside the \texttt{User} hierarchy. The System Admin is responsible for the configuration and lifecycle management of the entire platform infrastructure: creating and closing hospitals and departments, registering doctors, and managing insurance policies and treatments globally. This role is typically held by platform operators rather than healthcare professionals and has no patient-facing responsibilities. It has its own separate authentication mechanism.
-
+The elevated, platform-level System Admin who is an outsider to the \texttt{User} class. The System Admin oversees the creation, destruction, and management of all the platform's infrastructure, including hospitals and departments, registering doctors, and insurance plans and treatments across the globe. The System Admin is a position that is usually taken up by platform administrators and not medical practitioners, and therefore has no interaction with patients.
 \textbf{Attributes}
 
 \begin{center}
@@ -3175,8 +3167,7 @@ A privileged, platform-level administrator who sits outside the \texttt{User} hi
 
 \textbf{Description}
 
-Represents a physical hospital facility registered within the platform. A hospital is the top-level organizational unit in the care delivery hierarchy, containing multiple departments and employing doctors. Its status lifecycle (active/closed) is managed by the \texttt{SystemAdmin}. Each hospital is headed by a \texttt{HeadOfHospital} and can accumulate insurance-related debt tracked via \texttt{OutstandingDebt}.
-
+Represents the physical hospital infrastructure that has been registered on the system. The hospital is the highest level organizational structure within the healthcare delivery hierarchy, comprising several departments and staffed by physicians. The status of the hospital (active or closed) is controlled by the \texttt{SystemAdmin}. There is one HeadOfHospital per hospital, which may accrue insurance debt through \texttt{OutstandingDebt}.
 \textbf{Attributes}
 
 \begin{center}
@@ -3221,8 +3212,7 @@ Represents a physical hospital facility registered within the platform. A hospit
 
 \textbf{Description}
 
-Represents a specialized medical unit within a hospital (e.g., Cardiology, Oncology, Radiology). A department defines what treatments it offers, how many patients it can handle (capacity), and which doctors are working within it. Its operational state is managed through status flags, and it can be closed when no longer active. Departments are the direct context in which appointments and clinical activities take place.
-
+Department is a specialized health care division in a hospital such as Cardiology, Oncology, Radiology, etc. Department sets its own treatment services, capacity of patients to be treated in that department, and doctors that work in the department. It operates on the basis of flags and can be shut down if not active anymore. Departments are the immediate environment where appointments and clinical activities happen.
 \textbf{Attributes}
 
 \begin{center}
@@ -3269,8 +3259,7 @@ Represents a specialized medical unit within a hospital (e.g., Cardiology, Oncol
 
 \textbf{Description}
 
-Defines a recurring working time block for a specific doctor. A shift is characterized by a day of the week and a time window, and is valid within a defined date range. This allows the system to model part-time schedules, rotations, and temporary duty assignments. The validity check ensures the system only considers shifts that fall within their active period when computing doctor availability for appointment booking.
-
+It is a repeatable block of working hours for a particular doctor. It includes both the day of the week and the working hours for this day, and it can be activated within a certain date range. This enables the system to take into account part-time work plans, rotation shifts, and temporary shifts. The validation process prevents the system from taking into account shifts outside their active range.
 \textbf{Attributes}
 
 \begin{center}
@@ -3315,8 +3304,7 @@ Defines a recurring working time block for a specific doctor. A shift is charact
 
 \textbf{Description}
 
-A personal scheduling container owned by each \texttt{User}. It aggregates all appointments associated with that user and provides a secure export mechanism for integration with external calendar applications (e.g., Google Calendar, iCal). The export is token-protected and time-limited to prevent unauthorized access.
-
+Scheduling container for personal Use belonging to \texttt{User}. Collects all appointments made with respect to that user. It has an export feature, which enables exportation into other calendar software (such as Google Calendar and iCal), but the feature is token protected.
 \textbf{Attributes}
 
 \begin{center}
@@ -3599,7 +3587,7 @@ A registry that aggregates all treatments defined in the system. The catalog ser
 
 \textbf{Description}
 
-A formal medical document issued by a doctor to a patient, authorizing the patient to receive a specific treatment or medication. Prescriptions have a validity window and a fulfillment flag, enabling the system to track whether they have been acted upon. Expired or already-fulfilled prescriptions are distinguishable, preventing misuse.
+A prescription is a document written by a doctor that lets a patient get a particular medicine or treatment. It has a limited period of validity, and the system records whether it has already been used. This makes it easier to avoid problems such as expired prescriptions being accepted or the same prescription being used more than once.
 
 \textbf{Attributes}
 
@@ -3647,7 +3635,7 @@ A formal medical document issued by a doctor to a patient, authorizing the patie
 
 \textbf{Description}
 
-Represents a discount entitlement granted to a patient. An exemption reduces the cost of applicable treatments by a defined percentage and is valid for a specific time period.
+An exemption is a discount granted to a patient when they meet specific medical, social, or economic requirements, as commonly occurs within the Italian National Health Service. It reduces the cost of the treatments it covers by a predefined percentage and remains valid only for a set period of time. Because exemptions are tied to particular treatments, they apply only to the services explicitly included, rather than to all services in the system.
 
 \textbf{Attributes}
 
@@ -3697,7 +3685,7 @@ Represents a discount entitlement granted to a patient. An exemption reduces the
 
 \textbf{Description}
 
-Represents a health insurance product offered by an external insurance company, registered in the system by the \texttt{SystemAdmin}. A policy defines the coverage conditions and the discount percentage it provides on treatments. Policies can be linked to individual patients via \texttt{InsurancePolicyRecord} entries, allowing the system to automatically apply insurance discounts during payment. Policies can be deactivated to prevent new linkages while preserving historical records.
+An insurance policy represents a health insurance plan provided by an external insurance company and registered in the system by the \texttt{SystemAdmin}. It defines the conditions under which coverage applies, as well as the discount percentage that can be applied to treatments. Policies may be associated with individual patients through \texttt{InsurancePolicyRecord} entries, allowing the system to apply the appropriate insurance discount during payment. A policy can also be deactivated when it should no longer be assigned to new patients, while still keeping its past records available.
 
 \textbf{Attributes}
 
@@ -3747,7 +3735,7 @@ Represents a health insurance product offered by an external insurance company, 
 
 \textbf{Description}
 
-A join entity that captures the specific instance of an insurance policy being linked to a patient. It records when the policy was registered, whether it has been consumed (used for a payment), and the total financial amount it covered. This provides a granular audit trail of insurance usage per patient and per policy.
+An \texttt{InsurancePolicyRecord} is used to represent a single association between a patient and an insurance policy. It records the date the policy was added, whether it has already been applied to a payment, and the total amount that the insurance has covered. This allows the system to keep a clear and traceable history of insurance use for each patient and policy.
 
 \textbf{Attributes}
 
@@ -3780,7 +3768,7 @@ A join entity that captures the specific instance of an insurance policy being l
 
 \textbf{Description}
 
-Tracks the running financial debt that an insurance company owes to the hospital system as a result of insurance discounts applied to patient payments. As insurance covers portions of appointment costs, a debt accumulates against the insurance company. The Head of Hospital monitors this balance and can record settlements. A full history of insurance policy records is accessible for reconciliation purposes.
+\texttt{OutstandingDebt} keeps track of the amount an insurance company still owes to the hospital system after covering part of a patient's appointment cost. Whenever an insurance discount is applied, the covered amount is added to the company's outstanding balance. The Head of Hospital can review this balance and register any payments or settlements received from the insurance company. The system also preserves the related insurance records, making it possible to verify and reconcile the debt when necessary.
 
 \textbf{Attributes}
 
@@ -3827,7 +3815,7 @@ Tracks the running financial debt that an insurance company owes to the hospital
 
 \textbf{Description}
 
-An AI-powered conversational assistant embedded within the platform, associated with each user's session. It provides contextual support by processing natural language queries from users and suggesting relevant quick actions within the application. The assistant is session-scoped, meaning it has context within a single user interaction. It can help patients understand appointment options, guide doctors through workflows, or assist administrators with system tasks.
+\texttt{AiAssistant} is a conversational assistant built into the platform and linked to a user's active session. It supports users by understanding their natural language requests and suggesting useful quick actions inside the application. Since it is session-based, it works with the context of the current interaction only. It can help patients explore appointment options, guide doctors through common tasks, and support administrators while they manage system operations.
 
 \textbf{Attributes}
 
@@ -3870,7 +3858,7 @@ An AI-powered conversational assistant embedded within the platform, associated 
 
 \textbf{Description}
 
-A service class responsible for all outbound email communications sent by the system to users and doctors. It centralizes notification logic, ensuring that every significant event, account creation, appointment updates, prescriptions, shift changes, and more, triggers a standardized, well-formatted email to the relevant recipient. By encapsulating all mail-sending logic in one class, the system maintains a consistent communication layer decoupled from business logic.
+\texttt{MailService} handles the system's outgoing email communication with users and doctors. It provides a single place for sending notifications related to events such as account creation, appointment updates, prescriptions, shift changes, and similar actions. This helps ensure that emails are sent in a consistent format to the appropriate recipients, while keeping the notification logic separate from the rest of the system's business logic.
 
 \textbf{Attributes}
 

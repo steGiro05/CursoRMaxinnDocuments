@@ -106,7 +106,7 @@
     \tabularx{\textwidth}{|>{\centering\arraybackslash\bfseries}p{2.5cm}|X|}
     \hline
     \rowcolor{gray!30}
-    \textbf{FR ID} & \textbf{Title} \\ \hline
+    \textbf{FR/NFR ID} & \textbf{Title} \\ \hline
 }{
     \endtabularx
     \par\vspace{0.5cm}
@@ -422,12 +422,12 @@ The system shall allow the Head of Hospital to register a settlement payment fro
     \item \hl{\textbf{FR9.1 Create Insurance Policy:} The system shall allow the System Administrator to create a new insurance policy by defining the following parameters: Insurance Company, Discount Percentage, Validity Period, and Covered Medical Treatments.}
     \item \hl{\textbf{FR9.2 View Insurance Policies:} The system shall allow the System Administrator to view a list of all existing insurance policies and their associated details.}
     \item \hl{\textbf{FR9.3 Update Insurance Policy:} The system shall allow the System Administrator to modify the details of an existing, active insurance policy.}
-    \item \hl{\textbf{FR9.4 Delete Insurance Policy:} The system shall allow the System Administrator to delete an existing insurance policy.}
+    \item \hl{\textbf{FR9.4 Deactivate Insurance Policy:} The system shall allow the System Administrator to deactivate an existing insurance policy.}
 \end{itemize}
 \nameref{O2}
 \\
 \\ \textbf{Edit}:
-\hl{Following the review of D1, the functional requirement was split into Create Insurance Policy, View Insurance Policies, Update Insurance Policy, Delete Insurance Policy with the goal of achieving a more detailed description of such actions.}
+\hl{Following the review of D1, the functional requirement was split into Create Insurance Policy, View Insurance Policies, Update Insurance Policy, Deactivate Insurance Policy with the goal of achieving a more detailed description of such actions.}
 
 \subsection{FR10. Simulated insurance code generation} \label{FR10} 
 The system shall allow the System Administrator to create unique insurance codes associated with specific insurance policies for demonstration.
@@ -778,6 +778,7 @@ FR36 (Dept. Appointment Management)  \\ \hline
 \section{Use Case Diagram}
 This section presents the use case diagram for the system. The diagram was split to achieve better readability, moreover the actors hierarchy is represented in a separate diagram to avoid overcrowding the other diagrams.
 \\
+\\
 \begin{minipage}{\textwidth}
     \subsection{1. Actors hierarchy}
     This diagram illustrates the hierarchical structure of the actors in the system.
@@ -811,7 +812,7 @@ This section presents the use case diagram for the system. The diagram was split
 
 \begin{minipage}{\textwidth}
     \subsection{4. Account Management}
-    This diagram illustrates the interactions for the hospital structure management.
+    This diagram illustrates the interactions for the account management.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{System_Diagram/AccountManagement.png}
         \captionof{figure}{Account Management}
@@ -821,10 +822,10 @@ This section presents the use case diagram for the system. The diagram was split
 
 \begin{minipage}{\textwidth}
     \subsection{5. Appointment and Administration}
-    This diagram illustrates the interactions regarding appointments and administration.
+    This diagram illustrates the interactions regarding appointments and departmental administration.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{System_Diagram/AppointmentsAdministration.png}
-        \captionof{figure}{Appointment and Administration}
+        \captionof{figure}{Appointment and Departmental Administration}
     \end{center}
 \end{minipage}
 \vspace{3em}
@@ -1028,6 +1029,7 @@ network.} % 3: Goal
     FR0.2 & Treatment editing \\ \hline
     FR1.2 & Hospital editing \\ \hline
     FR1.5 & Department editing \\ \hline
+    NFR4 & Scalability and capacity \\ \hline
 \end{ucrequirements}
 \begin{ucflow}
     1 & The System Admin asks the System to edit an existing Treatment / Hospital / Department. \\ \hline
@@ -1164,7 +1166,7 @@ network.} % 3: Goal
   {Primary: System Admin. Secondary: Database.} % 8: Actors
   {The System Admin asks the System to deactivate an existing Insurance Policy.} % 9: Trigger
 \begin{ucrequirements}
-    FR9.4 & Delete insurance policy \\ \hline
+    FR9.4 & Deactivate insurance policy \\ \hline
 \end{ucrequirements}
 \begin{ucflow}
     1 & The System Admin asks the System to deactivate an existing Insurance Policy. \\ \hline
@@ -1272,6 +1274,7 @@ network.} % 3: Goal
   {The System Admin asks the System to create a new Doctor account.} % 9: Trigger
 \begin{ucrequirements}
     FR1.7 & Doctor registration \\ \hline
+    NFR4 & Scalability and capacity \\ \hline
 \end{ucrequirements}
 \begin{ucflow}
     1 & The System Admin asks the System to create a new Doctor account. \\ \hline
@@ -1308,6 +1311,7 @@ network.} % 3: Goal
   {System Admin wants to assign a Doctor to a specific hospital structure.} % 9: Trigger
 \begin{ucrequirements}
     FR1.8 & Doctor assignment \\ \hline
+    NFR4 & Scalability and capacity \\ \hline
 \end{ucrequirements}
 \begin{ucflow}
     1 & System Admin wants to assign a Doctor to a specific hospital structure. \\ \hline
@@ -1346,7 +1350,7 @@ network.} % 3: Goal
 Secondary: Database.} % 8: Actors
   {The System Administrator wants to appoint a Doctor as Head of Hospital.} % 9: Trigger
 \begin{ucrequirements}
-    FR5 & Strategic role appointment (Head of Hospital) \\ \hline
+    FR2 & Strategic role appointment (Head of Hospital) \\ \hline
 \end{ucrequirements}
 \begin{ucflow}
     1 & The System Administrator wants to appoint a Doctor as Head of Hospital. \\ \hline
@@ -1570,7 +1574,7 @@ Secondary: Database.} % 8: Actors
   {Register insurance payment} % 2: Titolo
   {To enable the Head of Hospital to manually settle and clear the outstanding financial balance owed by a specific insurance company to their facility.} % 3: Goal
   {Scope: Managing insurance. Level: Primary.} % 4: Scope
-  {The user is logged in as the Head of Hospital. The hospital exists, an outstanding debt is present, and the insurance company has paid out the debt.} % 5: Preconditions
+  {The user is logged in as the Head of Hospital. An outstanding debt is present, and the insurance company has paid out the debt.} % 5: Preconditions
   {The outstanding debt is marked as settled, and the transaction is recorded in the System.} % 6: Success
   {The settlement process is cancelled or fails; the debt remains unchanged.} % 7: Failed
   {Primary: Head of Hospital. 
@@ -1607,7 +1611,7 @@ Secondary: Database.} % 8: Actors
 \hypertarget{UC21}{}
 \usecaseheader
   {UC21} % 1: ID
-  {Departmental operational management} % 2: Titolo
+  {Departmental capacity configuration} % 2: Titolo
   {To enable the Head of Department to configure the operational capacity of the department.} % 3: Goal
   {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
   {The user is logged in as a Head of Department.} % 5: Preconditions
@@ -1788,7 +1792,7 @@ Secondary: Database.} % 8: Actors
   {No Doctor is assigned; the System notifies the Head of Department of the failure.} % 7: Failed
   {Primary: System. 
 Secondary: Patient, Database, Mail Service, Head of Department.} % 8: Actors
-  {The use case is triggered automatically when a Patient is booking or rescheduling an appointment.} % 9: Trigger
+  {The use case is triggered automatically when a Patient is booking or rescheduling an appointment. (\textbf{\hyperlink{UC27}{UC27}}) (\textbf{\hyperlink{UC29}{UC29}})} % 9: Trigger
 \begin{ucrequirements}
     FR12 & Automated Doctor assignment\\ \hline
     NFR1 & Algorithm performance\\ \hline
@@ -2601,14 +2605,14 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 1 ---
 \begin{minipage}{\textwidth}
     \subsection{1. Book Appointment}
-    Here there's the entire flow of the booking of an appointment.
+    The following activity diagram shows the entire flow regarding booking and paying for an appointment.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/BookAppointments.png}
-        \captionof{figure}{Activity Diagram for Book Appointment}
+        \captionof{figure}{Activity Diagram regarding Appointment Booking and Payment}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:}
-        \hyperlink{UC25}{Automated Doctor assignment}, 
+        \hyperlink{UC25}{Automated Doctor Assignment}, 
         \hyperlink{UC27}{Appointment booking}, 
         \hyperlink{UC32}{Payment management}, \hyperlink{UC33}{Exemption application during payment},
         \hyperlink{UC34}{Insurance application during payment},
@@ -2620,38 +2624,38 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 2 ---
 \begin{minipage}{\textwidth}
     \subsection{2. Calendar Management}
-    Here there's the entire flow of the management of a calendar.
+    The following activity diagram shows the entire flow regarding calendar management.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/CalandarManagement.png}
-        \captionof{figure}{Activity Diagram for Calendar Management}
+        \captionof{figure}{Activity Diagram regarding Calendar Management}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:}
-        \hyperlink{UC28}{Patient appointment view},
-        \hyperlink{UC10}{Patient appointment cancellation},
-        \hyperlink{UC29}{Patient appointment rescheduling},
+        \hyperlink{UC28}{Appointment view},
+        \hyperlink{UC10}{Cancel appointment (Patient)},
+        \hyperlink{UC29}{Appointment rescheduling},
         \hyperlink{UC30}{Internal calendar integration},
-        \hyperlink{UC45}{HoD appointment view}, \hyperlink{UC11}{Hospital staff appointment cancellation}
+        \hyperlink{UC11}{Cancel appointment (hospital staff)}
     \end{itemize}
 \end{minipage}
 \vspace{3em}
 
 % --- BUNDLE 3 ---
 \begin{minipage}{\textwidth}
-    \subsection{3. Admin Actions}
-    Here the flow of all the admin's possible actions.
+    \subsection{3. System Administrator Actions}
+    The following activity diagram shows the flow of possible actions for the System Administrator.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/AdminActions.png}
-        \captionof{figure}{Activity Diagram for Admin Actions}
+        \captionof{figure}{Activity Diagram for System Administrator Actions}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:}
-        \hyperlink{UC1}{Hospital and Department creation},
-        \hyperlink{UC5}{Hospital and Department edit},
-        \hyperlink{UC8}{Hospital and Department closure},
-        \hyperlink{UC12}{Doctor registration},
-        \hyperlink{UC13}{Doctor assignment to a hospital},
-        \hyperlink{UC14}{Promote Doctor to HoH}
+        \hyperlink{UC1}{Create Hospital/Department},
+        \hyperlink{UC5}{Edit Hospital/Department},
+        \hyperlink{UC8}{Close Hospital/Department},
+        \hyperlink{UC12}{Register Doctor},
+        \hyperlink{UC13}{Assign Doctor to Hospital},
+        \hyperlink{UC14}{Appoint Head of Hospital}
     \end{itemize}
 \end{minipage}
 \vspace{3em}
@@ -2659,18 +2663,18 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 4 ---
 \begin{minipage}{\textwidth}
     \subsection{4. Head of Hospital Actions}
-    Here there's the entire flow of all the Head of Hospital's possible actions.
+    The following activity diagram shows the entire flow of possible actions regarding the Head of Hospital.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/HeadOfHospitalActions.png}
-        \captionof{figure}{Activity Diagram for Head of Hospital Actions}
+        \captionof{figure}{Activity Diagram regarding Head of Hospital Actions}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:} 
-        \hyperlink{UC15}{Appoint HoD}, 
-        \hyperlink{UC16}{Macro-allocate Doctors to Deparments},
-        \hyperlink{UC18}{Insurance debt tracking and reporting},
-        \hyperlink{UC19}{Insurance debt History},
-        \hyperlink{UC20}{Manual settlement of insurance debt}
+        \hyperlink{UC15}{Appoint Head of Department}, 
+        \hyperlink{UC16}{Assign Doctor to Department},
+        \hyperlink{UC18}{View Insurances' Debts},
+        \hyperlink{UC19}{Insurance Debt History},
+        \hyperlink{UC20}{Register Insurance Payment},
     \end{itemize}
 \end{minipage}
 \vspace{3em}
@@ -2678,18 +2682,18 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 5 ---
 \begin{minipage}{\textwidth}
     \subsection{5. Head of Department Actions}
-    Here there's the entire flow of all the Head of Department's possible actions.
+    The following activity diagram shows the entire flow of possible actions regarding the Head of Department.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/HeadOfDepartmentActions.png}
-        \captionof{figure}{Activity Diagram for Head of Department Actions}
+        \captionof{figure}{Activity Diagram regarding Head of Department Actions}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:} 
-        \hyperlink{UC17}{Enable/Disable Examinations},
-        \hyperlink{UC21}{Configure Operational Capacity},
+        \hyperlink{UC17}{Configure Department's services},
+        \hyperlink{UC21}{Departmental capacity configuration},
         \hyperlink{UC44}{Assign Doctor Shift},
         \hyperlink{UC28}{Appointment View},
-        \hyperlink{UC11}{Appointment Cancellation}
+        \hyperlink{UC11}{Cancel appointment (hospital staff)}
     \end{itemize}
 \end{minipage}
 \vspace{3em}
@@ -2697,36 +2701,35 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 6 ---
 \begin{minipage}{\textwidth}
     \subsection{6. Doctor Operations}
-    Here's the flow of the Doctor's action to manage the their Patients' account (exemptions/examinations/prescriptions).
+    The following activity diagram shows the flow of the possible actions for a Doctor regarding their patient's medical record.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/DoctorOperations.png}
-        \captionof{figure}{Activity Diagram for Doctor Operations}
+        \captionof{figure}{Activity Diagram regarding Doctor Operations}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:} 
-        \hyperlink{UC42}{Access Medical Record via CF or Scan},
-        \hyperlink{UC3}{Insert Prescription},
-        \hyperlink{UC4}{Insert Diagnosis},
-        \hyperlink{UC3}{Insert Exemption}
+        \hyperlink{UC42}{Medical record access (Doctor)},
+        \hyperlink{UC3}{Create Prescription / Exemption},
+        \hyperlink{UC4}{Upload Examination},
     \end{itemize}
 \end{minipage}
 
 % --- BUNDLE 7 ---
 \begin{minipage}{\textwidth}
     \subsection{7. Account Lifecycle}
-    Here's the activity flow of all the action related to the creation/management/deletion of an user account (which can be Doctors or Patients).
+    The following activity diagram shows the flow of all the actions related to the creation, management and deletion of an user account.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/AccountLifecycle.png}
         \captionof{figure}{Activity Diagram for Account Lifecycle}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:}
-        \hyperlink{UC12}{Doctor Registration},
-        \hyperlink{UC23}{User Registration and Authentication via Email},
-        \hyperlink{UC26}{Password Recover},
-        \hyperlink{UC24}{Login},
-        \hyperlink{UC41}{Delete Account},
-        \hyperlink{UC7}{Update Account}
+        \hyperlink{UC12}{Register Doctor},
+        \hyperlink{UC23}{User registration and validation},
+        \hyperlink{UC26}{Account Recovery},
+        \hyperlink{UC24}{User Login},
+        \hyperlink{UC41}{Account Deletion},
+        \hyperlink{UC7}{Update User Profile}
     \end{itemize}
 \end{minipage}
 
@@ -2735,14 +2738,14 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 1 ---
 \begin{minipage}{\textwidth}
     \subsection{1. Reschedule Appointment}
-    Here there's the sequence diagram of the reschedule of an appointment.
+    The following sequence diagram shows the rescheduling of an appointment.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Sequence_Diagram/RescheduleAppointment.png}
         \captionof{figure}{Sequence Diagram for Reschedule Appointment}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:} 
-        \hyperlink{UC29}{Patient Appointment Rescheduling}
+        \hyperlink{UC29}{Appointment Rescheduling}
     \end{itemize}
 \end{minipage}
 \vspace{3em}
@@ -2750,15 +2753,15 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 2 ---
 \begin{minipage}{\textwidth}
     \subsection{2. Cancel Appointment}
-    Here is the sequence diagram of the cancel of an appointment, from both Patient or hospital staff point of view.
+    The following sequence diagram shows the cancellation of an appointment, from both Patient or hospital staff point of view.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Sequence_Diagram/CancelAppointment.jpeg}
         \captionof{figure}{Sequence Diagram for Cancel Appointment}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:} 
-        \hyperlink{UC10}{Patient cancel appointment},
-        \hyperlink{UC11}{Hospital staff cancel appointment}
+        \hyperlink{UC10}{Cancel appointment (Patient)},
+        \hyperlink{UC11}{Cancel appointment (Hospital Staff)}
     \end{itemize}
 \end{minipage}
 \vspace{3em}
@@ -2766,17 +2769,16 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 3 ---
 \begin{minipage}{\textwidth}
     \subsection{3. Doctor Upload Document}
-    Here is the sequence activity related to the upload of documents by Doctor into the Patient's medical record.
+    The following sequence diagram shows the process related to the upload of documents by a Doctor into the Patient's medical record.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Sequence_Diagram/DoctorUploadDocument.png}
         \captionof{figure}{Sequence Diagram for Doctor Upload Document}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:} 
-        \hyperlink{UC42}{Access Medical Record via CF or Scan},
-        \hyperlink{UC3}{Insert Prescription},
-        \hyperlink{UC4}{Insert Diagnosis},
-        \hyperlink{UC3}{Insert Exemption}
+        \hyperlink{UC42}{Medical Record Access (Doctor)},
+        \hyperlink{UC3}{Create Prescription / Exemption},
+        \hyperlink{UC4}{Upload Examination},
     \end{itemize}
 \end{minipage}
 \vspace{3em}
@@ -2784,15 +2786,15 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 4 ---
 \begin{minipage}{\textwidth}
     \subsection{4. Registration User}
-    Here is the sequence diagram about the registration of an user (that can be either a Doctor or a Patient).
+    The following sequence diagram shows the registration process for a user.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Sequence_Diagram/RegistrationUser.png}
         \captionof{figure}{Sequence Diagram for Registration User}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:} 
-        \hyperlink{UC12}{Doctor Registration},
-        \hyperlink{UC23}{User Registration and Authentication via Email}
+        \hyperlink{UC12}{Register Doctor},
+        \hyperlink{UC23}{User Registration and validation}
     \end{itemize}
 \end{minipage}
 \vspace{3em}
@@ -2801,7 +2803,7 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 5 ---
 \begin{minipage}{\textwidth}
     \subsection{5. Book Appointment}
-    Here the sequence diagram about the book of an appointment by a Patient.
+    The following sequence diagram shows the process of booking an appointment by a Patient.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Sequence_Diagram/BookAppointment.png}
         \captionof{figure}{Sequence Diagram for Book Appointment}
@@ -2821,15 +2823,15 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 6 ---
 \begin{minipage}{\textwidth}
     \subsection{6. Account Login and Password Recovery}
-    Here is the sequence diagram about the password recovery, that need the context of the user login, so we decided to implement them in a unique sequence diagram.
+    The following sequence diagram shows the process of login and account recovery for a user.
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Sequence_Diagram/LoginUserAndRecovery.png}
         \captionof{figure}{Sequence Diagram for Login and Password Recovery}
     \end{center}
     \begin{itemize}
         \item \textbf{Using:} 
-        \hyperlink{UC26}{Password Recover},
-        \hyperlink{UC24}{Login}
+        \hyperlink{UC26}{Account Recovery},
+        \hyperlink{UC24}{User Login}
     \end{itemize}
 \end{minipage}
 \vspace{3em}
@@ -2838,7 +2840,7 @@ Secondary: Database, Mail Service.} % 8: Actors
 % --- BUNDLE 7 ---
 \begin{minipage}{\textwidth}
     \subsection{7. Account Management}
-    Here the sequence diagram about the operations related to the edit and deletion of an user account (that can be either a Doctor or a Patient).
+    The following sequence diagram shows the operations related to the edit and deletion of an user account (that can be either a Doctor or a Patient).
     \begin{center}
         \includegraphics[width=0.8\textwidth]{Sequence_Diagram/AccountManagement.png}
         \captionof{figure}{Sequence Diagram for Account Management Operations}
@@ -2846,7 +2848,7 @@ Secondary: Database, Mail Service.} % 8: Actors
     \begin{itemize}
         \item \textbf{Using:} 
         \hyperlink{UC41}{Delete Account},
-        \hyperlink{UC7}{Update Account}
+        \hyperlink{UC7}{Update User Profile}
     \end{itemize}
 \end{minipage}
 \vspace{3em}

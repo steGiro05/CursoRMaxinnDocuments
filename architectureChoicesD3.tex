@@ -13,6 +13,9 @@
 \usepackage{parskip}
 \usepackage{hyperref}
 \usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{placeins}
 
 % Colors
 \definecolor{primaryblue}{HTML}{1F3864}
@@ -115,9 +118,28 @@ The application follows a \textbf{3-Tier Architecture} pattern, separating the s
     \item \textbf{package.json} --- JavaScript dependencies and scripts used by the frontend.
     
     \item \textbf{README.md} --- General project documentation and setup instructions.
-\end{itemize}
 
-Screeenshot!
+    \begin{figure}[htbp]
+        \centering
+        \begin{subfigure}[b]{0.32\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{ScreenshotD3/FoldStruct.png}
+            \caption{}
+            \label{fig:left_image}
+        \end{subfigure}
+        \hfill \begin{subfigure}[b]{0.32\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{ScreenshotD3/BE-FE.png}
+            \caption{}
+            \label{fig:right_image}
+        \end{subfigure}
+        
+        \caption{Folder structure, and a on zoom of the frontend and backend (b)}
+        \label{fig:side_by_side_main}
+    \end{figure}
+    \FloatBarrier
+
+\end{itemize}
 
 % -------------------------------------------------------
 \subsection{Language Used and Why}
@@ -168,14 +190,39 @@ Screeenshot!
   \item \textbf{Advanced Features:} Supports JSON, full-text search, and complex queries out of the box.
 \end{itemize}
 
-\subsubsection{Project Data or DB}
+\subsubsection{ER Diagram}
 
-\textbf{Element}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{ScreenshotD3/ER.png} % Scales to exactly 100% of text width
+    \caption{ER diagram}
+    \label{fig:large_image}
+\end{figure}
 
-Screenshot of json of data fetched and of tables.
-and also the ER diagram.
+\FloatBarrier
 
+\subsubsection{Example of some Tables}
 
+\begin{figure}[htbp]
+        \centering
+        \begin{subfigure}[b]{0.47\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{ScreenshotD3/tableUser.png}
+            \caption{}
+            \label{fig:left_image}
+        \end{subfigure}
+        \hfill \begin{subfigure}[b]{0.47\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{ScreenshotD3/tableHospital.png}
+            \caption{}
+            \label{fig:right_image}
+        \end{subfigure}
+        
+        \caption{table of users (a), table of hospitals (b)}
+        \label{fig:side_by_side_main}
+    \end{figure}
+    \FloatBarrier
+    
 % -------------------------------------------------------
 \subsection{Dependencies}
 % -------------------------------------------------------

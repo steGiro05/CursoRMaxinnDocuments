@@ -186,11 +186,11 @@
 
 % --- PURPOSE OF THE DOCUMENT ---
 \section{Purpose of the Document}
-This document presents the functionalities analysis for the HealthMaxxin platform. It defines the project context and scope, outlines the system objectives, identifies the relevant stakeholders, and specifies the modifications to the functional and non-functional requirements. Moreover, it describes in detail the system boundaries and uses cases, both through text and graphical representation. The document serves as a reference for all subsequent design, planning, and implementation phases of the project.
+This document describes the implementation phase of the HealthMaxxing App, providing a detailed description of the architecture and language choices, user flows and some snippets of code. Moreover, the document also covers the improvements regarding D1 and D2, only reporting the modified sections.
 
 %--- MODIFICATIONS TO D1 ---
 \section{Modifications to D1}
-Nothing modified lol
+Nothing modified
 
 \section{Modifications to D2}
 Specify what sections where modified, add Links
@@ -3645,9 +3645,35 @@ The application follows a \textbf{3-Tier Architecture} pattern, separating the s
   Infrastructure & Docker + Nginx & Consistency, reverse proxy, containerization, ease of deployment \\
 \end{tabular}
 
+\newpage
 \phantomsection 
 \section{Use Cases Implemented}
-We implemented....., in order to give a complete overview of the main functionalities of the HealthMaxxing app.
+During the implementation phase the goal was to cover the main functionalities of the app, with special focus on the management of the hierarchical hospital structure, giving the system administrator all the tools necessary to manage such structure.
+
+In particular, we implemented the use cases:
+
+\begin{enumerate}
+    \item \textbf{UC1} - Create Treatment / Hospital / Department
+    \item \textbf{UC2} - Create Insurance Policy
+    \item \textbf{UC5} - Edit Treatment / Hospital / Department
+    \item \textbf{UC6} - Update Insurance Policy
+    \item \textbf{UC8} - Deactivate or close Treatment / Hospital / Department
+    \item \textbf{UC9} - Deactivate Insurance Policy
+    \item \textbf{UC10} - Cancel Appointment (Patient)
+    \item \textbf{UC12} - Register Doctor
+    \item \textbf{UC13} - Assign Doctor to Hospital
+    \item \textbf{UC14} - Appoint Head of Hospital
+    \item \textbf{UC15} - Appoint Head of Department
+    \item \textbf{UC16} - Assign Doctor to Department
+    \item \textbf{UC22} - Generate Insurancce Policy Code
+    \item \textbf{UC23} - User Registration and Validation
+    \item \textbf{UC24} - User Login
+    \item \textbf{UC25} - Automated Doctor Assignment
+    \item \textbf{UC27} - Appointment Booking
+    \item \textbf{UC28} - Appointment View - partial
+    \item \textbf{UC29} - Appointment Rescheduling
+\end{enumerate}
+
 
 \phantomsection 
 \section{User Flows}
@@ -3685,9 +3711,10 @@ The actors are:
 % --- eg ---
 \newpage
 \begin{minipage}{\textwidth}
+    \phantomsection 
     \subsection{General Flow - Fill Form Flow}
-    The following diagram describes in detail the steps of the general Fill Form flow, expandend in the user flow "metter link".
-    \\\\
+    The following diagram describes in detail the steps of the general Fill Form flow, expandend in the user flow  \hyperref[UF1]{UF1. User - Registration and Validation}.
+    
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/FillForm.png}
         \captionof{figure}{General Fill Form Flow}
@@ -3698,9 +3725,10 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection 
     \subsection{General Flow - Detailed Access Flow}
     The following diagram describes in detail the steps of the general Detailed Access flow, expandend in the user flow "metter link".
-    \\\\
+    
     \begin{center}
         \includegraphics[width=9cm]{User_Flows/DetailedAccess.png}
         \captionof{figure}{General Detailed Access Flow}
@@ -3711,9 +3739,10 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection 
     \subsection{General Flow - Creation Flow}
     The following diagram describes in detail the steps of the general Creation flow, expandend in the user flow "mettere link".
-    \\\\
+    
     \begin{center}
         \includegraphics[width=5cm]{User_Flows/Creation.png}
         \captionof{figure}{General Creation Flow}
@@ -3724,9 +3753,10 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{General Flow - Edit Flow}
     The following diagram describes in detail the steps of the general Edit flow, expanded in the user flow "mettere link".
-    \\\\
+    
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/Edit.png}
         \captionof{figure}{General Edit Flow}
@@ -3737,9 +3767,10 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{General Flow - Deletion Flow}
     The following diagram describes in detail the steps of the general Deletion flow, expanded in the user flow "mettere link".
-    \\\\
+    
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/Deletion.png}
         \captionof{figure}{General Deletion Flow}
@@ -3751,10 +3782,12 @@ The actors are:
 
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF1. User - Registration and Validation}
+    \label{UF1}
     The following user flow shows the process of User registration and validation.
     It refers to use case \textbf{UC23}, and methods \textbf{??, ??} from the class \textbf{User} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/UserRegistrationValidation.png}
         \captionof{figure}{User flow regarding User Registration and Validation}
@@ -3765,10 +3798,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF2. User - Login and Recovery}
     The following user flow shows the process of User login and account recovery.
     It refers to use cases \textbf{UC24, UC26}, and methods \textbf{login(), requestPasswordReset()} from the class \textbf{User} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/LoginRecovery.png}
         \captionof{figure}{User flow regarding User Login and Recovery}
@@ -3780,10 +3814,11 @@ The actors are:
 
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF3. User - Internal Calendar}
     The following user flow shows the steps a user takes to view their calendar and see the detailes of a booked appointment.
     It refers to use cases \textbf{UC30, UC28}, and methods \textbf{??, ??} from the class \textbf{User} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/UserInternalCalendar.png}
         \captionof{figure}{User flow regarding Internal Calendar integration and View Appointment Details}
@@ -3795,10 +3830,11 @@ The actors are:
 
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF4. User - Profile Update and Deletion}
     The following user flow shows the steps a user takes to update and delete their profile.
     It refers to use cases \textbf{UC7, UC41}, and methods \textbf{viewProfile(), updateProfile(), deleteAccount()} from the class \textbf{User} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/ProfileUpdateDeletion.png}
         \captionof{figure}{User flow regarding Profile Update and Account Deletion}
@@ -3809,10 +3845,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF5. User - Export Calendar}
     The following user flow shows the steps a user takes to export their appointment to an external calendar.
     It refers to use case \textbf{UC31}, and methods \textbf{??} from the class \textbf{User} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/ExportCalendar.png}
         \captionof{figure}{User flow regarding Appointment export}
@@ -3823,10 +3860,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF6. Admin - Login}
     The following user flow shows the steps the admin takes to login.
     It refers to use case \textbf{??}, and method \textbf{adminLogin()} from the class \textbf{SystemAdmin} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/AdminLogin.png}
         \captionof{figure}{User flow regarding Admin Login}
@@ -3837,10 +3875,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF7. Admin - Create Insurance Policy, Hospital, Treatment, Department}
     The following user flow shows the steps the admin takes to create an Insurance Policy, Hospital, Treatment, Department.
     It refers to use case \textbf{UC1, UC2}, and methods \textbf{createInsurancePolicy(), createHospital(), createTreatment(), createDepartment()} from the class \textbf{SystemAdmin} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/CreatePolicyHospitalTreatmentDepartment.png}
         \captionof{figure}{User flow regarding Create Insurance Policy, Hospital, Treatment, Department}
@@ -3851,10 +3890,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF8. Admin - Edit Insurance Policy, Hospital, Treatment, Department}
     The following user flow shows the steps the admin takes to edit an Insurance Policy, Hospital, Treatment, Department.
     It refers to use case \textbf{UC5, UC6}, and methods \textbf{editInsurancePolicy(), editHospital(), editTreatment(), editDepartment()} from the class \textbf{SystemAdmin} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/EditPolicyHospitalTreatmentDepartment.png}
         \captionof{figure}{User flow regarding Edit Insurance Policy, Hospital, Treatment, Department}
@@ -3865,10 +3905,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF9. Admin - Deactivate Insurance Policy, Hospital, Treatment, Department}
     The following user flow shows the steps the admin takes to deactivate an Insurance Policy, Hospital, Treatment, Department.
     It refers to use case \textbf{UC8, UC9}, and methods \textbf{deactivateInsurancePolicy(), closeHospital(), deactivateTreatment(), closeDepartment()} from the class \textbf{SystemAdmin} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/DeactivatePolicyHospitalTreatmentDepartment.png}
         \captionof{figure}{User flow regarding Deactivate Insurance Policy, Hospital, Treatment, Department}
@@ -3879,10 +3920,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF10. Admin - Appoint Head of Hospital}
     The following user flow shows the steps the admin takes to appoint a Head of Hospital.
     It refers to use case \textbf{UC14}, and methods \textbf{appointHeadOfHospital(doctor:Doctor, hospital: Hospital)} from the class \textbf{SystemAdmin} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/AppointHeadOfHospital.png}
         \captionof{figure}{User flow regarding Appoint Head of Hospital}
@@ -3893,10 +3935,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF11. Admin - Assign Doctor to Hospital}
     The following user flow shows the steps the admin takes to assign a doctor to a hospital.
     It refers to use case \textbf{UC13}, and methods \textbf{assignDoctorToHospital()} from the class \textbf{SystemAdmin} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/AssignDoctorHospital.png}
         \captionof{figure}{User flow regarding Assign Doctor to Hospital}
@@ -3907,10 +3950,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF12. Admin - Generate Unique Code}
     The following user flow shows the steps the admin takes to generate a unique insurance policy code.
     It refers to use case \textbf{UC22}, and methods \textbf{generateInsuranceCode(policy:InsurancePolicy, patient:Patient)} from the class \textbf{SystemAdmin} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/GenerateUniqueCode.png}
         \captionof{figure}{User flow regarding Generate Unique Code}
@@ -3921,10 +3965,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF13. Patient - Appointment Cancellation and Rescheduling}
     The following user flow shows the steps a patient takes to cancel and reschedule an appointment.
     It refers to use case \textbf{UC10, UC29}, and methods \textbf{cancelAppointment(), rescheduleAppointment()} from the class \textbf{Patient} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/PatientCancellationRescheduling.png}
         \captionof{figure}{User flow regarding Patient Appointment Cancellation and Rescheduling}
@@ -3935,10 +3980,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF13. Patient - Appointment Booking and Payment}
     The following user flow shows the steps a patient takes to book and pay an appointment.
     It refers to use case \textbf{UC27, UC32}, and methods \textbf{bookAppointment(), ??} from the class \textbf{Patient} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/AppointmentBookingPayment.png}
         \captionof{figure}{User flow regarding Patient Appointment Booking and Payment}
@@ -3949,10 +3995,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{UF14. Patient - Register Insurance Policy via unique code}
     The following user flow shows the steps a patient takes to add an insurance policy to their profile via unique code.
     It refers to use case \textbf{UC36}, and methods \textbf{registerInsurance(code:String)} from the class \textbf{Patient} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.5\textwidth]{User_Flows/PatientRegisterPolicy.png}
         \captionof{figure}{User flow regarding Patient Register Insurance Policy via unique code}
@@ -3963,10 +4010,11 @@ The actors are:
 \vspace{3em}
 
 \begin{minipage}{\textwidth}
-    \subsection{UF14. Patient - Medical Record, Prescriptions, Exemptions consultation}
+    \phantomsection
+    \subsection{UF15. Patient - Medical Record, Prescriptions, Exemptions consultation}
     The following user flow shows the steps a patient takes to view their medical record, prescriptions, consultation in detail.
     It refers to use case \textbf{UC38, UC40}, and methods \textbf{??} from the class \textbf{Patient} of the class diagram.
-    \\\\
+    
     \begin{center}
         \includegraphics[width=0.9\textwidth]{User_Flows/PatientMedicalRecordPrescriptionExemptions.png}
         \captionof{figure}{User flow regarding Patient Medical Record, Prescriptions, Exemptions consultation}
@@ -3980,11 +4028,12 @@ The actors are:
 \phantomsection 
 \section{Code Developement}
 asdasdasd
-\\\\
+
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{1. Place holder}
     place holder!
-    \\
+    
     \begin{center}
         \includegraphics[width=5cm]{User_Flows/AdminLogin.png}
         \captionof{figure}{placeholder}
@@ -4001,9 +4050,3 @@ SADASDASD
 
 
 \end{document}
-
-
-
-
-
-

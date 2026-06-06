@@ -26,6 +26,7 @@
 \usepackage{soul}
 \usepackage[normalem]{ulem}
 \usepackage{enumitem}
+\usepackage[hypcap=false]{caption}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcolumntype{M}{>{\raggedright\arraybackslash}p{6.3cm}}
 
@@ -157,6 +158,15 @@
     \endtabularx
     \par\vspace{0.5cm}
 }
+% Ambiente per le note di modifica / elementi editati
+\newenvironment{ucedits}{
+    \noindent\textbf{EDITED ITEMS} \par \vspace{0.1cm}
+    \begin{quote}
+}{
+    \end{quote}
+    \par\vspace{0.5cm}
+}
+
 
 \setcounter{secnumdepth}{0}
 \begin{document}
@@ -201,12 +211,30 @@ This document describes the implementation phase of the HealthMaxxing App, provi
 %--- MODIFICATIONS TO D1 ---
 \phantomsection
 \section{Modifications to D1}
-Nothing modified
+
+\phantomsection
+\subsection{FR4. Facility doctors allocation}
+
+{\color{red}\sout{The system shall allow the Head of Hospital to macro-allocate doctors within their facility. This shall include assigning doctors to departments in the hospital.}}
+
+\vspace{0.3cm}
+
+The previous formulation has been removed because it is already covered by FR1.8 (Doctor assignment). Hospital-level allocation is therefore not required, as it is implicitly handled through department-level assignment in the updated use cases.
+
+\phantomsection
+\subsection{FR11. Identity and access management} \label{FR11}
+The system shall enable users to manage their platform identity and access through the following functionalities:
+\begin{itemize}
+\item \textbf{FR11.1 \hl{Patient} registration:} The system shall allow unregistered patients to create a new account using their email by providing the personal data required for identification, verification and service usage.
+
+\item \textbf{FR11.2 \hl{Patient} validation:} The system shall allow newly registered patients to validate their accounts by verifying a secure token sent to their registered email address.
+\end{itemize}
+\vspace{0.3cm}
+
+The term "User" has been replaced with "Patient" to ensure consistency across the entire specification. The system domain is patient-centric, and account registration/validation applies exclusively to patients rather than generic users.
 
 \phantomsection
 \section{Modifications to D2}
-Specify what sections where modified, add Links
-\\ keep only modified sections of d2
 
 \phantomsection
 \addcontentsline{toc}{subsection}{UC2. Create Insurance Policy}
@@ -250,6 +278,10 @@ network.} % 3: Goal
          2. The System returns an error.\newline 
          3. Go to main flow step 2 to perform a correction. \\ \hline
 \end{ucextensions}
+\begin{ucedits}
+Added a backend validity check for the maximum coverage amount (steps 5 and 5a). 
+The check was already implemented in the system but had not been explicitly documented in this use case.
+\end{ucedits}
 
 
 \phantomsection
@@ -294,6 +326,9 @@ network.} % 3: Goal
          2. The System returns an error.\newline 
          3. Go to main flow step 2 to perform a correction. \\ \hline
 \end{ucextensions}
+\begin{ucedits}
+Added a backend validity check for the maximum coverage amount (steps 5 and 5a). The check was already implemented during Insurance Policy updates but had not been explicitly documented in this use case.
+\end{ucedits}
 
 \phantomsection
 \addcontentsline{toc}{subsection}{UC10. Cancel appointment (Patient)}
@@ -334,9 +369,399 @@ network.} % 3: Goal
          1. The System checks if the appointment was paid ahead.\newline 
          2. If not, proceed to step 7 (refund is skipped).\\ \hline
 \end{ucextensions}
+\begin{ucedits}
+Added the appointment cancellation email notification (step 7) to align the use case with the actual system behavior and ensure that patient communications are explicitly documented.
+\end{ucedits}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC12. Register Doctor}
+\hypertarget{UC12}{}
+\usecaseheader
+  {UC12} % 1: ID
+  {Register Doctor} % 2: Titolo
+  {A System Admin wants to add a new Doctor to the hospital’s digital infrastructure.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a System Admin. \sout{The relevant hospital structure already exists.}} % 5: Preconditions
+  {The Doctor is successfully saved in the Database, and a set of one-time credentials is provided to the System Admin.} % 6: Success
+  {The registration is aborted due to invalid data or duplication; no credentials are created.} % 7: Failed
+  {Primary: System Admin. Secondary: Database.} % 8: Actors
+  {The System Admin asks the System to create a new Doctor account.} % 9: Trigger
+
+\begin{ucrequirements}
+    FR1.7 & Doctor registration \\ \hline
+    NFR4 & Scalability and capacity \\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The System Admin asks the System to create a new Doctor account. \\ \hline
+    2 & The System Admin fills in the required fields, including Doctor's personal data. \\ \hline
+    3 & The System Admin saves. \\ \hline
+    4 & The System checks if the \hl{fiscal code} field is not duplicate. \\ \hline
+    5 & The System creates the new Doctor account in the Database. \\ \hline
+    6 & The System returns the new account credentials, which are displayed just once. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    3a & \textbf{The System Admin cancels:}\newline 
+         1. The System aborts the creation process.\newline 
+         2. Use case ends. \\ \hline
+    4a & \textbf{Validity check fails:}\newline 
+         1. The System identifies duplicated personal data for the Doctor.\newline 
+         2. The System returns an error.\newline 
+         3. Go to main flow step 2 to perform a correction. \\ \hline
+\end{ucextensions}
+
+\begin{ucedits}
+Removed the precondition requiring the relevant hospital structure to already exist, as it is not necessary for Doctor registration. 
+Replaced the uniqueness check from "name" to "fiscal code" to correctly identify duplicate Doctor records using a unique identifier.
+\end{ucedits}
+\phantomsection
+\addcontentsline{toc}{subsection}{UC13. Assign Doctor to Department / Hospital}
+\hypertarget{UC13}{}
+\usecaseheader
+  {UC13} % 1: ID
+  {Assign Doctor to Department / Hospital} % 2: Titolo
+  {To enable the System Administrator or Head of Hospital to assign one or more registered Doctors to a specific department. Hospital assignment is implicit through the department.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a System Admin or Head of Hospital. The target department exists. The Doctors are registered in the System.} % 5: Preconditions
+  {The selected Doctors are successfully assigned to the selected department.} % 6: Success
+  {The assignment fails; previous assignments remain unchanged.} % 7: Failed
+  {Primary: System Admin, Head of Hospital. Secondary: Database.} % 8: Actors
+  {The user selects Doctors and assigns them to a department.} % 9: Trigger
 
 
+\begin{ucrequirements}
+    FR1.8 & Doctor assignment \\ \hline
+    NFR4 & Scalability and capacity \\ \hline
+\end{ucrequirements}
 
+
+\begin{ucflow}
+    1 & The user selects one or more Doctors from the set of registered Doctors. \\ \hline
+    2 & The user selects the target department. \\ \hline
+    3 & The user requests assignment. \\ \hline
+    4 & The System checks whether selected Doctors are already assigned to a department. \\ \hline
+    5 & The System displays current assignment status (including any existing department assignments). \\ \hline
+    6 & The user confirms or modifies the selection. \\ \hline
+    7 & The System assigns the Doctors to the selected department and updates the System status. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    3a & \textbf{Cancel operation:}\newline 
+         1. The user cancels the assignment.\newline 
+         2. No changes are made to the System.\newline 
+         3. Use case ends. \\ \hline
+
+    6a & \textbf{User does not confirm assignment:}\newline 
+         1. The user rejects the proposed assignment or modifies the selection.\newline 
+         2. The System returns to step 1 or 2 depending on modification.\newline 
+         3. Use case continues or ends. \\ \hline
+\end{ucextensions}
+
+
+\begin{ucedits}
+Merged UC13 (Assign Doctor to Hospital) and UC16 (Assign Doctors to Department) into a single use case because hospital assignment is implicit through department assignment.
+Moved validity checking of existing assignments before confirmation, so the user is informed of current Doctor allocation status prior to final confirmation.
+\end{ucedits}
+
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC14. Appoint Head of Hospital}
+\hypertarget{UC14}{}
+\usecaseheader
+  {UC14} % 1: ID
+  {Appoint Head of Hospital} % 2: Titolo
+  {To enable the System Administrator to appoint a Registered Doctor to the strategic role of Head of Hospital for a specific facility.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged in as a System Administrator. The specific hospital has been created. The Doctor is already registered in the System.} % 5: Preconditions
+  {The selected Doctor is successfully appointed as Head of Hospital.} % 6: Success
+  {The appointment fails; the System state remains unchanged and the previous head (if any) remains in place.} % 7: Failed
+  {Primary: System Administrator. Secondary: Database.} % 8: Actors
+  {The System Administrator wants to appoint a Doctor as Head of Hospital.} % 9: Trigger
+
+
+\begin{ucrequirements}
+    FR2 & Strategic role appointment (Head of Hospital) \\ \hline
+\end{ucrequirements}
+
+
+\begin{ucflow}
+    1 & The System Administrator selects a Doctor from the list of Registered Doctors. \\ \hline
+    2 & The Admin saves the selection. \\ \hline
+    3 & The System prompts a confirmation message including the currently assigned Head of Hospital (if any). \\ \hline
+    4 & The Admin confirms the replacement. \\ \hline
+    5 & The System performs validity checks. \\ \hline
+    6 & The Doctor is appointed as Head of Hospital and the System status is updated. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    2a & \textbf{Operation canceled:}\newline 
+         1. Admin cancels the operation.\newline 
+         2. No changes are made to the Database.\newline 
+         3. Use case ends. \\ \hline
+
+    5a & \textbf{Doctor not found:}\newline 
+         1. System cannot find the selected Doctor.\newline 
+         2. Operation is aborted.\newline 
+         3. System returns an error.\newline 
+         4. Use case ends. \\ \hline
+\end{ucextensions}
+
+
+\begin{ucedits}
+Removed extension 2a ("Already existing Head of Hospital") because it is redundant: the System now displays the current Head of Hospital during the confirmation step, and the Admin implicitly confirms the replacement.
+Adjusted the main flow so that role replacement is handled entirely within the confirmation step.
+\end{ucedits}
+\phantomsection
+\addcontentsline{toc}{subsection}{UC15. Appoint Head of Department}
+\hypertarget{UC15}{}
+\usecaseheader
+  {UC15} % 1: ID
+  {Appoint Head of Department} % 2: Titolo
+  {To enable the Head of Hospital to appoint a Registered Doctor to the tactical role of Head of Department within their facility.} % 3: Goal
+  {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
+  {The user is logged as a Head of Hospital. The specific department has been created. The Doctor is registered in the System.} % 5: Preconditions
+  {The selected Doctor is successfully appointed as Head of Department.} % 6: Success
+  {Head of Department appointment fails. The System remains unchanged.} % 7: Failed
+  {Primary: Head of Hospital. Secondary: Database.} % 8: Actors
+  {The Head of Hospital wants to appoint a Doctor as Head of Department.} % 9: Trigger
+
+
+\begin{ucrequirements}
+    FR3 & Tactical role appointment (Head of Department) \\ \hline
+\end{ucrequirements}
+
+
+\begin{ucflow}
+    1 & The Head of Hospital selects a Doctor from the set of Registered Doctors in their facility. \\ \hline
+    2 & The Head of Hospital saves the selection. \\ \hline
+    3 & The System prompts a confirmation message including the currently assigned Head of Department (if any). \\ \hline
+    4 & The Head of Hospital confirms the replacement. \\ \hline
+    5 & The System performs validity checks. \\ \hline
+    6 & The Doctor is appointed as Head of Department and the System status is updated. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    2a & \textbf{Operation canceled:}\newline 
+         1. Head of Hospital cancels the operation.\newline 
+         2. No changes are made to the Database.\newline 
+         3. Use case ends. \\ \hline
+
+    5a & \textbf{Doctor not found:}\newline 
+         1. System cannot find the selected Doctor.\newline 
+         2. Operation is aborted.\newline 
+         3. System returns an error.\newline 
+         4. Use case ends. \\ \hline
+\end{ucextensions}
+
+
+\begin{ucedits}
+Removed extension 2a ("Already existing Head of Department") because it is redundant: the System now displays the current Head of Department during the confirmation step, and the Head of Hospital implicitly confirms the replacement when proceeding.
+Adjusted the main flow so that role replacement is handled entirely within the confirmation step.
+\end{ucedits}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC23. Patient registration and validation}
+\hypertarget{UC23}{}
+\usecaseheader
+  {UC23} % 1: ID
+  {\hl{Patient} registration and validation} % 2: Titolo
+  {To allow an Unregistered Patient to create and validate an account within the System} % 3: Goal
+  {Scope: Users account management. Level: Primary Task.} % 4: Scope
+  {The Patient is not authenticated and does not have an active account.} % 5: Preconditions
+  {A new account is registered in the System and successfully validated.} % 6: Success
+  {No new account is created, or the account remains unverified; the user is prompted with an error message.} % 7: Failed
+  {Primary: Patient. Secondary: Database, Mail Service, Identity Provider (SPID/CIE).} % 8: Actors
+  {The Unregistered Patient wants to register in the System.} % 9: Trigger
+
+
+\begin{ucrequirements}
+    FR11.1 & User registration \\ \hline
+    FR11.2 & User validation \\ \hline
+    NFR0 & Security and privacy \\ \hline
+    NFR6 & SPID/CIE-based registration and authentication \\ \hline
+    NFR7 & Login validity period \\ \hline
+\end{ucrequirements}
+
+
+\begin{ucflow}
+    1 & The System asks the Unregistered Patient to insert their email and personal information. \\ \hline
+    2 & The Patient fills in the required information. \\ \hline
+    3 & The Unregistered Patient submits. \\ \hline
+    4 & The System validates the input fields. \\ \hline
+    5 & The Patient submits personal information together with the password. \\ \hline
+    6 & The System checks password security (complexity and strength). \\ \hline
+    7 & The System creates a new unverified account in the Database. \\ \hline
+    8 & The System sends a verification token to the provided email address via the Mail Service. \\ \hline
+    9 & The User accesses their mailbox and clicks on the validation link. \\ \hline
+    10 & The System retrieves the validation token sent with the request. \\ \hline
+    11 & The System checks for token validity and matching records in the Database. \\ \hline
+    12 & The System marks the account as verified and active. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    4a & \textbf{Duplicated fiscal code:}\newline 
+         1. The System identifies a duplicated fiscal code. \newline 
+         2. The Patient is prompted with an error message highlighting the invalid field. \newline 
+         3. Resume at Main Flow Step 2. \\ \hline
+
+    4b & \textbf{Email already taken:}\newline 
+         1. The System finds another account already associated with the provided email. \newline 
+         2. The Patient is prompted with an error message suggesting to log in or reset the password. \newline 
+         3. Use case ends. \\ \hline
+
+    6a & \textbf{Password security check fails:}\newline 
+         1. The System identifies the provided password as unsafe or too simple. \newline 
+         2. The System prompts an error message with security requirements. \newline 
+         3. Resume at Main Flow Step 5. \\ \hline
+
+    10a & \textbf{Invalid or Expired validation token:}\newline 
+         1. The System identifies that the token from the email link is invalid or has expired.\newline 
+         2. The Patient is prompted with an error message and asked if they want to receive a new validation email.\newline 
+         3. The Patient either confirms (go to Main flow step 8) or declines (use case ends). \\ \hline
+\end{ucextensions}
+
+
+\begin{ucsubvariations}
+    2a & \textbf{SPID or CIE register:}\newline 
+         1. The User selects to register using a National Digital Identity Provider (SPID/CIE).\newline 
+         2. Authentication is performed by the external authority, which returns a secure token.\newline 
+         3. The System maps the token to the corresponding user account.\newline
+         4. Use case ends. \\ \hline
+\end{ucsubvariations}
+
+
+\begin{ucedits}
+Changed title from "User registration and validation" to "Patient registration and validation" to reflect correct actor terminology.
+Merged password submission into the main registration data submission (password is no longer a separate step).
+Removed step 14 (automatic login and redirection) as it is a UI-level detail not relevant to the use case specification.
+\end{ucedits}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC25. Automated Doctor Assignment}
+\hypertarget{UC25}{}
+\usecaseheader
+  {UC25} % 1: ID
+  {Automated Doctor Assignment} % 2: Titolo
+  {To automatically assign a Doctor to a newly requested appointment based on specialization, availability, and scheduling constraints within the selected hospital.} % 3: Goal
+  {Scope: Doctor assignment. Level: Subfunction.} % 4: Scope
+  {The calling use case has provided the examination type, requested date and time and optionally the hospital.} % 5: Preconditions
+  {A suitable Doctor is successfully assigned to the appointment.} % 6: Success
+  {No Doctor is assigned; the System returns an error to the calling use case.} % 7: Failed
+  {Primary: System. Secondary: Database, Head of Department.} % 8: Actors
+  {The use case is triggered automatically when a Patient is booking or rescheduling an appointment. (\textbf{\hyperlink{UC27}{UC27}}) (\textbf{\hyperlink{UC29}{UC29}})} % 9: Trigger
+
+
+\begin{ucrequirements}
+    FR12 & Automated Doctor assignment\\ \hline
+    NFR1 & Algorithm performance\\ \hline
+\end{ucrequirements}
+
+
+\begin{ucflow}
+    1 & The System filters Doctors by specialization matching the requested examination type. \\ \hline
+    2 & If a hospital is specified, the System filters Doctors assigned to that hospital. \\ \hline
+    3 & The System filters Doctors available in the requested day and time slot based on shift constraints. \\ \hline
+    4 & The System excludes Doctors with conflicting appointments within a 30-minute window before and after the requested time. \\ \hline
+    5 & If a Patient is provided, the System prioritizes Doctors that have previously visited the Patient. \\ \hline
+    6 & The System selects the first available Doctor after applying all filters (ordered deterministically). \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    1a & \textbf{No Doctor found with required specialization:}\newline 
+         1. The System returns an error to the calling use case. \newline 
+         2. Use case ends. \\ \hline
+
+    3a & \textbf{No Doctor available in requested slot:}\newline 
+         1. The System returns an error to the calling use case. \newline 
+         2. Use case ends. \\ \hline
+
+    4a & \textbf{All Doctors have conflicting appointments:}\newline 
+         1. The System returns an error to the calling use case. \newline 
+         2. Use case ends. \\ \hline
+\end{ucextensions}
+
+\begin{ucedits}
+Rewritten the use case to match the actual backend implementation of the Doctor assignment algorithm.
+The selection process is now strictly constraint-based, reflecting filtering by specialization, optional hospital assignment, shift-based availability, and appointment conflict detection.
+Added optional patient-based prioritization to reflect continuity of care logic, which is applied only when matching candidates are available after filtering.
+Removed optimization (e.g., 30-day availability window and fallback strategies) as they are not implemented in the system.
+\end{ucedits}
+
+\phantomsection
+\addcontentsline{toc}{subsection}{UC27. Appointment booking}
+\hypertarget{UC27}{}
+\usecaseheader
+  {UC27} % 1: ID
+  {Appointment booking} % 2: Titolo
+  {To provide a logged-in Patient a way to book a medical visit.} % 3: Goal
+  {Scope: Appointment management. Level: Primary.} % 4: Scope
+  {The Patient is logged into the System.} % 5: Preconditions
+  {An appointment (comprising date, time, hospital, department, and Doctor) is successfully booked.} % 6: Success
+  {No appointment is booked; the System remains unchanged.} % 7: Failed
+  {Primary: Patient. 
+Secondary: Database, Mail Service.} % 8: Actors
+  {The Patient wants to book an appointment.} % 9: Trigger
+
+
+\begin{ucrequirements}
+    FR15 & Appointment booking\\ \hline
+    NFR1 & Algorithm performance\\ \hline
+    NFR4 & Scalability and capacity\\ \hline
+    NFR5 & Accessibility\\ \hline
+    NFR8 & Concurrency and data integrity\\ \hline
+\end{ucrequirements}
+
+
+\begin{ucflow}
+    1 & The Patient selects the desired examination and, optionally, a preferred hospital and a target future date. \\ \hline
+    2 & The Patient submits the search request. \\ \hline
+    3 & \hl{The System verifies whether the selected hospital offers the requested examination.} \\ \hline
+    4 & \textbf{Include: \hyperlink{FR12}{FR12 Automated Doctor assignment.}} The System retrieves a suitable Doctor and date and time of the appointment. \\ \hline
+    5 & The System presents the proposed appointment details (date, time, hospital, department, and Doctor) to the Patient. \\ \hline
+    6 & The Patient confirms. \\ \hline
+    7 & The System saves the appointment in the Database. \\ \hline
+    8 & The System sends an email notification to the Patient. \\ \hline
+\end{ucflow}
+
+
+\begin{ucextensions}
+    2a & \textbf{Examination not available in the preferred hospital:}\newline 
+         1. The System displays an alert stating the examination is unavailable at the selected hospital. \newline 
+         2. The System automatically selects the closest hospital to the Patient's registered address that offers the selected examination. \newline 
+         3. Resume at Main Flow Step 3. \\ \hline
+
+    2b & \textbf{No preferred hospital:}\newline 
+         1. The System automatically selects the closest hospital to the Patient's registered address that offers the selected examination. \newline 
+         2. Resume at Main Flow Step 3. \\ \hline
+
+    2c & \textbf{No preferred date:}\newline 
+         1. The System automatically defaults to the current date as the search starting point. \newline 
+         2. Resume at Main Flow Step 3. \\ \hline
+
+    3a & \textbf{Hospital does not offer the requested examination:}\newline 
+         1. The System displays an error message asking the Patient to select another hospital or examination. \newline 
+         2. Resume at Main Flow Step 1. \\ \hline
+
+    4a & \textbf{No suitable appointment is found:}\newline 
+         1. The System displays an error message asking the Patient to select another hospital or date range. \newline 
+         2. Resume at Main Flow Step 1. \\ \hline
+
+    6a & \textbf{The Patient cancels:}\newline 
+         1. No action is taken and the System remains unchanged. \newline 
+         2. Use case ends. \\ \hline
+\end{ucextensions}
+
+
+\begin{ucedits}
+Replaced the examination room availability check with a validation that the selected hospital offers the requested examination.
+This change aligns the use case with the actual system implementation.
+\end{ucedits}
 
 % --- CONTEXT DESCRIPTION ---
 \section{Context Description}
@@ -626,25 +1051,24 @@ During the implementation phase the goal was to cover the main functionalities o
 In particular, we implemented the use cases:
 
 \begin{enumerate}
-    \item \textbf{UC1} - Create Treatment / Hospital / Department DONE
-    \item \textbf{UC2} - Create Insurance Policy DONE
-    \item \textbf{UC5} - Edit Treatment / Hospital / Department DONE
-    \item \textbf{UC6} - Update Insurance Policy    DONE
-    \item \textbf{UC8} - Deactivate or close Treatment / Hospital / Department  DONE
-    \item \textbf{UC9} - Deactivate Insurance Policy    DONE
-    \item \textbf{UC10} - Cancel Appointment (Patient) DONE
-    \item \textbf{UC12} - Register Doctor
-    \item \textbf{UC13} - Assign Doctor to Hospital
-    \item \textbf{UC14} - Appoint Head of Hospital
-    \item \textbf{UC15} - Appoint Head of Department
-    \item \textbf{UC16} - Assign Doctor to Department
-    \item \textbf{UC22} - Generate Insurancce Policy Code
-    \item \textbf{UC23} - User Registration and Validation -  Cambiare nome UC (riguarda solo patient)
-    \item \textbf{UC24} - User Login 
-    \item \textbf{UC25} - Automated Doctor Assignment
-    \item \textbf{UC27} - Appointment Booking
-    \item \textbf{UC28} - Appointment View - partial
-    \item \textbf{UC29} - Appointment Rescheduling
+    \item \textbf{UC1} - Create Treatment / Hospital / Department 
+    \item \textbf{UC2} - Create Insurance Policy 
+    \item \textbf{UC5} - Edit Treatment / Hospital / Department 
+    \item \textbf{UC6} - Update Insurance Policy    
+    \item \textbf{UC8} - Deactivate or close Treatment / Hospital / Department  
+    \item \textbf{UC9} - Deactivate Insurance Policy    
+    \item \textbf{UC10} - Cancel Appointment (Patient) 
+    \item \textbf{UC12} - Register Doctor   
+    \item \textbf{UC13} - Assign Doctor to Hospital 
+    \item \textbf{UC14} - Appoint Head of Hospital  
+    \item \textbf{UC15} - Appoint Head of Department 
+    \item \textbf{UC16} - Assign Doctor to Department   
+    \item \textbf{UC22} - Generate Insurancce Policy Code 
+    \item \textbf{UC23} - User Registration and Validation
+    \item \textbf{UC24} - User Login  
+    \item \textbf{UC25} - Automated Doctor Assignment 
+    \item \textbf{UC27} - Appointment Booking 
+    \item \textbf{UC28} - Appointment View 
 \end{enumerate}
 
 
@@ -1120,25 +1544,119 @@ The actors are:
 \end{minipage}
 \vspace{3em}
 
-\newpage
 \phantomsection 
 \section{Code Developement}
-asdasdasd
+We illustrate through snippets of code the pattern used across the whole application
+\phantomsection
+\subsection{Infrastructure}
+The project's infrastructure is managed using a \texttt{docker-compose.yml} file. This configuration orchestrates the core services that make up the solution:
+\begin{itemize}
+    \item Development environment
+    \item Nginx reverse proxy
+    \item PostgreSQL database
+    \item Mail service
+\end{itemize}
 
-\begin{minipage}{\textwidth}
-    \phantomsection
-    \subsection{1. Place holder}
-    place holder!
-    
-    \begin{center}
-        \includegraphics[width=5cm]{User_Flows/AdminLogin.png}
-        \captionof{figure}{placeholder}
-    \end{center}
-    %\begin{itemize}   
-    %\end{itemize}
-\end{minipage}
-\vspace{3em}
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/infra.png}
+    \captionof{figure}{Snippet of the \texttt{docker-compose.yml} configuration}
+\end{center}
 
+Each service defined within the Docker Compose file typically consists of the following key components:
+\begin{itemize}
+    \item \textbf{Image / Build context}: A pre-existing Docker image or a custom \texttt{Dockerfile} used to build the container.
+    \item \textbf{Environment variables}: Configuration values injected into the service, often loaded dynamically from a \texttt{.env} file.
+    \item \textbf{Volumes}: Persistent storage mechanisms that map container directories to the host file system, ensuring data is not lost when containers are destroyed or recreated.
+    \item \textbf{Port mapping}: Network rules that expose the container's internal ports to the host machine, allowing external access to the service.
+\end{itemize}
+
+\phantomsection
+\subsection{Models}
+The core entities mapped to the database are structured using Django models. 
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/model.png}
+    \captionof{figure}{Snippet of the \texttt{medical/models.py} file}
+\end{center}
+
+These model classes can extend custom utility mixins (such as \texttt{CreatedUpdatedAt} and \texttt{SoftDelete}), which inherently derive from Django's base \texttt{models.Model}. 
+
+Within each model definition, the following key elements are established:
+\begin{itemize}
+    \item \textbf{Fields and Data Types}: The parameters that define the internal structure of the entity.
+    \item \textbf{Relationships}: The relational mappings between different tables (e.g., Foreign Keys).
+    \item \textbf{Custom Methods}: Encapsulation of specific business logic directly within the model class.
+    \item \textbf{Method Overrides}: Customization of default built-in behaviors, such as overriding the \texttt{\_\_str\_\_} method for better object representation.
+\end{itemize}
+\phantomsection
+\subsection{Serializers}
+Serializers act as a crucial intermediary layer between the database models and the client applications. They serve two primary purposes:
+\begin{itemize}
+    \item \textbf{Data Validation}: Ensuring that incoming data meets all required constraints before interacting with the database.
+    \item \textbf{Data Transformation and Formatting}: Converting complex data types (like Django models and querysets) into native Python datatypes that can be easily rendered into JSON, and vice versa.
+\end{itemize}
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/serializer.png}
+    \captionof{figure}{Snippet of the \texttt{users/serializers.py} file}
+\end{center}
+
+In the provided example, the serializer is explicitly customized to handle user creation logic. Key operations defined within this class include:
+\begin{itemize}
+    \item \textbf{Field Definition}: Specifying the exact parameters to be accepted and processed by the API.
+    \item \textbf{Field Overrides}: Modifying default field behaviors, such as explicitly setting the password field to \texttt{write\_only} to ensure it is never exposed in API responses.
+    \item \textbf{Custom Validation}: Implementing specific field-level validation logic (e.g., \texttt{validate\_fiscal\_code}) to enforce strict data integrity rules.
+    \item \textbf{Method Overriding}: Customizing the default \texttt{create} method to safely process sensitive information, such as extracting (\textit{popping}) the password from the validated data.
+\end{itemize}
+
+\phantomsection
+\subsection{Views}
+Views serve as the entry points for the application's API endpoints. They act as the core controllers within the architecture, responsible for receiving incoming HTTP requests, orchestrating the necessary business logic, and returning the appropriate HTTP responses to the client.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/view.png}
+    \captionof{figure}{Snippet of the \texttt{users/views.py} file}
+\end{center}
+
+In the provided example, the view is specifically designed to handle the user login process via a \texttt{POST} request. The typical execution flow within this view involves several key steps:
+\begin{itemize}
+    \item \textbf{Data Ingestion}: Capturing the payload (credentials) sent by the client in the request body.
+    \item \textbf{Validation}: Passing the incoming data to the \texttt{LoginSerializer} to ensure it is structurally valid and meets all required constraints before any processing occurs.
+    \item \textbf{Authentication Logic}: Attempting to authenticate the user by verifying the validated credentials against the database records.
+    \item \textbf{Response Generation}: Returning a structured HTTP response based on the authentication outcome. This typically means returning an authentication token (e.g., JWT) with a \texttt{200 OK} status on success, or returning explicit error messages with a \texttt{400 Bad Request} or \texttt{401 Unauthorized} status if the login attempt fails.
+\end{itemize}
+
+\phantomsection
+\subsection{URL Routing}
+URL routing serves as the final configuration layer, actively exposing the application's API endpoints to external users, client applications, and interconnected services. 
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/urls.png}
+    \captionof{figure}{Snippet of the \texttt{core/urls.py} file}
+\end{center}
+
+Django's URL dispatcher provides a highly flexible approach to endpoint management, characterized by two main features:
+\begin{itemize}
+    \item \textbf{Nested Architecture}: URL configurations can be modularly included and deeply nested. This allows developers to cleanly separate global routing rules from app-specific endpoints, ensuring the codebase remains scalable and maintainable.
+    \item \textbf{RESTful Conventions}: The routing system seamlessly accommodates standard RESTful API design, providing out-of-the-box support for intuitive naming patterns, path parameters, and resource-oriented structuring.
+\end{itemize}
+
+\phantomsection
+\subsection{Front-End API Handler}
+The Front-End API handler serves as the centralized HTTP client for the application. Built on top of the \texttt{axios} library, this module establishes a consistent and highly reusable foundation for all outgoing network interactions between the client and the backend services.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/js-api-call.png}
+    \captionof{figure}{Snippet of the \texttt{webSiteApi.jsx} file}
+\end{center}
+
+By analyzing the provided implementation, several key architectural patterns are defined within this module:
+\begin{itemize}
+    \item \textbf{Axios Configuration}: Initialization of a dedicated Axios instance pre-configured with common attributes, such as the \texttt{baseURL}. This eliminates the need to hardcode the API domain across different UI components.
+    \item \textbf{Standardized Response Wrapper}: The implementation of a unified \texttt{request} utility function that resolves API promises. It ensures every call consistently returns an object structured as \texttt{\{ok: boolean, data: object\}}, which simplifies loading and error state management in the UI layers.
+    \item \textbf{Centralized Error Handling}: The wrapper gracefully catches exceptions, explicitly differentiating between valid backend error responses (e.g., HTTP 400/500 errors) and network failures (e.g., server unreachable), providing safe fallback messages.
+    \item \textbf{Modular API Methods}: Specific endpoint interactions, such as the \texttt{register} method, are encapsulated within an exported \texttt{websiteApi} object. This keeps React components decoupled from routing paths and HTTP verbs, improving code maintainability.
+\end{itemize}
 \phantomsection 
 \section{Team Assessment}
 

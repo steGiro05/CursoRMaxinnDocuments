@@ -771,12 +771,20 @@ This change aligns the use case with the actual system implementation.
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/DoctorMedicalRecord.jpeg}
         \captionof{figure}{Activity Diagram regarding Doctor Accessing Patient's Medical Record}
     \end{center}
+
+    \textbf{Using:} 
+    
     \begin{itemize}
-        \item \textbf{Using:} 
-        \textbf{UC42}{Medical record access (Doctor)},
+        \item \textbf{UC42} Medical record access (Doctor) ,
     \end{itemize}
 \end{minipage}
 \vspace{3em}
+
+\begin{ucedits}
+Following review of D2 the activity diagram number 6 was split to better reflect use cases.
+\end{ucedits}
+
+
 
 \phantomsection
 \begin{minipage}{\textwidth}
@@ -786,12 +794,69 @@ This change aligns the use case with the actual system implementation.
         \includegraphics[width=0.8\textwidth]{Activity_Diagram/DoctorUploads.jpeg}
         \captionof{figure}{Activity Diagram regarding Doctor Uploading Prescription / Exemption / Examination}
     \end{center}
+
+    \textbf{Using:} 
+
     \begin{itemize}
-        \item \textbf{Using:} 
-        \textbf{UC3}{Create Prescription / Exemption},
-        \textbf{UC4}{Upload Examination},    \end{itemize}
+        \item \textbf{UC3} Create Prescription / Exemption,
+        \item \textbf{UC4} Upload Examination,    
+    \end{itemize}
+
+    
 \end{minipage}
 \vspace{3em}
+
+\begin{ucedits}
+Following review of D2 the activity diagram number 6 was split to better reflect use cases.
+\end{ucedits}
+
+
+\phantomsection
+\begin{minipage}{\textwidth}
+    \subsection{Activity Diagram 8. Patient Cancel and reschedule appointment}
+    The following activity diagram shows the entire flow of cancellation and rescheduling of an appointment from the patient's perspective.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/PatientCancelReschedule.jpeg}
+        \captionof{figure}{Activity Diagram regarding Patient Cancel and reschedule appointment}
+    \end{center}
+    
+    \textbf{Using:} 
+
+    \begin{itemize}
+        \item \textbf{UC10} Cancel Appointment (Patient),
+        \item \textbf{UC29} Appointment rescheduling,
+    \end{itemize}
+\end{minipage}
+\vspace{3em}
+
+\begin{ucedits}
+Following review of D2 this activy diagram was added to visualize the steps of the respective use cases.
+\end{ucedits}
+
+\phantomsection
+\begin{minipage}{\textwidth}
+    \subsection{Activity Diagram 9. Patient Medical record and Prescriptions consultation}
+    The following activity diagram shows the entire flow of patient medical record access and prescription consultation.
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Activity_Diagram/PatientMedicalRecordPrescriptions.jpeg}
+        \captionof{figure}{Activity Diagram regarding Patient Medical record and Prescriptions consultation}
+    \end{center}
+    
+    \textbf{Using:} 
+    
+    \begin{itemize}
+        \item \textbf{UC38} Prescription Consultation,
+        \item \textbf{UC39} Detailed Prescription Access,    
+        \item \textbf{UC40} Medical Record Access,    
+    \end{itemize}
+    
+\end{minipage}
+\vspace{3em}
+
+\begin{ucedits}
+Following review of D2 this activy diagram was added to visualize the steps of the respective use cases.
+\end{ucedits}
+
 
 % --- CONTEXT DESCRIPTION ---
 \section{Context Description}

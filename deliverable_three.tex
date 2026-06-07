@@ -763,8 +763,8 @@ Replaced the examination room availability check with a validation that the sele
 This change aligns the use case with the actual system implementation.
 \end{ucedits}
 
-\phantomsection
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{Activity Diagram 6.1. Doctor access patient's medical record}
     The following activity diagram shows the entire flow of accessing a patient's medical record from the doctor's perspective.
     \begin{center}
@@ -778,8 +778,8 @@ This change aligns the use case with the actual system implementation.
 \end{minipage}
 \vspace{3em}
 
-\phantomsection
 \begin{minipage}{\textwidth}
+    \phantomsection
     \subsection{Activity Diagram 6.2. Doctor uploads Prescription / Exemption / Examination}
     The following activity diagram shows the entire flow of uploading a prescription, exemption, or examination from the doctor's perspective.
     \begin{center}
@@ -792,6 +792,23 @@ This change aligns the use case with the actual system implementation.
         \textbf{UC4}{Upload Examination},    \end{itemize}
 \end{minipage}
 \vspace{3em}
+
+\begin{minipage}{\textwidth}
+    \phantomsection
+    \subsection{Class diagram. Appointment entity}
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Class_Diagram/review/appointment.png}
+        \captionof{figure}{Class Diagram regarding Appointment entity}
+    \end{center}
+\end{minipage}
+\vspace{3em}
+
+\begin{ucedits}
+Added the previously missing \texttt{getDetails()} method to the \texttt{Appointment} class.
+\end{ucedits}
+
+
+
 
 % --- CONTEXT DESCRIPTION ---
 \section{Context Description}
@@ -1227,7 +1244,7 @@ The actors are:
     \phantomsection
     \subsection{UF2. User - Internal Calendar}
     The following user flow shows the steps a user takes to view their calendar and see the detailes of a booked appointment.
-    It refers to use cases \textbf{UC30, UC28}, and methods \textbf{??, ??} from the class \textbf{User} of the class diagram.
+    It refers to use cases \textbf{UC30, UC28}, and methods \textbf{Calendar.getAppointments(), Appointment.getDetails()} from the class \textbf{Calendar, Appointment} of the class diagram.
     
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/UserInternalCalendar.png}

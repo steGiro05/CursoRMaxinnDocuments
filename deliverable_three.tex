@@ -212,15 +212,6 @@ This document describes the implementation phase of the HealthMaxxing App, provi
 \section{Modifications to D1}
 
 \phantomsection
-\subsection{FR4. Facility doctors allocation}
-
-{\color{red}\sout{The system shall allow the Head of Hospital to macro-allocate doctors within their facility. This shall include assigning doctors to departments in the hospital.}}
-
-\vspace{0.3cm}
-
-The previous formulation has been removed because it is already covered by FR1.8 (Doctor assignment). Hospital-level allocation is therefore not required, as it is implicitly handled through department-level assignment in the updated use cases.
-
-\phantomsection
 \subsection{FR11. Identity and access management} \label{FR11}
 The system shall provide identity and access management through the following functionalities:
 \begin{itemize}
@@ -420,19 +411,20 @@ Added the appointment cancellation email notification (step 7) to align the use 
 Removed the precondition requiring the relevant hospital structure to already exist, as it is not necessary for Doctor registration. 
 Replaced the uniqueness check from "name" to "fiscal code" to correctly identify duplicate Doctor records using a unique identifier.
 \end{ucedits}
+
 \phantomsection
-\addcontentsline{toc}{subsection}{UC13. Assign Doctor to Department / Hospital}
+\addcontentsline{toc}{subsection}{UC13. Assign Doctor to Hospital}
 \hypertarget{UC13}{}
 \usecaseheader
   {UC13} % 1: ID
-  {Assign Doctor to Department / Hospital} % 2: Titolo
-  {To enable the System Administrator or Head of Hospital to assign one or more registered Doctors to a specific department. Hospital assignment is implicit through the department.} % 3: Goal
+  {Assign Doctor to Hospital} % 2: Titolo
+  {To enable the System Administrator to assign a registered Doctors to a specific hospital.} % 3: Goal
   {Scope: Hospital structures handling. Level: Primary.} % 4: Scope
-  {The user is logged in as a System Admin or Head of Hospital. The target department exists. The Doctors are registered in the System.} % 5: Preconditions
-  {The selected Doctors are successfully assigned to the selected department.} % 6: Success
+  {The user is logged in as a System Admin. The target hospital exists. The Doctors are registered in the System.} % 5: Preconditions
+  {The selected Doctors are successfully assigned to the selected hospital.} % 6: Success
   {The assignment fails; previous assignments remain unchanged.} % 7: Failed
   {Primary: System Admin, Head of Hospital. Secondary: Database.} % 8: Actors
-  {The user selects Doctors and assigns them to a department.} % 9: Trigger
+  {The user selects Doctors and assigns them to a hospital.} % 9: Trigger
 
 
 \begin{ucrequirements}
@@ -442,32 +434,31 @@ Replaced the uniqueness check from "name" to "fiscal code" to correctly identify
 
 
 \begin{ucflow}
-    1 & The user selects one or more Doctors from the set of registered Doctors. \\ \hline
-    2 & The user selects the target department. \\ \hline
-    3 & The user requests assignment. \\ \hline
-    4 & The System checks whether selected Doctors are already assigned to a department. \\ \hline
-    5 & The System displays current assignment status (including any existing department assignments). \\ \hline
-    6 & The user confirms or modifies the selection. \\ \hline
-    7 & The System assigns the Doctors to the selected department and updates the System status. \\ \hline
+    1 & The System Admin selects one or more Doctors from the set of registered Doctors. \\ \hline
+    2 & The System Admin selects the target hospital. \\ \hline
+    3 & The System Admin requests assignment. \\ \hline
+    4 & The System checks whether selected Doctors are already assigned to a hospital. \\ \hline
+    5 & The System displays current assignment status (including any existing hospital assignments). \\ \hline
+    6 & The System Admin confirms or modifies the selection. \\ \hline
+    7 & The System assigns the Doctors to the selected hospital and updates the System status. \\ \hline
 \end{ucflow}
 
 
 \begin{ucextensions}
     3a & \textbf{Cancel operation:}\newline 
-         1. The user cancels the assignment.\newline 
+         1. The System Admin cancels the assignment.\newline 
          2. No changes are made to the System.\newline 
          3. Use case ends. \\ \hline
 
-    6a & \textbf{User does not confirm assignment:}\newline 
-         1. The user rejects the proposed assignment or modifies the selection.\newline 
+    6a & \textbf{System Admin does not confirm assignment:}\newline 
+         1. The System Admin rejects the proposed assignment or modifies the selection.\newline 
          2. The System returns to step 1 or 2 depending on modification.\newline 
          3. Use case continues or ends. \\ \hline
 \end{ucextensions}
 
 
 \begin{ucedits}
-Merged UC13 (Assign Doctor to Hospital) and UC16 (Assign Doctors to Department) into a single use case because hospital assignment is implicit through department assignment.
-Moved validity checking of existing assignments before confirmation, so the user is informed of current Doctor allocation status prior to final confirmation.
+Moved validity checking of existing assignments before confirmation, so the System Admin is informed of current Doctor allocation status prior to final confirmation.
 \end{ucedits}
 
 
@@ -897,8 +888,26 @@ Following review of D2 this activy diagram was added to visualize the steps of t
 \vspace{3em}
 
 \begin{ucedits}
-Following review of D2 this activy diagram was added to visualize the steps of the respective use cases.
+Following review of D2 this activity diagram was added to visualize the steps of the respective use cases.
+\end{ucedits}\
+
+\phantomsection
+\begin{minipage}{\textwidth}
+    \subsection{Class Diagram. Appointment Class}
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{Class_Diagram/review/appointment.png}
+        \captionof{figure}{Class Diagram regarding Appointment Class}
+    \end{center}
+
+    
+\end{minipage}
+\vspace{3em}
+
+\begin{ucedits}
+Added the previously missing \texttt{getDetails()} method to the \texttt{Appointment} class.
 \end{ucedits}
+
+
 
 
 % --- CONTEXT DESCRIPTION ---
@@ -1200,7 +1209,6 @@ In particular, we implemented the use cases:
     \item \textbf{UC13} - Assign Doctor to Hospital 
     \item \textbf{UC14} - Appoint Head of Hospital  
     \item \textbf{UC15} - Appoint Head of Department 
-    \item \textbf{UC16} - Assign Doctor to Department   
     \item \textbf{UC22} - Generate Insurancce Policy Code 
     \item \textbf{UC23} - User Registration and Validation
     \item \textbf{UC24} - User Login  
@@ -1352,7 +1360,7 @@ The actors are:
     \phantomsection
     \subsection{UF3. User - Profile Update and Deletion}
     The following user flow shows the steps a user takes to update and delete their profile.
-    It refers to use cases \textbf{UC7, UC41}, and methods \textbf{viewProfile(), updateProfile(), deleteAccount()} from the class \textbf{User} of the class diagram.
+    It refers to use cases \textbf{UC7, UC41}, and methods \textbf{viewProfile(), updateProfile(newData: UserProfileData), deleteAccount()} from the class \textbf{User} of the class diagram.
     
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/ProfileUpdateDeletion.png}
@@ -1367,7 +1375,7 @@ The actors are:
     \phantomsection
     \subsection{UF4. User - Export Calendar}
     The following user flow shows the steps a user takes to export their appointment to an external calendar.
-    It refers to use case \textbf{UC31}, and methods \textbf{??} from the class \textbf{User} of the class diagram.
+    It refers to use case \textbf{UC31}, and methods \textbf{generateExportToken()} from the class \textbf{Calendar} of the class diagram.
     
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/ExportCalendar.png}
@@ -1382,7 +1390,7 @@ The actors are:
     \phantomsection
     \subsection{UF5. Admin - Login}
     The following user flow shows the steps the admin takes to login.
-    It refers to use case \textbf{UC45}, and method \textbf{adminLogin()} from the class \textbf{SystemAdmin} of the class diagram.
+    It refers to use case \textbf{UC45}, and method \textbf{adminLogin(credentials)} from the class \textbf{SystemAdmin} of the class diagram.
     
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/AdminLogin.png}
@@ -1398,7 +1406,7 @@ The actors are:
     \subsection{UF6. Admin - Create Insurance Policy, Hospital, Treatment, Department. Register Doctor}
     \label{UF6}
     The following user flow shows the steps the admin takes to create an Insurance Policy, Hospital, Treatment, Department and register a Doctor.
-    It refers to use case \textbf{UC1, UC2, UC12}, and methods \textbf{createInsurancePolicy(), createHospital(), createTreatment(), createDepartment(), registerDoctor()} from the class \textbf{SystemAdmin} of the class diagram.
+    It refers to use case \textbf{UC1, UC2, UC12}, and methods \textbf{createInsurancePolicy(policyData), createHospital(hospitalData), createTreatment(treatmentData), createDepartment(hospital, departmentData), registerDoctor(doctorData)} from the class \textbf{SystemAdmin} of the class diagram.
     
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/CreatePolicyHospitalTreatmentDepartment.png}
@@ -1414,7 +1422,7 @@ The actors are:
     \subsection{UF7. Admin - Edit Insurance Policy, Hospital, Treatment, Department}
     \label{UF7}
     The following user flow shows the steps the admin takes to edit an Insurance Policy, Hospital, Treatment, Department.
-    It refers to use case \textbf{UC5, UC6}, and methods \textbf{editInsurancePolicy(), editHospital(), editTreatment(), editDepartment()} from the class \textbf{SystemAdmin} of the class diagram.
+    It refers to use case \textbf{UC5, UC6}, and methods \textbf{editInsurancePolicy(policy, newPolicyData), editHospital(hospital, newHospitalData), editTreatment(treatment, newTreatmentData), editDepartment(department, newDepartmentData)} from the class \textbf{SystemAdmin} of the class diagram.
     
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/EditPolicyHospitalTreatmentDepartment.png}
@@ -1430,7 +1438,7 @@ The actors are:
     \subsection{UF8. Admin - Deactivate Insurance Policy, Hospital, Treatment, Department}
     \label{UF8}
     The following user flow shows the steps the admin takes to deactivate an Insurance Policy, Hospital, Treatment, Department.
-    It refers to use case \textbf{UC8, UC9}, and methods \textbf{deactivateInsurancePolicy(), closeHospital(), deactivateTreatment(), closeDepartment()} from the class \textbf{SystemAdmin} of the class diagram.
+    It refers to use case \textbf{UC8, UC9}, and methods \textbf{deactivateInsurancePolicy(policy), closeHospital(hospital), deactivateTreatment(treatment), closeDepartment(department)} from the class \textbf{SystemAdmin} of the class diagram.
     
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/DeactivatePolicyHospitalTreatmentDepartment.png}
@@ -1445,7 +1453,7 @@ The actors are:
     \phantomsection
     \subsection{UF9. Admin - Appoint Head of Hospital}
     The following user flow shows the steps the admin takes to appoint a Head of Hospital.
-    It refers to use case \textbf{UC14}, and methods \textbf{appointHeadOfHospital(doctor:Doctor, hospital: Hospital)} from the class \textbf{SystemAdmin} of the class diagram.
+    It refers to use case \textbf{UC14}, and methods \textbf{appointHeadOfHospital(doctor, hospital)} from the class \textbf{SystemAdmin} of the class diagram.
     
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/AppointHeadOfHospital.png}

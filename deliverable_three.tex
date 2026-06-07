@@ -167,6 +167,15 @@
     \par\vspace{0.5cm}
 }
 
+% Environment for use cases introduced during implementation
+\newenvironment{ucnew}{
+    \noindent\textbf{NEW USE CASE} \par \vspace{0.1cm}
+    \begin{quote}
+}{
+    \end{quote}
+    \par\vspace{0.5cm}
+}
+
 
 \setcounter{secnumdepth}{0}
 \begin{document}
@@ -223,15 +232,19 @@ The previous formulation has been removed because it is already covered by FR1.8
 
 \phantomsection
 \subsection{FR11. Identity and access management} \label{FR11}
-The system shall enable users to manage their platform identity and access through the following functionalities:
+The system shall provide identity and access management through the following functionalities:
 \begin{itemize}
-\item \textbf{FR11.1 \hl{Patient} registration:} The system shall allow unregistered patients to create a new account using their email by providing the personal data required for identification, verification and service usage.
+    \item \textbf{FR11.1 \hl{Patient} registration:} The system shall allow unregistered patients to create a new account using their email by providing the personal data required for identification, verification and service usage.
 
-\item \textbf{FR11.2 \hl{Patient} validation:} The system shall allow newly registered patients to validate their accounts by verifying a secure token sent to their registered email address.
+    \item \textbf{FR11.2 \hl{Patient} validation:} The system shall allow newly registered patients to validate their accounts by verifying a secure token sent to their registered email address.
+
+    \item \textbf{FR11.3 User login:} The system shall allow registered users in the standard User hierarchy to authenticate and securely access their accounts using their registered email and password credentials, or alternatively through national digital identity providers (e.g., SPID, CIE).
+
+    \item \textbf{FR11.4 \hl{System Administrator authentication}:} The system shall allow an active account with administrative privileges to authenticate through the dedicated administration interface using its email address and password. The system shall deny administration access to inactive accounts and accounts without administrative privileges.
 \end{itemize}
 \vspace{0.3cm}
 
-The term "User" has been replaced with "Patient" to ensure consistency across the entire specification. The system domain is patient-centric, and account registration/validation applies exclusively to patients rather than generic users.
+The term "User" has been replaced with "Patient" in FR11.1 and FR11.2 because registration and validation apply specifically to patients. FR11.3 remains applicable to the standard User hierarchy defined in D2. FR11.4 is a new functional requirement introduced during implementation to document the separate System Administrator authentication flow, which was implemented but not covered by FR11.3.
 
 \phantomsection
 \section{Modifications to D2}
@@ -763,6 +776,66 @@ Replaced the examination room availability check with a validation that the sele
 This change aligns the use case with the actual system implementation.
 \end{ucedits}
 
+\phantomsection
+\addcontentsline{toc}{subsection}{UC45. Admin Login}
+\hypertarget{UC45}{}
+
+\usecaseheader
+  {UC45}
+  {Admin Login}
+  {To allow the System Administrator to authenticate and access the Django administration interface.}
+  {Scope: System administration access management. Level: Primary Task.}
+  {A valid, active account with administration access (\texttt{is\_staff}) exists, and the administrator is not authenticated.}
+  {An authenticated administrative session is created, and the System Administrator is redirected to the requested administration page.}
+  {No administrative session is created, access is denied, and the login form displays an error.}
+  {Primary: System Administrator. Secondary: Database.}
+  {The System Administrator navigates to the administration interface at \texttt{/admin/}.}
+
+\begin{ucrequirements}
+    FR11.4 & System Administrator authentication \\ \hline
+    NFR0 & Security and privacy \\ \hline
+\end{ucrequirements}
+
+\begin{ucflow}
+    1 & The System displays the administration login form. \\ \hline
+    2 & The System Administrator enters their email address and password. \\ \hline
+    3 & The System Administrator submits the login form. \\ \hline
+    4 & The System validates that the required credentials were provided. \\ \hline
+    5 & The System authenticates the credentials against the stored account. \\ \hline
+    6 & The System verifies that the account is active and has staff access. \\ \hline
+    7 & The System creates an authenticated server-side session. \\ \hline
+    8 & The System redirects the System Administrator to the requested administration page or administration dashboard. \\ \hline
+\end{ucflow}
+
+\begin{ucextensions}
+    4a & \textbf{Missing credentials:}\newline
+         1. One or more required fields are empty.\newline
+         2. The System displays a validation error.\newline
+         3. Resume at Main Flow Step 2. \\ \hline
+
+    5a & \textbf{Invalid credentials:}\newline
+         1. The email address or password is incorrect.\newline
+         2. The System denies access and displays an authentication error.\newline
+         3. Resume at Main Flow Step 2. \\ \hline
+
+    6a & \textbf{Administrative access not permitted:}\newline
+         1. The account is inactive or does not have staff access.\newline
+         2. The System denies access and displays an authentication error.\newline
+         3. Resume at Main Flow Step 2. \\ \hline
+\end{ucextensions}
+
+\begin{ucnew}
+UC45 documents the separate Django administration authentication flow exposed
+at \texttt{/admin/} and is traced to the newly introduced FR11.4. Although D2
+models the System Administrator as a distinct conceptual class, the current
+implementation realizes administrative privileges through the base User
+account's staff and superuser flags. The unguarded React
+\texttt{/admin/dashboard} placeholder is not considered an implemented
+administration login. SPID/CIE, account recovery, an explicit cancellation
+action, and NFR7 inactivity re-authentication are excluded because they are not
+implemented for this flow.
+\end{ucnew}
+
 \begin{minipage}{\textwidth}
     \phantomsection
     \subsection{Activity Diagram 6.1. Doctor access patient's medical record}
@@ -772,7 +845,7 @@ This change aligns the use case with the actual system implementation.
         \captionof{figure}{Activity Diagram regarding Doctor Accessing Patient's Medical Record}
     \end{center}
     \begin{itemize}
-        \item \textbf{Using:} 
+        \item \textbf{Using:}
         \textbf{UC42}{Medical record access (Doctor)},
     \end{itemize}
 \end{minipage}
@@ -787,9 +860,10 @@ This change aligns the use case with the actual system implementation.
         \captionof{figure}{Activity Diagram regarding Doctor Uploading Prescription / Exemption / Examination}
     \end{center}
     \begin{itemize}
-        \item \textbf{Using:} 
+        \item \textbf{Using:}
         \textbf{UC3}{Create Prescription / Exemption},
-        \textbf{UC4}{Upload Examination},    \end{itemize}
+        \textbf{UC4}{Upload Examination},
+    \end{itemize}
 \end{minipage}
 \vspace{3em}
 
@@ -1116,6 +1190,7 @@ In particular, we implemented the use cases:
     \item \textbf{UC25} - Automated Doctor Assignment 
     \item \textbf{UC27} - Appointment Booking 
     \item \textbf{UC28} - Appointment View 
+    \item \textbf{UC45} - Admin Login
 \end{enumerate}
 
 
@@ -1290,7 +1365,7 @@ The actors are:
     \phantomsection
     \subsection{UF5. Admin - Login}
     The following user flow shows the steps the admin takes to login.
-    It refers to use case \textbf{??}, and method \textbf{adminLogin()} from the class \textbf{SystemAdmin} of the class diagram.
+    It refers to use case \textbf{UC45}, and method \textbf{adminLogin()} from the class \textbf{SystemAdmin} of the class diagram.
     
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/AdminLogin.png}

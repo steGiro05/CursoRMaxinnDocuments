@@ -1271,7 +1271,7 @@ The actors are:
 \begin{minipage}{\textwidth}
     \phantomsection 
     \subsection{General Flow - Detailed Access Flow}
-    The following diagram describes in detail the steps of the general Detailed Access flow, expandend in the user flow \hyperref[UF15]{UF15. Patient - Medical Record and Prescriptions consultation}.
+    The following diagram describes in detail the steps of the general Detailed Access flow, expandend in the user flow \hyperref[UF16]{UF16. Patient - Medical Record and Prescriptions consultation}.
     
     \begin{center}
         \includegraphics[width=9cm]{User_Flows/DetailedAccess.png}
@@ -1300,7 +1300,6 @@ The actors are:
     \phantomsection
     \subsection{General Flow - Edit Flow}
     The following diagram describes in detail the steps of the general Edit flow, expanded in the user flow \hyperref[UF7]{UF7. Admin - Edit Insurance Policy, Hospital, Treatment, Department. Register Doctor}.
-    In order to simplify the diagram
     \begin{center}
         \includegraphics[width=8cm]{User_Flows/Edit.png}
         \captionof{figure}{General Edit Flow}
@@ -1527,9 +1526,9 @@ The actors are:
 
 \begin{minipage}{\textwidth}
     \phantomsection
-    \subsection{UF13. Patient - Appointment Booking and Payment}
+    \subsection{UF14. Patient - Appointment Booking and Payment}
     The following user flow shows the steps a patient takes to book and pay an appointment.
-    It refers to use case \textbf{UC27, UC32}, and methods \textbf{bookAppointment(), ??} from the class \textbf{Patient} of the class diagram.
+    It refers to use case \textbf{UC27, UC32, UC35}, and methods \textbf{bookAppointment(), ??} from the class \textbf{Patient} of the class diagram.
     
     \begin{center}
         \includegraphics[width=0.8\textwidth]{User_Flows/AppointmentBookingPayment.png}
@@ -1542,7 +1541,7 @@ The actors are:
 
 \begin{minipage}{\textwidth}
     \phantomsection
-    \subsection{UF14. Patient - Register Insurance Policy via unique code}
+    \subsection{UF15. Patient - Register Insurance Policy via unique code}
     The following user flow shows the steps a patient takes to add an insurance policy to their profile via unique code.
     It refers to use case \textbf{UC36}, and methods \textbf{registerInsurance(code:String)} from the class \textbf{Patient} of the class diagram.
     
@@ -1557,8 +1556,8 @@ The actors are:
 
 \begin{minipage}{\textwidth}
     \phantomsection
-    \subsection{UF15. Patient - Medical Record and Prescriptions consultation}
-    \label{UF15}
+    \subsection{UF16. Patient - Medical Record and Prescriptions consultation}
+    \label{UF16}
     The following user flow shows the steps a patient takes to view their medical record and prescriptions in detail.
     It refers to use case \textbf{UC38, UC39, UC40}, and methods \textbf{??} from the class \textbf{Patient} of the class diagram.
     
@@ -1573,28 +1572,13 @@ The actors are:
 
 \begin{minipage}{\textwidth}
     \phantomsection
-    \subsection{UF16. Doctor - Access Patient's Medical Record, Chronological Report}
+    \subsection{UF17. Doctor - Access Patient's Medical Record, Chronological Report}
     The following user flow shows the steps a doctor takes to access a patient's medical records and to consult their own chronological report.
     It refers to use case \textbf{UC42, UC43}, and methods \textbf{accessPatientRecord(),viewChronologicalReport()} from the class \textbf{Doctor} of the class diagram.
     
     \begin{center}
         \includegraphics[width=0.9\textwidth]{User_Flows/DoctorMedicalRecordReport.png}
         \captionof{figure}{User flow regarding Doctor Access Patient's Medical Record, Chronological Report}
-    \end{center}
-    %\begin{itemize}   
-    %\end{itemize}
-\end{minipage}
-\vspace{3em}
-
-\begin{minipage}{\textwidth}
-    \phantomsection
-    \subsection{UF17. Doctor - Upload Prescriptions, Exemptions and Exam Results}
-    The following user flow shows the steps a doctor takes to upload prescriptions, exemptions and exam result to a patient's profile.
-    It refers to use case \textbf{UC3, UC4}, and methods \textbf{createPrescription(),createExemption(), uploadExamination()} from the class \textbf{Doctor} of the class diagram.
-    
-    \begin{center}
-        \includegraphics[width=0.9\textwidth]{User_Flows/DoctorUploads.png}
-        \captionof{figure}{User flow regarding Doctor Upload Prescriptions, Exemptions and Exam Results}
     \end{center}
     %\begin{itemize}   
     %\end{itemize}
@@ -1623,7 +1607,7 @@ The actors are:
     It refers to use case \textbf{UC11}, and methods \textbf{cancelAppointment(reason : String)} from the class \textbf{Doctor} of the class diagram.
     
     \begin{center}
-        \includegraphics[width=0.9\textwidth]{User_Flows/DoctorAppointmentCancellation.png}
+        \includegraphics[width=0.6\textwidth]{User_Flows/DoctorAppointmentCancellation.png}
         \captionof{figure}{User flow regarding Doctor Appointment Cancellation}
     \end{center}
     %\begin{itemize}   
@@ -1638,7 +1622,7 @@ The actors are:
     It refers to use case \textbf{UC17, UC21, UC44}, and methods \textbf{updateDepartmentTreatments(), configureDepartmentCapacity(),  setShiftPattern(doctor : Doctor)} from the class \textbf{Head of Department} of the class diagram.
     
     \begin{center}
-        \includegraphics[width=0.9\textwidth]{User_Flows/DepartmentManagement.png}
+        \includegraphics[width=0.8\textwidth]{User_Flows/DepartmentManagement.png}
         \captionof{figure}{User flow regarding Head of Department Management Operations}
     \end{center}
     %\begin{itemize}   
@@ -1653,7 +1637,7 @@ The actors are:
     It refers to use case \textbf{UC11}, and methods \textbf{cancelDepartmentAppointment(reason : String)} from the class \textbf{Head of Department} of the class diagram.
     
     \begin{center}
-        \includegraphics[width=0.9\textwidth]{User_Flows/DepartmentAppointmentCancellation.png}
+        \includegraphics[width=0.6\textwidth]{User_Flows/DepartmentAppointmentCancellation.png}
         \captionof{figure}{User flow regarding Head of Department Cancel Department Appointments}
     \end{center}
     %\begin{itemize}   
@@ -1668,7 +1652,7 @@ The actors are:
     It refers to use case \textbf{UC18, UC19, UC20}, and methods \textbf{viewInsuranceDebt(), settleInsuranceDebt(companyName : String, amount : Decimal)} from the class \textbf{Head of Hospital} of the class diagram.
     
     \begin{center}
-        \includegraphics[width=0.9\textwidth]{User_Flows/HospitalDebtsManagement.png}
+        \includegraphics[width=0.8\textwidth]{User_Flows/HospitalDebtsManagement.png}
         \captionof{figure}{User flow regarding Head of Hospital Insurances' Debt Management}
     \end{center}
     %\begin{itemize}   

@@ -1,0 +1,19 @@
+\phantomsection
+\section{Modifications to D1}
+
+\phantomsection
+\subsection{FR11. Identity and access management} \label{FR11}
+The system shall provide identity and access management through the following functionalities:
+\begin{itemize}
+    \item \textbf{FR11.1 \hl{Patient} registration:} The system shall allow unregistered patients to create a new account using their email by providing the personal data required for identification, verification and service usage.
+
+    \item \textbf{FR11.2 \hl{Patient} validation:} The system shall allow newly registered patients to validate their accounts by verifying a secure token sent to their registered email address.
+
+    \item \textbf{FR11.3 User login:} The system shall allow registered users in the standard User hierarchy to authenticate and securely access their accounts using their registered email and password credentials, or alternatively through national digital identity providers (e.g., SPID, CIE).
+
+    \item \textbf{FR11.4 \hl{System Administrator authentication}:} The system shall allow an active account with administrative privileges to authenticate through the dedicated administration interface using its email address and password. 
+\end{itemize}
+\vspace{0.3cm}
+
+The term "User" has been replaced with "Patient" in FR11.1 and FR11.2 because registration and validation apply specifically to patients. FR11.3 remains applicable to the standard User hierarchy defined in D2. FR11.4 is a new functional requirement introduced during implementation to document the separate System Administrator authentication flow, which was implemented but not covered by FR11.3.
+

@@ -1,0 +1,114 @@
+
+\phantomsection 
+\section{Code Developement}
+We illustrate through snippets of code the pattern used across the whole application
+\phantomsection
+\subsection{Infrastructure}
+The project's infrastructure is managed using a \texttt{docker-compose.yml} file. This configuration orchestrates the core services that make up the solution:
+\begin{itemize}
+    \item Development environment
+    \item Nginx reverse proxy
+    \item PostgreSQL database
+    \item Mail service
+\end{itemize}
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/infra.png}
+    \captionof{figure}{Snippet of the \texttt{docker-compose.yml} configuration}
+\end{center}
+
+Each service defined within the Docker Compose file typically consists of the following key components:
+\begin{itemize}
+    \item \textbf{Image / Build context}: A pre-existing Docker image or a custom \texttt{Dockerfile} used to build the container.
+    \item \textbf{Environment variables}: Configuration values injected into the service, often loaded dynamically from a \texttt{.env} file.
+    \item \textbf{Volumes}: Persistent storage mechanisms that map container directories to the host file system, ensuring data is not lost when containers are destroyed or recreated.
+    \item \textbf{Port mapping}: Network rules that expose the container's internal ports to the host machine, allowing external access to the service.
+\end{itemize}
+
+\phantomsection
+\subsection{Models}
+The core entities mapped to the database are structured using Django models. 
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/model.png}
+    \captionof{figure}{Snippet of the \texttt{medical/models.py} file}
+\end{center}
+
+These model classes can extend custom utility mixins (such as \texttt{CreatedUpdatedAt} and \texttt{SoftDelete}), which inherently derive from Django's base \texttt{models.Model}. 
+
+Within each model definition, the following key elements are established:
+\begin{itemize}
+    \item \textbf{Fields and Data Types}: The parameters that define the internal structure of the entity.
+    \item \textbf{Relationships}: The relational mappings between different tables (e.g., Foreign Keys).
+    \item \textbf{Custom Methods}: Encapsulation of specific business logic directly within the model class.
+    \item \textbf{Method Overrides}: Customization of default built-in behaviors, such as overriding the \texttt{\_\_str\_\_} method for better object representation.
+\end{itemize}
+\phantomsection
+\subsection{Serializers}
+Serializers act as a crucial intermediary layer between the database models and the client applications. They serve two primary purposes:
+\begin{itemize}
+    \item \textbf{Data Validation}: Ensuring that incoming data meets all required constraints before interacting with the database.
+    \item \textbf{Data Transformation and Formatting}: Converting complex data types (like Django models and querysets) into native Python datatypes that can be easily rendered into JSON, and vice versa.
+\end{itemize}
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/serializer.png}
+    \captionof{figure}{Snippet of the \texttt{users/serializers.py} file}
+\end{center}
+
+In the provided example, the serializer is explicitly customized to handle user creation logic. Key operations defined within this class include:
+\begin{itemize}
+    \item \textbf{Field Definition}: Specifying the exact parameters to be accepted and processed by the API.
+    \item \textbf{Field Overrides}: Modifying default field behaviors, such as explicitly setting the password field to \texttt{write\_only} to ensure it is never exposed in API responses.
+    \item \textbf{Custom Validation}: Implementing specific field-level validation logic (e.g., \texttt{validate\_fiscal\_code}) to enforce strict data integrity rules.
+    \item \textbf{Method Overriding}: Customizing the default \texttt{create} method to safely process sensitive information, such as extracting (\textit{popping}) the password from the validated data.
+\end{itemize}
+
+\phantomsection
+\subsection{Views}
+Views serve as the entry points for the application's API endpoints. They act as the core controllers within the architecture, responsible for receiving incoming HTTP requests, orchestrating the necessary business logic, and returning the appropriate HTTP responses to the client.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/view.png}
+    \captionof{figure}{Snippet of the \texttt{users/views.py} file}
+\end{center}
+
+In the provided example, the view is specifically designed to handle the user login process via a \texttt{POST} request. The typical execution flow within this view involves several key steps:
+\begin{itemize}
+    \item \textbf{Data Ingestion}: Capturing the payload (credentials) sent by the client in the request body.
+    \item \textbf{Validation}: Passing the incoming data to the \texttt{LoginSerializer} to ensure it is structurally valid and meets all required constraints before any processing occurs.
+    \item \textbf{Authentication Logic}: Attempting to authenticate the user by verifying the validated credentials against the database records.
+    \item \textbf{Response Generation}: Returning a structured HTTP response based on the authentication outcome. This typically means returning an authentication token (e.g., JWT) with a \texttt{200 OK} status on success, or returning explicit error messages with a \texttt{400 Bad Request} or \texttt{401 Unauthorized} status if the login attempt fails.
+\end{itemize}
+
+\phantomsection
+\subsection{URL Routing}
+URL routing serves as the final configuration layer, actively exposing the application's API endpoints to external users, client applications, and interconnected services. 
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/urls.png}
+    \captionof{figure}{Snippet of the \texttt{core/urls.py} file}
+\end{center}
+
+Django's URL dispatcher provides a highly flexible approach to endpoint management, characterized by two main features:
+\begin{itemize}
+    \item \textbf{Nested Architecture}: URL configurations can be modularly included and deeply nested. This allows developers to cleanly separate global routing rules from app-specific endpoints, ensuring the codebase remains scalable and maintainable.
+    \item \textbf{RESTful Conventions}: The routing system seamlessly accommodates standard RESTful API design, providing out-of-the-box support for intuitive naming patterns, path parameters, and resource-oriented structuring.
+\end{itemize}
+
+\phantomsection
+\subsection{Front-End API Handler}
+The Front-End API handler serves as the centralized HTTP client for the application. Built on top of the \texttt{axios} library, this module establishes a consistent and highly reusable foundation for all outgoing network interactions between the client and the backend services.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{ScreenshotD3/code_snippets/js-api-call.png}
+    \captionof{figure}{Snippet of the \texttt{webSiteApi.jsx} file}
+\end{center}
+
+By analyzing the provided implementation, several key architectural patterns are defined within this module:
+\begin{itemize}
+    \item \textbf{Axios Configuration}: Initialization of a dedicated Axios instance pre-configured with common attributes, such as the \texttt{baseURL}. This eliminates the need to hardcode the API domain across different UI components.
+    \item \textbf{Standardized Response Wrapper}: The implementation of a unified \texttt{request} utility function that resolves API promises. It ensures every call consistently returns an object structured as \texttt{\{ok: boolean, data: object\}}, which simplifies loading and error state management in the UI layers.
+    \item \textbf{Centralized Error Handling}: The wrapper gracefully catches exceptions, explicitly differentiating between valid backend error responses (e.g., HTTP 400/500 errors) and network failures (e.g., server unreachable), providing safe fallback messages.
+    \item \textbf{Modular API Methods}: Specific endpoint interactions, such as the \texttt{register} method, are encapsulated within an exported \texttt{websiteApi} object. This keeps React components decoupled from routing paths and HTTP verbs, improving code maintainability.
+\end{itemize}

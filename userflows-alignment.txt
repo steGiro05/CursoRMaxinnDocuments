@@ -1,0 +1,91 @@
+-------Admin-----
+1) UC1 Create Treatment/Hospital/Dep , UC2 Create Insurance Policy - Userflow Create insurance policy, hospital, treatment, department 
+    Completely Aligned 
+    (post review ste)
+2) UC5 Edit Treatment/Hosp/Dep, UC6 Update Insurance Policy - userflow Edit insurance policy, hospital, treatment, department 
+    Aggiunta possibilità di filtrare la lista (non implementata, ma in realtà UC inizia dopo) 
+    (post review ste)
+3) UC8 Deactivate/Close Treatment/Hosp/Dep, UC9 Deactivate Insurance Policy - userflow Deactivate insurance policy, hospital, treatment, department 
+    Aggiunta possibilità di filtrare la lista (non implementata, ma in realtà UC inizia dopo) 
+    (post review ste)
+4) Userflow Admin Login
+    Da aggiungere UC
+5) UC14 Appoint Head of Hospital - Userflow Appoint Head of Hospital
+    Manca parte di already existing head of hospital & doctor not found 
+    no confirmation -> abort  (invece user flow torna indietro)
+    Aggiunta possibilità di filtrare la lista (non implementata, ma in realtà UC inizia dopo) 
+    (pre review ste)
+6) UC13 Assign Doctor to Hospital - Userflow Assign Doctor to Hospital
+    Questo è molto diverso da use case (meglio modificare UC secondo me):
+    a) nello usecase prima avviene scelta ospedale e poi dottore
+    b) validity check non fatti come descritti in UC 
+    Aggiunta possibilità di filtrare la lista (non implementata, ma in realtà UC inizia dopo) 
+    (pre review ste)
+7) UC22 Generate Insurance Policy Code - Userflow Admin Generates Unique Code
+    Completely Aligned
+    (pre review ste)
+8) UC12 register doctor - user flow create insurance policy, hospital, treatment, department, register doctor
+   Aggiunta possibilità di copiare credenziali dottore (implementata?)
+   (pre review ste)
+
+------Generic User------
+1) UC 24 User Login, UC26 Account recovery - User flow User Login, Recovery 
+    Id prov login: La chiamata a ID Prov va implementata mock
+    Recovery: Semplificata la parte di email nel diagramma a "User provides validation token"
+    (pre review ste)
+2) UC30 Internal Calendar Integration - User flow internal calendar integration
+    Manca caso appointment not found (secondo me inutile visto che sceglie appuntamento da calendar)
+    (pre review ste)
+3) UC7 User update profile, UC41 Account Deletion - User flow User Profile Update and Deletion
+    Buono
+    (pre review ste)
+4) UC31 appointment export - UF User export calendar
+    Aggiunta possibilità di copiare link calendar.
+    Tolto check del sistema sul token
+    (pre review ste)
+
+------ Patient------
+1) UC 23 User Registration & Validation - User flow patient registration & validation
+    Manca registration tramite ID PROVIDER
+    Semplificata la parte di email nel diagramma a "Patient provides validation token"
+    (pre review ste)
+2) UC10,UC29, UC  - UF Patient - Appointment Cancellation and Rescheduling
+    Cancellation: semplificata la parte di refund (non messa) (post review ste)
+    Rescheduling: semplificata la parte di ricerca nuovi appuntamenti (non messa) (pre review ste)
+3) UC27, UC32, UC35 - UF Patient - Appointment Booking and Payment
+    Booking(UC27): simplified checks, all considered in the fill form flow
+    Booking(UC32): okay
+    Payment(UC35): simplified (session timeout)
+    (pre review ste)
+4) UC36 - UF Patient - Register Insurance Policy via code
+    Okay (pre review)
+5) UC40, UC38, UC39 - UF Patient - medical record, prescriptions consultation
+    Aggiunta possibilità di filtrare anche su prescription consultation (pre review)
+
+-----Doctor------
+1) UC42, UC43 - UF Doctor access Patient's medical records, chronological report
+    medical records: OK (pre review)
+    chronological report: OK (pre review)
+2) UC3, UC4 - UF Doctors uploads prescription, exemption, exam results
+    Upload exemption, prescription: OK (pre review)
+    Upload examination: semplificato processo di append attachments (pre review)
+3) UC11 - Doctor cancels appointment (forse meglio non metterlo questo che lo UC è diviso in due user flows)
+    OK (pre review)
+
+--- Head of Department -------------
+1) UC17, UC21, UC44- UF Head of Department - management operations
+    services: OK (pre review)
+    capacity: Ok (pre review)
+    doctors workshift: OK (pre review)
+2) UC11 - UF Head of Department - Cancel Department Appointments (forse meglio non metterlo questo che lo UC è diviso in due user flows)
+    Ok (pre review)
+---- Head of Hospital ----------
+1) UC18, UC19, UC20 - UF Head of Hospital - Insurance Debts Management
+    List: OK (pre rev) (in realà errore nello UC)
+    History: OK (pre rev) (anche qui UC un po' a culo)
+    Register payment: OK (pre rev)
+2) UC13, UC15- UF Head of Hospital - Department Management
+    head of department da standardizzare con head of hospital,
+    idem assign doctor to department
+
+

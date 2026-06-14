@@ -1,4 +1,3 @@
-
 \phantomsection %% non so perché senza l'indice funziona male :///
 % -------------------------------------------------------
 \section{Architecture Choice and Language Used}
@@ -241,6 +240,42 @@ The application follows a \textbf{3-Tier Architecture} pattern, separating the s
   \item \textbf{Docker:} Ensures the application runs consistently across all environments (local, CI/CD, production). Eliminates ``works on my machine'' problems.
   \item \textbf{docker-compose:} Simplifies local development by defining and running all services (frontend, backend, database) in one configuration file.
 \end{itemize}
+
+\phantomsection
+\subsubsection{Infrastructure Implementation}
+
+The project's infrastructure is orchestrated using Docker Compose, which defines a unified, isolated, and easily reproducible development environment. Instead of running services directly on the host machine, the infrastructure is containerized into four distinct interconnected services under a shared custom network (\texttt{health-maxxing-network}).
+
+The implemented services are structured as follows:
+
+\begin{itemize}
+    \item \textbf{Database (\texttt{db})}:
+    \begin{itemize}
+        \item Runs a PostgreSQL 16 instance based on an Alpine Linux image to keep the footprint minimal.
+        \item Utilizes a dedicated Docker volume (\texttt{postgres-data}) mapped to the container's internal storage, ensuring that database records are preserved across container restarts and rebuilds.
+        \item Includes an automated health check to verify that the database is fully ready to accept connections before dependent services start up.
+    \end{itemize}
+    
+    \item \textbf{Development Workspace (\texttt{devbox})}:
+    \begin{itemize}
+        \item Acts as the central execution environment, built from a custom \texttt{Dockerfile.devbox}.
+        \item The entire local project directory is mounted into the container as a volume, allowing real-time code synchronization between the host and the container.
+        \item It manages the runtime for both the Django backend (port 8000) and the React frontend (port 3000). It is strictly configured to wait for the \texttt{db} to be healthy and the \texttt{mail} service to be started before initializing.
+    \end{itemize}
+    
+    \item \textbf{Reverse Proxy (\texttt{nginx})}:
+    \begin{itemize}
+        \item An Nginx 1.27 container that acts as the entry point for external traffic on port 8080.
+        \item It loads a custom routing configuration (\texttt{default.conf}) to properly direct requests to either the frontend or backend services running inside the \texttt{devbox}.
+    \end{itemize}
+    
+    \item \textbf{Mail Service (\texttt{mail})}:
+    \begin{itemize}
+        \item Utilizes Mailpit to capture and inspect outgoing emails during development.
+        \item It exposes port 1025 for internal SMTP routing (used by the Django backend) and port 8025 for a web-based user interface where developers can review the intercepted emails without sending them to real addresses.
+    \end{itemize}
+\end{itemize}
+
 \phantomsection 
 % -------------------------------------------------------
 \subsection*{Summary}

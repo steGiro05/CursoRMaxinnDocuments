@@ -50,22 +50,10 @@ The application follows a \textbf{3-Tier Architecture} pattern, separating the s
     \item \textbf{README.md} --- General project documentation and setup instructions.
 
     \begin{figure}[htbp]
-        \centering
-        \begin{subfigure}[b]{0.32\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{ScreenshotD3/FoldStruct.png}
-            \caption{}
-            \label{Folder structure}
-        \end{subfigure}
-        \hfill \begin{subfigure}[b]{0.32\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{ScreenshotD3/BE-FE.png}
-            \caption{}
-            \label{Frontend and Backend}
-        \end{subfigure}
-        
-        \caption{Folder structure, and a on zoom of the frontend and backend (b)}
-        \label{Folder stracture, BE-FE}
+      \centering
+      \includegraphics[width=0.35\textwidth]{ScreenshotD3/FoldStruct.jpeg}
+      \caption{Project structure}
+      \label{fig:folder-structure}
     \end{figure}
     \FloatBarrier
 
@@ -174,10 +162,10 @@ The application follows a \textbf{3-Tier Architecture} pattern, separating the s
   Django & 4.2.30 & Core web framework used to build the backend application and REST API \\
   \rowcolor{tablerowalt}
   Django REST Framework & 3.17.1 & Provides tools for building RESTful APIs, including serialization, authentication, and viewsets \\
-  django-cors-headers & 4.9.0 & Handles Cross-Origin Resource Sharing (CORS) between frontend and backend services \\
+  django-admin-confirm & 1.0.1 & Adds confirmation steps to Django admin actions to prevent accidental bulk operations \\
   \rowcolor{tablerowalt}
+  django-cors-headers & 4.9.0 & Handles Cross-Origin Resource Sharing (CORS) between frontend and backend services \\
   djangorestframework-simplejwt & 5.5.1 & Implements JWT-based authentication for Django REST Framework \\
-  PyJWT & 2.13.0 & Creates, signs, decodes, and validates JSON Web Tokens \\
   \rowcolor{tablerowalt}
   psycopg & 3.3.4 & PostgreSQL database adapter for Python \\
   psycopg-binary & 3.3.4 & Pre-compiled PostgreSQL adapter for simplified installation and development \\
@@ -189,6 +177,7 @@ The application follows a \textbf{3-Tier Architecture} pattern, separating the s
   typing\_extensions & 4.15.0 & Backported and experimental type hinting features for Python \\
   \rowcolor{tablerowalt}
   tzdata & 2026.2 & Time zone database used for accurate date and time handling \\
+  PyJWT & 2.13.0 & Creates, signs, decodes, and validates JSON Web Tokens \\
 \end{longtable}
 \phantomsection 
 \subsubsection{Frontend Dependencies}
@@ -209,10 +198,15 @@ The application follows a \textbf{3-Tier Architecture} pattern, separating the s
   react-dom & 18.3.1 & Renders React components to the DOM \\
   react-router-dom & 6.0.0 & Client-side routing for seamless page navigation \\
   \rowcolor{tablerowalt}
+  react-big-calendar & 1.20.0 & Feature-rich calendar component for displaying and managing scheduled events \\
   Vite & 5.4.1 & Lightning-fast build tool and dev server (modern webpack alternative) \\
-  @vitejs/plugin-react & 4.3.1 & Vite plugin for React support with Fast Refresh \\
   \rowcolor{tablerowalt}
+  @vitejs/plugin-react & 4.3.1 & Vite plugin for React support with Fast Refresh \\
+  axios & 1.17.0 & Promise-based HTTP client for making API requests from the frontend \\
+  \rowcolor{tablerowalt}
+  date-fns & 4.4.0 & Lightweight utility library for parsing, formatting, and manipulating dates \\
   zustand & 5.0.14 & Lightweight state management library for global application state, including authentication data \\
+  \rowcolor{tablerowalt}
   jwt-decode & 4.0.0 & Decodes JWT tokens on the client side to extract user information and token claims without server requests \\
 \end{longtable}
 \phantomsection 

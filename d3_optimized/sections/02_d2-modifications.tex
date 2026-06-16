@@ -385,10 +385,10 @@ Adjusted the main flow so that role replacement is handled entirely within the c
          2. The System prompts an error message with security requirements. \newline 
          3. Resume at Main Flow Step 5. \\ \hline
 
-    10a & \textbf{Invalid or Expired validation token:}\newline 
+    11a & \textbf{Invalid or Expired validation token:}\newline 
          1. The System identifies that the token from the email link is invalid or has expired.\newline 
-         2. The Patient is prompted with an error message and asked if they want to receive a new validation email.\newline 
-         3. The Patient either confirms (go to Main flow step 8) or declines (use case ends). \\ \hline
+         2. The Patient is prompted with an error message.\newline 
+         3. Use case ends. \\ \hline
 \end{ucextensions}
 
 
@@ -405,6 +405,7 @@ Adjusted the main flow so that role replacement is handled entirely within the c
 Changed title from "User registration and validation" to "Patient registration and validation" to reflect correct actor terminology.
 Merged password submission into the main registration data submission (password is no longer a separate step).
 Removed step 14 (automatic login and redirection) as it is a UI-level detail not relevant to the use case specification.
+In EXTENSIONS, step 11a, removed the possibility to recieve a new validation email.
 \end{ucedits}
 
 \phantomsection
@@ -634,7 +635,7 @@ Following review of D2 the activity diagram number 6 was split to better reflect
 \vspace{3em}
 
 \begin{ucedits}
-Following review of D2 this activy diagram was added to visualize the steps of the respective use cases.
+Following review of D2 this activity diagram was added to visualize the steps of the respective use cases.
 \end{ucedits}
 
 \phantomsection

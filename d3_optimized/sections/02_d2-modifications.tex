@@ -355,17 +355,15 @@ Adjusted the main flow so that role replacement is handled entirely within the c
 
 \begin{ucflow}
     1 & The System asks the Unregistered Patient to insert their email and personal information. \\ \hline
-    2 & The Patient fills in the required information. \\ \hline
+    2 & The Patient submits personal information together with the password. \\ \hline
     3 & The Unregistered Patient submits. \\ \hline
     4 & The System validates the input fields. \\ \hline
-    5 & The Patient submits personal information together with the password. \\ \hline
-    6 & The System checks password security (complexity and strength). \\ \hline
-    7 & The System creates a new unverified account in the Database. \\ \hline
-    8 & The System sends a verification token to the provided email address via the Mail Service. \\ \hline
-    9 & The User accesses their mailbox and clicks on the validation link. \\ \hline
-    10 & The System retrieves the validation token sent with the request. \\ \hline
-    11 & The System checks for token validity and matching records in the Database. \\ \hline
-    12 & The System marks the account as verified and active. \\ \hline
+    6 & The System creates a new unverified account in the Database. \\ \hline
+    7 & The System sends a verification token to the provided email address via the Mail Service. \\ \hline
+    8 & The User accesses their mailbox and clicks on the validation link. \\ \hline
+    9 & The System retrieves the validation token sent with the request. \\ \hline
+    10 & The System checks for token validity and matching records in the Database. \\ \hline
+    11 & The System marks the account as verified and active. \\ \hline
 \end{ucflow}
 
 
@@ -373,19 +371,19 @@ Adjusted the main flow so that role replacement is handled entirely within the c
     4a & \textbf{Duplicated fiscal code:}\newline 
          1. The System identifies a duplicated fiscal code. \newline 
          2. The Patient is prompted with an error message highlighting the invalid field. \newline 
-         3. Resume at Main Flow Step 2. \\ \hline
+         3. Use case ends. \\ \hline
 
     4b & \textbf{Email already taken:}\newline 
          1. The System finds another account already associated with the  email. \newline 
          2. The Patient is prompted with an error message suggesting to log in or reset the password. \newline 
          3. Use case ends. \\ \hline
 
-    6a & \textbf{Password security check fails:}\newline 
+    4c & \textbf{Password security check fails:}\newline 
          1. The System identifies the provided password as unsafe or too simple. \newline 
          2. The System prompts an error message with security requirements. \newline 
-         3. Resume at Main Flow Step 5. \\ \hline
+         3. Use case ends. \\ \hline
 
-    11a & \textbf{Invalid or Expired validation token:}\newline 
+    10a & \textbf{Invalid or Expired validation token:}\newline 
          1. The System identifies that the token from the email link is invalid or has expired.\newline 
          2. The Patient is prompted with an error message.\newline 
          3. Use case ends. \\ \hline
@@ -405,7 +403,7 @@ Adjusted the main flow so that role replacement is handled entirely within the c
 Changed title from "User registration and validation" to "Patient registration and validation" to reflect correct actor terminology.
 Merged password submission into the main registration data submission (password is no longer a separate step).
 Removed step 14 (automatic login and redirection) as it is a UI-level detail not relevant to the use case specification.
-In EXTENSIONS, step 11a, removed the possibility to recieve a new validation email.
+In EXTENSIONS, step 10a, removed the possibility to recieve a new validation email.
 \end{ucedits}
 
 \phantomsection
@@ -431,7 +429,7 @@ In EXTENSIONS, step 11a, removed the possibility to recieve a new validation ema
 
 \begin{ucflow}
     1 & The System filters Doctors by specialization matching the requested examination type. \\ \hline
-    2 & If a hospital is specified, the System filters Doctors assigned to that hospital. \\ \hline
+    2 & The System filters Doctors assigned to the requested hospital. \\ \hline
     3 & The System filters Doctors available in the requested day and time slot based on shift constraints. \\ \hline
     4 & The System excludes Doctors with conflicting appointments within a 30-minute window before and after the requested time. \\ \hline
     5 & If a Patient is provided, the System prioritizes Doctors that have previously visited the Patient. \\ \hline
@@ -486,7 +484,7 @@ Secondary: Database, Mail Service.} % 8: Actors
 
 
 \begin{ucflow}
-    1 & The Patient selects the desired examination and, optionally, a preferred hospital and a target future date. \\ \hline
+    1 & The Patient selects the desired examination and a preferred hospital, department and a target future date. \\ \hline
     2 & The Patient submits the search request. \\ \hline
     3 & \hl{The System verifies whether the selected hospital offers the requested examination.} \\ \hline
     4 & \textbf{Include: \hyperlink{FR12}{FR12 Automated Doctor assignment.}} The System retrieves a suitable Doctor and date and time of the appointment. \\ \hline
@@ -498,25 +496,12 @@ Secondary: Database, Mail Service.} % 8: Actors
 
 
 \begin{ucextensions}
-    2a & \textbf{Examination not available in the preferred hospital:}\newline 
-         1. The System displays an alert stating the examination is unavailable at the selected hospital. \newline 
-         2. The System automatically selects the closest hospital to the Patient's registered address that offers the selected examination. \newline 
-         3. Resume at Main Flow Step 3. \\ \hline
-
-    2b & \textbf{No preferred hospital:}\newline 
-         1. The System automatically selects the closest hospital to the Patient's registered address that offers the selected examination. \newline 
-         2. Resume at Main Flow Step 3. \\ \hline
-
-    2c & \textbf{No preferred date:}\newline 
-         1. The System automatically defaults to the current date as the search starting point. \newline 
-         2. Resume at Main Flow Step 3. \\ \hline
-
-    3a & \textbf{Hospital does not offer the requested examination:}\newline 
-         1. The System displays an error message asking the Patient to select another hospital or examination. \newline 
+    2a & \textbf{Hospital does not offer the requested examination:}\newline 
+         1. The System displays an error message asking the Patient to select another hospital, department or examination. \newline 
          2. Resume at Main Flow Step 1. \\ \hline
 
     4a & \textbf{No suitable appointment is found:}\newline 
-         1. The System displays an error message asking the Patient to select another hospital or date range. \newline 
+         1. The System displays an error message asking the Patient to select another hospital, department and date range. \newline 
          2. Resume at Main Flow Step 1. \\ \hline
 
     6a & \textbf{The Patient cancels:}\newline 
